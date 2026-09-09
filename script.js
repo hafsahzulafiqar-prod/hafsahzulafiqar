@@ -68,7 +68,9 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     p.textContent = text;
     row.appendChild(p);
     log.appendChild(row);
-    log.scrollTop = log.scrollHeight;
+    // The log grows with the card now instead of scrolling internally, so
+    // bring the new message into view on the page itself.
+    row.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }
 
   function ask(question) {
