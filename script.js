@@ -2,6 +2,47 @@
 var yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+// Hero role word (home page only): cycles Designer → Thinker → Marketeer →
+// Strategist → All-Rounder → repeat, with a quick fade+rise swap. Skips
+// entirely under prefers-reduced-motion, leaving the static initial word.
+(function () {
+  var el = document.getElementById('role-word');
+  if (!el) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var words = ['Designer', 'Thinker', 'Marketeer', 'Strategist', 'All-Rounder'];
+  var i = words.indexOf(el.textContent.trim());
+  if (i === -1) i = words.length - 1;
+
+  setInterval(function () {
+    el.classList.add('swap');
+    setTimeout(function () {
+      i = (i + 1) % words.length;
+      el.textContent = words[i];
+      el.classList.remove('swap');
+    }, 220);
+  }, 1800);
+})();
+
+// Generic tab switcher for [role="tablist"] groups (currently: the "Key flows
+// redesigned" tabs on case-study pages). No-ops on pages without one.
+(function () {
+  var tablists = document.querySelectorAll('[role="tablist"]');
+  tablists.forEach(function (tablist) {
+    var tabs = tablist.querySelectorAll('[role="tab"]');
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        tabs.forEach(function (t) {
+          var selected = t === tab;
+          t.setAttribute('aria-selected', selected ? 'true' : 'false');
+          var panel = document.getElementById(t.getAttribute('aria-controls'));
+          if (panel) panel.hidden = !selected;
+        });
+      });
+    });
+  });
+})();
+
 // Scroll-reveal for "The record." stats (home page only). The grid stays
 // hidden (via the .js-ready CSS gate) until it scrolls into view, then the
 // three stat items cascade in one at a time via staggered transition-delay.

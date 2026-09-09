@@ -21,7 +21,7 @@
   </div>
 </header>
 
-<section class="case-hero-image thumb-4" aria-hidden="true"></section>
+<section class="case-hero-image thumb-purecs-hero" aria-hidden="true"></section>
 
 <main>
   <section class="case-hero">
@@ -45,22 +45,159 @@
   </section>
 
   <article class="wrap case-body">
-    <h2>The context</h2>
-    <p>PureCS is part of PureHealth, and Pura is its consumer-facing super-health app — the kind of product that tries to be one place for a user's health, not a single-purpose tool. Hafsah joined as CX/UI Designer in August 2023 to lead a redesign aimed at a specific, hard-to-fake goal: making people actually satisfied with using it, not just able to use it.</p>
 
-    <h2>Applying the Double Diamond</h2>
-    <p>Hafsah ran the redesign through the Double Diamond framework — discover, define, develop, deliver — rather than jumping straight to screens. In the discover and define phases, she ran focus groups to understand where the existing app was falling short of what a "super-health" app should feel like. In develop and deliver, she moved through rapid prototyping and A/B testing, validating directions against real user behavior before committing to a final design rather than relying on internal opinion.</p>
+    <div class="case-prose">
+      <h2>The brief</h2>
+      <p>PureCS is part of PureHealth, and Pura is its consumer-facing super-health app — the kind of product that tries to be one place for a user's health, not a single-purpose tool. Hafsah joined as CX/UI Designer in August 2023 to lead a full UI revamp aimed at a specific, hard-to-fake goal: increasing user retention and satisfaction by making the app actually pleasant to use, not just usable — with handoff-ready documentation for the development team.</p>
+    </div>
 
-    <div class="case-callout">Focus groups to find the problem. A/B testing to prove the fix. Rapid prototyping to get there fast enough to matter.</div>
+    <div class="case-prose">
+      <h2>Applying the Double Diamond</h2>
+      <p>Hafsah ran the redesign through the Double Diamond framework — discover, define, develop, deliver — rather than jumping straight to screens. In the discover and define phases, she ran focus groups and competitive analysis to understand where the existing app was falling short of what a "super-health" app should feel like. In develop and deliver, she moved through affinity mapping, rapid prototyping, and A/B testing, validating directions against real user behavior before committing to a final design rather than relying on internal opinion.</p>
+    </div>
 
-    <h2>The result</h2>
-    <p>The redesign improved user satisfaction with Pura by 60% — a broad, structural improvement that reflected the app finally working the way a health app should: coherent, trustworthy, and easy to act on, not just easy to open.</p>
+    <div class="case-callout">Focus groups and competitive analysis to find the problem. A/B testing to prove the fix. Rapid prototyping to get there fast enough to matter.</div>
 
-    <h2>A cybersecurity dashboard for Abu Dhabi</h2>
-    <p>Alongside the Pura work, Hafsah designed a cybersecurity dashboard for a mega facility in Abu Dhabi — a very different design problem, built for security operators monitoring a large, high-stakes physical facility rather than consumers managing their health. The dashboard was designed to improve incident-response efficiency, giving operators a clearer, faster path from detecting an issue to acting on it. That work contributed to a 50% increase in revenue tied to the engagement.</p>
+    <h2>Old vs. new</h2>
+    <div class="case-prose">
+      <p>The existing app read as a set of disconnected screens with little visual hierarchy — the redesign introduced a cohesive, dashboard-first experience built around clear data visualization and a consistent visual language.</p>
+    </div>
+    <div class="case-compare">
+      <div>
+        <p class="case-compare-label">Old</p>
+        <img class="case-compare-img" src="../assets/purecs/hero-compare/old.png" alt="Pura app, old design — sign up, dashboard, booking, and Pure Score screens" loading="lazy">
+      </div>
+      <div>
+        <p class="case-compare-label">New</p>
+        <img class="case-compare-img" src="../assets/purecs/hero-compare/new.png" alt="Pura+ app, redesigned — sign up, goal completion, mobility, and biomarker screens" loading="lazy">
+      </div>
+    </div>
 
-    <h2>The throughline</h2>
-    <p>Pura and the cybersecurity dashboard don't look alike on the surface — a consumer wellness app and an enterprise security tool for critical infrastructure — but both came from the same instinct: figure out what the person in front of the screen actually needs to do in that moment, and strip the interface down to make that as fast and clear as possible. At PureCS, that instinct scaled from a health app used by thousands to a dashboard used by the handful of people responsible for keeping a facility safe.</p>
+    <h2>Design system</h2>
+    <div class="case-prose">
+      <p>To keep the redesign consistent as it scaled across the app, Hafsah built a component library and design language — buttons, cards, charts, and states — used throughout every screen, and handed off to engineering as living documentation.</p>
+    </div>
+    <div class="case-design-system">
+      <img src="../assets/purecs/design-system.png" alt="Pura+ design system — typography, color palette, buttons, inputs, dropdowns, toggles, cards, alerts, upload states, and language switch" loading="lazy">
+    </div>
+
+    <h2>Key flows redesigned</h2>
+    <div class="case-prose">
+      <p>The revamp touched every major flow in the app, not just the dashboard — click a flow to see the old and new screens side by side.</p>
+    </div>
+
+    <div class="case-flow-tags" role="tablist" aria-label="Redesigned flows">
+      <button type="button" role="tab" id="tab-signup" aria-controls="flow-signup" aria-selected="true">Sign up &amp; sign in</button>
+      <button type="button" role="tab" id="tab-goal" aria-controls="flow-goal" aria-selected="false">Goal &amp; dual completion</button>
+      <button type="button" role="tab" id="tab-purescore" aria-controls="flow-purescore" aria-selected="false">Pure Score</button>
+    </div>
+
+    <div class="case-flow-panel" id="flow-signup" role="tabpanel" aria-labelledby="tab-signup">
+      <div class="case-flow-columns">
+        <div>
+          <p class="case-flow-col-label">Old</p>
+          <div class="case-flow-shots">
+            <img src="../assets/purecs/signup/old/1.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 1 of 6" loading="lazy">
+            <img src="../assets/purecs/signup/old/2.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 2 of 6" loading="lazy">
+            <img src="../assets/purecs/signup/old/3.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 3 of 6" loading="lazy">
+            <img src="../assets/purecs/signup/old/4.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 4 of 6" loading="lazy">
+            <img src="../assets/purecs/signup/old/5.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 5 of 6" loading="lazy">
+            <img src="../assets/purecs/signup/old/6.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 6 of 6" loading="lazy">
+          </div>
+        </div>
+        <div>
+          <p class="case-flow-col-label">New</p>
+          <div class="case-flow-shots">
+            <img src="../assets/purecs/signup/new/1.png" alt="Pura+ sign-up &amp; sign-in flow, redesigned, screen 1 of 6" loading="lazy">
+            <img src="../assets/purecs/signup/new/2.png" alt="Pura+ sign-up &amp; sign-in flow, redesigned, screen 2 of 6" loading="lazy">
+            <img src="../assets/purecs/signup/new/3.png" alt="Pura+ sign-up &amp; sign-in flow, redesigned, screen 3 of 6" loading="lazy">
+            <img src="../assets/purecs/signup/new/4.png" alt="Pura+ sign-up &amp; sign-in flow, redesigned, screen 4 of 6" loading="lazy">
+            <img src="../assets/purecs/signup/new/5.png" alt="Pura+ sign-up &amp; sign-in flow, redesigned, screen 5 of 6" loading="lazy">
+            <img src="../assets/purecs/signup/new/6.png" alt="Pura+ sign-up &amp; sign-in flow, redesigned, screen 6 of 6" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-flow-panel" id="flow-goal" role="tabpanel" aria-labelledby="tab-goal" hidden>
+      <div class="case-flow-columns">
+        <div>
+          <p class="case-flow-col-label">Old</p>
+          <div class="case-flow-shots">
+            <img src="../assets/purecs/goal-completion/old/1.png" alt="Pura goal completion flow, old design, screen 1 of 6" loading="lazy">
+            <img src="../assets/purecs/goal-completion/old/2.png" alt="Pura goal completion flow, old design, screen 2 of 6" loading="lazy">
+            <img src="../assets/purecs/goal-completion/old/3.png" alt="Pura goal completion flow, old design, screen 3 of 6" loading="lazy">
+            <img src="../assets/purecs/goal-completion/old/4.png" alt="Pura goal completion flow, old design, screen 4 of 6" loading="lazy">
+            <img src="../assets/purecs/goal-completion/old/5.png" alt="Pura goal completion flow, old design, screen 5 of 6" loading="lazy">
+            <img src="../assets/purecs/goal-completion/old/6.png" alt="Pura goal completion flow, old design, screen 6 of 6" loading="lazy">
+          </div>
+        </div>
+        <div>
+          <p class="case-flow-col-label">New</p>
+          <div class="case-flow-shots">
+            <img src="../assets/purecs/goal-completion/new/1.png" alt="Pura+ goal completion flow, redesigned, screen 1 of 6" loading="lazy">
+            <img src="../assets/purecs/goal-completion/new/2.png" alt="Pura+ goal completion flow, redesigned, screen 2 of 6" loading="lazy">
+            <img src="../assets/purecs/goal-completion/new/3.png" alt="Pura+ goal completion flow, redesigned, screen 3 of 6" loading="lazy">
+            <img src="../assets/purecs/goal-completion/new/4.png" alt="Pura+ goal completion flow, redesigned, screen 4 of 6" loading="lazy">
+            <img src="../assets/purecs/goal-completion/new/5.png" alt="Pura+ goal completion flow, redesigned, screen 5 of 6" loading="lazy">
+            <img src="../assets/purecs/goal-completion/new/6.png" alt="Pura+ goal completion flow, redesigned, screen 6 of 6" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-flow-panel" id="flow-purescore" role="tabpanel" aria-labelledby="tab-purescore" hidden>
+      <div class="case-flow-columns">
+        <div>
+          <p class="case-flow-col-label">Old</p>
+          <div class="case-flow-shots">
+            <img src="../assets/purecs/purescore/old/1.png" alt="Pura Score flow, old design, screen 1 of 5" loading="lazy">
+            <img src="../assets/purecs/purescore/old/2.png" alt="Pura Score flow, old design, screen 2 of 5" loading="lazy">
+            <img src="../assets/purecs/purescore/old/3.png" alt="Pura Score flow, old design, screen 3 of 5" loading="lazy">
+            <img src="../assets/purecs/purescore/old/4.png" alt="Pura Score flow, old design, screen 4 of 5" loading="lazy">
+            <img src="../assets/purecs/purescore/old/5.png" alt="Pura Score flow, old design, screen 5 of 5" loading="lazy">
+          </div>
+        </div>
+        <div>
+          <p class="case-flow-col-label">New</p>
+          <div class="case-flow-shots">
+            <img src="../assets/purecs/purescore/new/1.png" alt="Pura+ Score flow, redesigned, screen 1 of 5" loading="lazy">
+            <img src="../assets/purecs/purescore/new/2.png" alt="Pura+ Score flow, redesigned, screen 2 of 5" loading="lazy">
+            <img src="../assets/purecs/purescore/new/3.png" alt="Pura+ Score flow, redesigned, screen 3 of 5" loading="lazy">
+            <img src="../assets/purecs/purescore/new/4.png" alt="Pura+ Score flow, redesigned, screen 4 of 5" loading="lazy">
+            <img src="../assets/purecs/purescore/new/5.png" alt="Pura+ Score flow, redesigned, screen 5 of 5" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Experimentation</h2>
+    <div class="case-prose">
+      <p>The Challenges feature — how workouts and progress surface to the user — shipped as two real variants and got tested against each other, not decided by opinion.</p>
+    </div>
+    <div class="case-compare">
+      <div>
+        <p class="case-compare-label">Variant A</p>
+        <img class="case-compare-img" src="../assets/purecs/challenges/old/1.png" alt="Pura Challenges, variant A, screen 1 of 2" loading="lazy">
+        <img class="case-compare-img" src="../assets/purecs/challenges/old/2.png" alt="Pura Challenges, variant A, screen 2 of 2" loading="lazy" style="margin-top:16px;">
+      </div>
+      <div>
+        <p class="case-compare-label">Variant B</p>
+        <img class="case-compare-img" src="../assets/purecs/challenges/new/1.png" alt="Pura+ Challenges, variant B, screen 1 of 2" loading="lazy">
+        <img class="case-compare-img" src="../assets/purecs/challenges/new/2.png" alt="Pura+ Challenges, variant B, screen 2 of 2" loading="lazy" style="margin-top:16px;">
+      </div>
+    </div>
+
+    <div class="case-prose">
+      <h2>The result</h2>
+      <p>The redesign improved user satisfaction with Pura by 60% — a broad, structural improvement that reflected the app finally working the way a health app should: coherent, trustworthy, and easy to act on, not just easy to open.</p>
+
+      <h2>A cybersecurity dashboard for Abu Dhabi</h2>
+      <p>Alongside the Pura work, Hafsah designed a cybersecurity dashboard for a mega facility in Abu Dhabi — a very different design problem, built for security operators monitoring a large, high-stakes physical facility rather than consumers managing their health. The dashboard was designed to improve incident-response efficiency, giving operators a clearer, faster path from detecting an issue to acting on it. That work contributed to a 50% increase in revenue tied to the engagement.</p>
+
+      <h2>The throughline</h2>
+      <p>Pura and the cybersecurity dashboard don't look alike on the surface — a consumer wellness app and an enterprise security tool for critical infrastructure — but both came from the same instinct: figure out what the person in front of the screen actually needs to do in that moment, and strip the interface down to make that as fast and clear as possible. At PureCS, that instinct scaled from a health app used by thousands to a dashboard used by the handful of people responsible for keeping a facility safe.</p>
+    </div>
   </article>
 
   <nav class="wrap case-nav">

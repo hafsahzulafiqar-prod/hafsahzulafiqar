@@ -1,11 +1,12 @@
 # Hafsah Zulafiqar — Portfolio
 
-A multi-page portfolio site hosted on GitHub Pages. Light blue-to-pink-to-purple theme,
-bold display headings, a company logo strip, a stats section, and case-study preview
-cards linking out to full project pages. Includes an on-page chat assistant that
-answers visitor questions using a fixed CV knowledge base — no backend, no API keys.
+This portfolio runs as a multi-page site on GitHub Pages. It uses a light
+blue-to-pink-to-purple theme, bold display headings, a company logo strip, a stats
+section, and case-study preview cards that link out to full project pages. It also
+includes an on-page chat assistant that answers visitor questions using a fixed CV
+knowledge base — no backend, no API keys.
 
-Design language modeled after abmcooks.github.io: a fixed top nav, a scrolling strip of
+The design language follows abmcooks.github.io: a fixed top nav, a scrolling strip of
 past-company names/logos beneath it, a bold hero statement, a stat block section, and
 case-study cards that link out to dedicated project pages.
 
@@ -26,10 +27,9 @@ Work/
 ```
 
 The home page's layout format (centered hero, alternating-image process section, icon
-grid, closing glow CTA) is modeled after a SaaS landing page reference the user shared —
-adapted with this site's own light blue/pink/purple palette and content, not that
-reference's dark theme or literal copy (which was product-onboarding content, not
-relevant to a portfolio).
+grid, closing glow CTA) follows a SaaS landing page reference you shared. It keeps this
+site's own light blue/pink/purple palette and content, not that reference's dark theme
+or literal copy — that copy covered product onboarding, which doesn't fit a portfolio.
 
 ## File structure
 
@@ -46,7 +46,7 @@ portfolio-site/
 │   └── jugnu-retailer-app.html
 ├── styles.css             → design tokens + component styles (shared across all pages)
 ├── script.js              → nav state, footer year, chat assistant Q&A logic
-├── resume.pdf             → add your own — not included in this repo
+├── resume.pdf             → add your own — this repo doesn't include it
 ├── assets/
 │   └── logos/             → company logo files (see Logo strip section)
 └── README.md
@@ -80,13 +80,13 @@ multiple hues together; removing the radial fade there would just leave a hard-e
 circle, not "no gradient." If that distinction turns out to be wrong, flatten those too
 (`.orb` and `.section-glow::before` in `styles.css`).
 
-A short-lived white/black/red variant, and later a dark theme, were both tried and fully
-reverted — if you ever want to redo either, `git log` has them, but every hardcoded color
-in this file (shadows, gradients, tag tints) needs to move with the tokens, not just the
-`:root` block; a revert missed exactly that once.
+This project briefly tried a white/black/red palette, then a dark theme, and fully
+reverted both — `git log` has them if you ever want to redo either. But every hardcoded
+color in this file (shadows, gradients, tag tints) needs to move with the tokens, not
+just the `:root` block; one revert missed exactly that.
 
-All tokens are defined once in `:root` at the top of `styles.css` — change a value there
-to re-theme the whole site.
+`:root` at the top of `styles.css` defines all tokens once — change a value there to
+re-theme the whole site.
 
 ### Typography
 
@@ -97,9 +97,9 @@ to re-theme the whole site.
 - **Body** (`--font-body`): DM Sans, weights 400/500/700 — used for subheadings, nav,
   body copy, and the chat UI. Loads from Google Fonts via `<link>` tags in each page's
   `<head>`.
-- The hero `<h1>` is a flat solid `--accent` (purple) — it used to be a gradient
-  text-fill across primary → secondary → accent, removed along with every other
-  decorative gradient on the site (see Color palette above).
+- The hero `<h1>` is a flat solid `--accent` (purple). It used to be a gradient
+  text-fill across primary → secondary → accent; this pass flattened it along with
+  every other decorative gradient on the site (see Color palette above).
 
 ### Layout
 
@@ -132,13 +132,25 @@ to re-theme the whole site.
   actions, and chat card all center as a column. `.chat-content` resets
   `text-align: left` so that centering doesn't cascade into the chat bubbles/input
   (it will if you add new hero children with body text — reset it the same way).
+- **Rotating role word** — the headline reads "Meet Hafsah, the `<span
+  id="role-word">`" so the swapped word never needs its own article ("a" vs. "an"
+  would otherwise have to change per word). A script in `script.js` cycles
+  `#role-word`'s text through Designer → Thinker → Marketeer → Strategist →
+  All-Rounder → repeat, every 1.8s, with a `.swap` class that triggers a quick
+  fade-and-rise transition (`.role-word` / `.role-word.swap` in `styles.css`) around
+  each change. Skips entirely under `prefers-reduced-motion`, leaving whatever word
+  is already in the HTML (currently "All-Rounder") static — no partial-motion
+  fallback, since a word that keeps changing without the transition to soften it
+  would arguably be worse for motion-sensitive readers than not changing at all. To
+  edit the word list or timing, edit the `words` array or the two delays (220ms
+  swap, 1800ms hold) in that block of `script.js`.
 - **How I work** — `.how-steps`, four `.how-step` articles alternating image-left/
   text-right and text-left/image-right (`.how-step-reverse` swaps the grid order via
-  `order`), connected by a centered vertical line (`.how-steps::before`). Each step has
-  a numbered circle (`.how-number`) in an accent-colored ring. On mobile the line is
-  hidden and steps stack single-column. Content is drawn from Hafsah's real skills list
-  (continuous discovery, Double Diamond, CRM/growth strategy) and the FITT Meals
-  case study — not invented.
+  `order`); a centered vertical line (`.how-steps::before`) connects them. Each step has
+  a numbered circle (`.how-number`) in an accent-colored ring. On mobile the line
+  disappears and steps stack single-column. The copy pulls from Hafsah's real skills
+  list (continuous discovery, Double Diamond, CRM/growth strategy) and the FITT Meals
+  case study — nothing invented.
 - **What makes Hafsah different** — `.diff-grid`, a 3-column icon/title/description
   grid (`.diff-item`), inline SVG line icons in a rounded `.diff-icon` box. The three
   claims are all traceable to material already on the site (the design+growth hybrid
@@ -149,21 +161,22 @@ to re-theme the whole site.
   `radial-gradient` fading to transparent — see the note on gradients above).
   `.section-glow .wrap` is `position: relative; z-index: 1` so content stays above
   the glow.
-- **Orb** — `.orb`, a soft radial `--btn-color` glow (280px) inside `.chat-card`,
-  absolutely positioned behind the card header and clipped by the card's
-  `overflow: hidden` so it reads as a glow within the card rather than floating above
-  it. `orb-pulse` (6s loop) both scales/fades it (pulse) and offsets it via `translate`
-  (drift) in the same keyframes, so it breathes and wanders at once. Respects
+- **Orb** — `.orb`, a soft radial `--btn-color` glow (280px) inside `.chat-card`. It
+  sits absolutely positioned behind the card header; the card's `overflow: hidden`
+  clips it, so it reads as a glow within the card rather than floating above it.
+  `orb-pulse` (6s loop) both scales/fades it (pulse) and offsets it via `translate`
+  (drift) in the same keyframes, so it breathes and wanders at once. It respects
   `prefers-reduced-motion`. (An earlier version used a separate drifting "pupil" child
-  for an eye-like look — removed; the orb itself now carries the movement instead.)
+  for an eye-like look; this pass removed it, and the orb itself now carries the
+  movement instead.)
 - **Profile photo** — `.profile-photo` in the hero, above the name/kicker line.
   Currently a flat `--primary` placeholder circle (`aria-hidden`); swap in a real `<img
   src="..." alt="Hafsah Zulafiqar">` when a photo is ready, and remove the
   `aria-hidden`.
 - **Hero background** — plain `var(--bg)`, same as the rest of the page. It used to be
   an animated gradient wash (`hero-gradient-shift`) cycling blue/pink behind the hero
-  content — removed along with the other decorative gradients. The keyframes and
-  animation are gone from `styles.css` entirely, not just hidden.
+  content; this pass removed it along with the other decorative gradients. The
+  keyframes and animation no longer exist in `styles.css` at all, not just hidden.
 - **Logo strip** — `.marquee`, a scrolling text ticker of company names (not image
   logos — this matches the abmcooks.github.io reference itself, and avoids broken
   image icons since no logo files exist): FITT Meals, PureHealth, Kahunas, Kaso, PureCS,
@@ -175,20 +188,100 @@ to re-theme the whole site.
   - `30% → 7%` — Bounce rate reduced
   - `30%` — Increase in sales YoY
 
-  Scroll-revealed: only "The record." heading is visible on first view; the three
-  stats stay hidden until the grid scrolls into the viewport, then cascade in one at a
-  time (staggered `transition-delay`). Driven by an `IntersectionObserver` in
-  `script.js` that adds `.in-view` to `.stat-grid`. The hidden state is gated behind a
-  `.js-ready` class added by a tiny inline script in `index.html`'s `<head>` — so if JS
-  fails to load, the stats just render visible immediately (progressive enhancement,
-  and avoids a flash-of-hidden-content).
+  Scroll-revealed: only "The record." heading shows on first view; the three stats
+  stay hidden until the grid scrolls into the viewport, then cascade in one at a time
+  (staggered `transition-delay`). An `IntersectionObserver` in `script.js` drives this
+  — it adds `.in-view` to `.stat-grid` once the grid comes into view. A tiny inline
+  script in `index.html`'s `<head>` adds a `.js-ready` class that gates the hidden
+  state, so if JS fails to load, the stats just render visible immediately
+  (progressive enhancement — it also avoids a flash-of-hidden-content).
 - **Case-study hero image** — `.case-hero-image`, a full-bleed banner (`thumb-1`
   through `thumb-5`, same flat-color family as the home page's project-card
   thumbnails) at the very top of each `/work/*.html` page, above the breadcrumb and
   title. The floating nav overlaps its top edge deliberately (same pattern as the
   image sitting behind a nav elsewhere). It's a solid-color placeholder — swap in a
-  real `<img>` per
-  case study when you have one.
+  real `<img>` per case study when you have one.
+- **Case-study visual placeholders** — `.case-compare` (side-by-side before/after or
+  A/B variant boxes, `.case-compare-shot` + `.case-compare-label`) and `.case-gallery`
+  (a grid of smaller screen placeholders, `.case-gallery-shot`). Unlike the colorful
+  `thumb-N` placeholders, these use a neutral `--bg-alt` fill with a **dashed** border
+  specifically so they read as "empty, swap in a real screenshot" rather than as
+  intentional decoration. `.case-prose` caps a text block at 720px for readability —
+  it sits between the wider (1100px, from `.wrap`) visual blocks so paragraphs don't
+  stretch full-width while galleries do. This pattern first appeared on the PureCS/Pura
+  case study (`pura-health-redesign.html`), matching a richer, Behance-style
+  case-study format (brief → before/after → design system → key flows →
+  experimentation → result). Apply the same pattern to the other four case studies if
+  you want them in this format too, and swap the placeholder divs for real `<img>`
+  tags once you have the actual screens.
+
+  **Watch the shorthand `padding` property here.** `.wrap` sets `padding: 0 24px` for
+  the site's horizontal margins; if a class combined onto the same element (like
+  `.case-body` or `.case-nav`) later sets its own `padding: Xpx 0 Ypx` shorthand, that
+  three-value form sets left/right padding to `0` too — silently overwriting `.wrap`'s
+  24px and pulling that element flush to the edge, with no error and no visual cue
+  except comparing bounding-box positions against a sibling element. This actually
+  happened (`.case-body` and `.case-nav` both did it), and it's why case-study
+  paragraphs and images briefly sat at the edge instead of aligned with the rest of
+  the site. Fixed now — both rules use `padding-top`/`padding-bottom` only, leaving
+  `.wrap`'s horizontal padding alone — but if a case-study page's content ever looks
+  misaligned again, check for this exact pattern before anything else: grep
+  `styles.css` for `padding:` shorthand on any class that appears combined with
+  `wrap` in the HTML (`grep -n 'class="wrap ' *.html work/*.html` finds the
+  combinations; check each of those classes' own `padding` rule for a 3- or 4-value
+  shorthand).
+- **Real case-study images** — `.case-compare-img` (a single full-width `<img>`,
+  replacing a `.case-compare-shot` placeholder pair) and `.case-design-system` (a
+  single wide reference image in a horizontally-scrolling container). PureCS/Pura
+  uses both already: `assets/purecs/hero-compare/old.png` + `.../new.png` for the
+  "Old vs. new" section, and `assets/purecs/design-system.png` for "Design system."
+  `.case-design-system` scrolls horizontally rather than shrinking to fit — on mobile
+  it holds the image at a fixed legible height (`480px`) instead of scaling it down to
+  viewport width, so dense reference sheets (small text, many components) stay
+  readable; the container scrolls instead of the image shrinking into mush. Apply the
+  same treatment (a wide, detailed reference image) to any other case study that
+  needs it.
+- **Clickable flow tabs** — `.case-flow-tags` is a real `role="tablist"` of buttons
+  (not static pills), each with `aria-controls` linking it to a
+  `.case-flow-panel[role="tabpanel"]`. A generic tab-switcher in `script.js` toggles
+  the `hidden` attribute so only the selected tab's panel shows — it works on any
+  `[role="tablist"]`, so it's safe to reuse elsewhere and it no-ops on pages without
+  one. Each panel holds a `.case-flow-columns` (Old / New) with a `.case-flow-shots`
+  row per side — a horizontally-scrolling strip of phone-frame screenshots
+  (`overflow-x: auto`); each image sets a fixed height (not width), so mixed-count
+  old/new sets still line up. All three tabs use real screenshots now: "Sign up &
+  sign in" (`assets/purecs/signup/`, 6 old + 6 new), "Goal & dual completion"
+  (`assets/purecs/goal-completion/`, 6 + 6), and "Pure Score"
+  (`assets/purecs/purescore/`, 5 + 5) — this tab's real name changed once the folder
+  arrived; the deck reference this case study followed called it "Kids score," but
+  the actual screens are about calculating a personal "Pura Score," not anything
+  kid-specific, so the tab label and folder name both reflect what the screens
+  actually show. A fourth tab ("Subscription & pricing") existed as a placeholder
+  earlier; it's gone now — nobody supplied those screenshots, so it got removed
+  rather than left empty. Check the existing asset folders for new additions before
+  assuming a set is final; screenshots have shown up in batches across multiple
+  sessions, sometimes for flows this doc didn't originally list (see "Real
+  Experimentation images" below).
+- **Real hero photo** — `.thumb-purecs-hero` (`assets/purecs/hero.png`, a wide
+  three-phone composite) replaces the flat `thumb-4` color on both the home page's
+  PureCS card and the case-study page's `.case-hero-image` banner. Because CSS
+  `url()` paths resolve against the stylesheet's own location (project root), not the
+  page that includes it, this one rule works correctly from both `index.html` (root)
+  and `work/pura-health-redesign.html` (one level down) without needing a different
+  path per page.
+- **Real Experimentation images** — the "Experimentation" section's `.case-compare`
+  (Variant A / Variant B) now shows real screens from `assets/purecs/challenges/`
+  (2 old + 2 new, stacked with `.case-compare-img`, not the scrolling
+  `.case-flow-shots` row — only 2 images per side, so stacking reads more clearly
+  than a scroll strip). The copy describing this section changed to match: the
+  original draft guessed this would be a card/pricing A/B test, but the actual
+  screenshots show the Challenges feature (workout history vs. an "Ongoing
+  Challenges" + Fit Coins redesign) — the "Variant A / Variant B" framing stayed
+  since that's how the request specified it, but the surrounding sentence now
+  describes what the images actually show rather than the earlier guess.
+- **Case-study image assets** — live under `assets/<case-study>/<flow>/<old|new>/`
+  (e.g. `assets/purecs/signup/old/1.png`) — sequential numbers, not the original
+  export filenames, so ordering stays predictable regardless of source.
 - **Tags/chips** — `.tags span` (role tags, tinted `--primary`) and `.chip` (chat
   suggestions, neutral until hover). Both pill-shaped, small-caps-weight text.
 - **Chat assistant** — `.chat-log`, `.chat-msg-bot` / `.chat-msg-user` bubbles,
@@ -197,7 +290,8 @@ to re-theme the whole site.
   itself gets taller and the "Ask about Hafsah's work" header scrolls up and out of
   view with the page as messages accumulate, rather than staying pinned above a small
   scrolling box. `addMessage()` in `script.js` calls `scrollIntoView()` on each new
-  message to bring it into view. See below for how its content is maintained.
+  message to bring it into view. See "Maintaining the chat assistant" below for how
+  to keep its content up to date.
 
 ## Maintaining the chat assistant
 
@@ -207,8 +301,8 @@ parts:
 
 - **ANSWERS** — a fixed object of pre-written response strings, one per topic (design,
   growth, projects, education, general, fallback).
-- **KEYWORDS** — lists of substrings per topic. Incoming questions are lowercased and
-  checked against each list in order until one matches.
+- **KEYWORDS** — lists of substrings per topic. The classifier lowercases each
+  incoming question and checks it against each list in order until one matches.
 
 To update what the assistant knows: edit the strings in `ANSWERS`. Keep every claim
 traceable to your actual CV — no invented metrics or skills.
@@ -218,7 +312,7 @@ To change what triggers which answer: add or remove substrings in the matching
 first.
 
 To change the suggested-question chips: each `<button class="chip">` in the hero has a
-`data-question="..."` attribute — that's the exact string run through the classifier
+`data-question="..."` attribute — that's the exact string the classifier processes
 when clicked. Edit the button's visible label and/or its `data-question` independently.
 
 If you outgrow keyword matching later, that's the point to swap in a real LLM — but that
@@ -233,8 +327,8 @@ needs a backend to hold an API key safely, a bigger step up from this static set
   PureHealth, Kahunas, Kaso, PureCS, Jugnu, Mualim, Happa Studios). It renders as a
   scrolling text marquee below the hero/chat section, not image logos.
 - **Nav** — deliberately minimal: logo + "Resume" + "Get in touch." If you add pages
-  later, decide whether they need a nav link or are better reached from the footer —
-  About currently isn't linked from the top bar.
+  later, decide whether they need a nav link, or whether the footer is a better place
+  for them — the top bar currently doesn't link to About.
 - **Stats section** — lead with the three numbers above; don't add unverified stats.
 - **Work previews** — one `.project-card` per case study on the home page, each with a
   title, 1-2 sentence summary, and a link to its full page in `/work/`.
