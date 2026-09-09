@@ -2,8 +2,10 @@
 var yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-// Hero role word (home page only): cycles Designer → Thinker → Marketeer →
-// Strategist → All-Rounder → repeat, with a quick fade+rise swap. The span is
+// Hero role word (home page only): cycles Designer. → Thinker. → Marketeer. →
+// Strategist. → All-Rounder. → repeat, with a quick fade+rise swap. The full
+// stop lives inside the span (not after it in the HTML), so it swaps in and
+// out together with each word instead of sitting fixed in place. The span is
 // locked to the width of its widest word first, so the swap never nudges the
 // surrounding headline text. Skips entirely under prefers-reduced-motion,
 // leaving the static initial word.
@@ -11,10 +13,10 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   var el = document.getElementById('role-word');
   if (!el) return;
 
-  var words = ['Designer', 'Thinker', 'Marketeer', 'Strategist', 'All-Rounder'];
+  var words = ['Designer.', 'Thinker.', 'Marketeer.', 'Strategist.', 'All-Rounder.'];
 
   // Measure every word in the element's own font, then lock the span to the
-  // widest one so text after it (the closing period) never shifts.
+  // widest one so the headline never shifts.
   var maxWidth = 0;
   words.forEach(function (word) {
     el.textContent = word;
@@ -23,11 +25,11 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   el.style.width = Math.ceil(maxWidth) + 'px';
 
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    el.textContent = 'All-Rounder';
+    el.textContent = 'All-Rounder.';
     return;
   }
 
-  var i = words.indexOf('All-Rounder');
+  var i = words.indexOf('All-Rounder.');
   el.textContent = words[i];
 
   setInterval(function () {
