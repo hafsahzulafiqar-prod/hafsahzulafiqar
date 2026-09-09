@@ -117,21 +117,22 @@ a { color: inherit; text-decoration: none; }
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   background: var(--card);
-  padding: 28px 0;
+  padding: 36px 0;
 }
 
 .marquee-track {
   display: flex;
   width: max-content;
-  gap: 14px;
+  gap: 28px;
   animation: marquee-scroll 32s linear infinite;
 }
 
 .marquee-track span {
   font-family: var(--font-display);
   text-transform: uppercase;
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
   color: var(--text-muted);
   white-space: nowrap;
 }
@@ -355,9 +356,14 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--border);
   border-radius: 20px;
   overflow: hidden;
+  position: relative;
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 .project-card:hover { transform: translateY(-6px); border-color: var(--accent); }
+/* Only cards with a real case-study link (not the plain summary cards on
+   resume.html) get the pointer cursor and the focus-visible border cue. */
+.project-card:has(.project-link) { cursor: pointer; }
+.project-card:has(.project-link:focus-visible) { border-color: var(--accent); }
 .project-thumb { height: 130px; }
 .thumb-1 { background: var(--primary); }
 .thumb-2 { background: var(--secondary); }
@@ -378,7 +384,13 @@ a { color: inherit; text-decoration: none; }
 .project-body h3 { font-size: 1.15rem; margin-bottom: 8px; text-transform: none; }
 .project-body p { color: var(--text-muted); font-size: 0.92rem; margin: 0 0 16px; }
 .project-link { font-weight: 700; color: var(--text); font-size: 0.88rem; }
-.project-link .arrow { color: var(--accent); margin-left: 4px; }
+.project-link .arrow { color: var(--accent); margin-left: 4px; transition: margin-left 0.15s ease; }
+/* Stretches the case-study link over the whole card so the entire card is
+   clickable, while keeping exactly one real <a> per card (no nested links).
+   .project-link itself stays position:static so this ::after's absolute
+   positioning resolves against .project-card (position:relative) instead. */
+.project-link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+.project-card:hover .project-link .arrow { margin-left: 8px; }
 
 /* Tags */
 .tags { display: flex; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
@@ -387,27 +399,47 @@ a { color: inherit; text-decoration: none; }
   background: rgba(127,178,240,0.15); padding: 4px 10px; border-radius: 999px;
 }
 
-/* How I Work */
-.how-steps { position: relative; display: flex; flex-direction: column; gap: 64px; }
+/* How I Work — a vertical run of "bubbles" that pop in one at a time as each
+   scrolls into view (see the per-step IntersectionObserver in script.js). */
+.how-steps {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  gap: 88px; margin-top: 8px;
+}
 .how-steps::before {
   content: ''; position: absolute; left: 50%; top: 8px; bottom: 8px; width: 2px;
   background: var(--border); transform: translateX(-50%); z-index: 0;
 }
 .how-step {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
-  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  max-width: 460px; position: relative; z-index: 1;
 }
-.how-step-reverse .how-media { order: 2; }
-.how-step-reverse .how-text { order: 1; }
-.how-media { height: 220px; border-radius: 20px; }
-.how-number {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--card); border: 2px solid var(--accent); color: var(--accent);
-  font-family: var(--font-display); font-size: 0.9rem; margin-bottom: 12px;
+.how-bubble {
+  display: flex; align-items: center; justify-content: center;
+  width: 116px; height: 116px; border-radius: 50%; flex-shrink: 0;
+  background: var(--card); border: 2px solid var(--accent);
+  box-shadow: 0 16px 32px rgba(20, 20, 40, 0.08);
+  margin-bottom: 22px;
+}
+.how-bubble-number {
+  font-family: var(--font-display); font-weight: 700; color: var(--accent);
+  font-size: 2rem; line-height: 1;
 }
 .how-text h3 { font-size: 1.3rem; text-transform: none; margin-bottom: 10px; }
-.how-text p { color: var(--text-muted); font-size: 0.95rem; max-width: 440px; }
+.how-text p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Scroll-reveal: each bubble stays hidden and slightly shrunk until it
+   scrolls into view, then pops up in place. Gated behind .js-ready so the
+   steps render visible immediately if JS fails (progressive enhancement),
+   matching the stat-grid reveal pattern above. */
+.js-ready .how-step {
+  opacity: 0; transform: translateY(36px) scale(0.9);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.js-ready .how-step.in-view { opacity: 1; transform: translateY(0) scale(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .js-ready .how-step { opacity: 1; transform: none; transition: none; }
+}
 
 /* What Makes Different */
 .diff-grid {
@@ -423,6 +455,33 @@ a { color: inherit; text-decoration: none; }
 .diff-icon svg { width: 26px; height: 26px; }
 .diff-item h3 { font-size: 1.1rem; text-transform: none; margin-bottom: 10px; }
 .diff-item p { color: var(--text-muted); font-size: 0.92rem; }
+
+/* Testimonials */
+.testimonial-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+}
+.testimonial-card {
+  display: flex; flex-direction: column; gap: 22px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+  padding: 30px;
+}
+.testimonial-quote-mark {
+  font-family: var(--font-display); font-size: 2.6rem; line-height: 1;
+  color: var(--accent);
+}
+.testimonial-text { color: var(--text); font-size: 1rem; line-height: 1.6; flex-grow: 1; }
+.testimonial-person { display: flex; align-items: center; gap: 12px; }
+/* Placeholder avatar (flat color, like .profile-photo/.about-photo elsewhere on
+   the site) until real photos are dropped into assets/testimonials/ — swap each
+   for <img class="testimonial-photo" src="assets/testimonials/name.jpg" alt="Name">
+   and this rule's background no longer matters. */
+.testimonial-photo {
+  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+  background: var(--primary); object-fit: cover;
+}
+.testimonial-name { font-weight: 700; font-size: 0.95rem; }
+.testimonial-title { color: var(--text-muted); font-size: 0.85rem; }
 
 /* Closing CTA glow */
 .section-glow { position: relative; overflow: hidden; }
@@ -580,6 +639,19 @@ a { color: inherit; text-decoration: none; }
   .nav-links a { font-size: 0.68rem; letter-spacing: 0.02em; }
   .nav-cta { display: none; }
   .hero { padding-top: 100px; }
+  /* Force the rotating word onto its own line, always — "I'm Hafsah, the"
+     stays together on line 1 no matter which word is showing. Without this,
+     shorter words wrap onto line 1 with "the" and longer ones don't, so the
+     heading's line break moves around as the word rotates. display:block
+     takes it out of the inline flow entirely so it always starts a new line;
+     margin:auto centers its fixed-width box (set by script.js) under the
+     centered line above, and text-align:center keeps the word itself
+     centered inside that box instead of flush against its left edge. */
+  .role-word {
+    display: block;
+    margin: 4px auto 0;
+    text-align: center;
+  }
   .profile-photo { width: 84px; height: 84px; margin-bottom: 18px; }
   .marquee { padding: 20px 0; }
   .chat-card { padding: 24px; }
@@ -596,10 +668,10 @@ a { color: inherit; text-decoration: none; }
   .chat-form { flex-wrap: wrap; }
   .chat-send { width: 100%; }
   .footer-inner { flex-direction: column; align-items: flex-start; }
+  .how-steps { gap: 64px; }
   .how-steps::before { display: none; }
-  .how-step, .how-step-reverse { grid-template-columns: 1fr; gap: 20px; }
-  .how-step-reverse .how-media, .how-step-reverse .how-text { order: initial; }
-  .how-media { height: 180px; }
+  .how-bubble { width: 96px; height: 96px; }
+  .how-bubble-number { font-size: 1.6rem; }
   .section-glow::before { width: 600px; height: 300px; bottom: -140px; }
 }
 

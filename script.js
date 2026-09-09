@@ -78,6 +78,24 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   observer.observe(grid);
 })();
 
+// Scroll-reveal for "How I work" (home page only). Each numbered bubble is
+// observed independently (unlike the stat grid's single shared observer), so
+// they pop in one at a time as the visitor scrolls down past each one, rather
+// than all four appearing together.
+(function () {
+  var steps = document.querySelectorAll('.how-step');
+  if (!steps.length || typeof IntersectionObserver === 'undefined') return;
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  steps.forEach(function (step) { observer.observe(step); });
+})();
+
 // Rule-based Q&A over Hafsah's CV (home page only). Answers are fixed templates
 // built only from the knowledge base below — nothing is generated or invented.
 (function () {

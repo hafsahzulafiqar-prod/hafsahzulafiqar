@@ -14,8 +14,9 @@ case-study cards that link out to dedicated project pages.
 
 ```
 Home (index.html)     → hero (centered), logo strip, stats, work preview cards,
-                         "How I work" (4-step process), "What makes Hafsah different"
-                         (3-item grid), footer CTA with a closing glow
+                         "How I work" (4-step scroll-reveal), "What makes me different"
+                         (3-item grid), "What people say" (testimonial cards), footer
+                         CTA with a closing glow
 About (about.html)    → bio, skills
 Resume (resume.html)  → embedded/downloadable resume.pdf
 Work/
@@ -127,45 +128,75 @@ re-theme the whole site.
   so whatever sits behind it (the orb's glow, the page background) shows through,
   blurred. There's a `@supports` fallback to a solid `var(--card)` background for
   browsers without `backdrop-filter`.
+  **The whole card is clickable, not just "Read the case study."** `.project-card` is
+  `position: relative`; the real `.project-link` anchor stays `position: static` so its
+  `::after` (`position: absolute; inset: 0; z-index: 1`) resolves against the card
+  instead and stretches over it — a click anywhere on the thumbnail, title, or
+  description follows the link. This is the standard "stretched link" pattern: exactly
+  one real `<a>` per card (no nested links, no JS click handler needed), with the
+  visible link text still doing its normal job for keyboard/screen-reader users.
+  `.project-card:has(.project-link)` gates the pointer cursor and the focus-visible
+  border cue so the plain (non-linking) summary cards on `resume.html` don't look
+  clickable when they aren't.
 - **Hero layout** — `.hero .wrap` is `display: flex; flex-direction: column;
   align-items: center; text-align: center;`, so the profile photo, headline, tagline,
   actions, and chat card all center as a column. `.chat-content` resets
   `text-align: left` so that centering doesn't cascade into the chat bubbles/input
   (it will if you add new hero children with body text — reset it the same way).
-- **Rotating role word** — the headline reads "Meet Hafsah, the `<span
-  id="role-word">`" so the swapped word never needs its own article ("a" vs. "an"
-  would otherwise have to change per word). A script in `script.js` cycles
-  `#role-word`'s text through Designer → Thinker → Marketeer → Strategist →
-  All-Rounder → repeat, every 1.8s, with a `.swap` class that triggers a quick
+- **Rotating role word** — the headline reads "I'm Hafsah, the `<span
+  id="role-word">`" with the closing period *inside* the span (`All-Rounder.`, not
+  `All-Rounder</span>.`), so the full stop swaps in and out together with each word
+  instead of sitting fixed in the markup after it. A script in `script.js` cycles
+  `#role-word`'s text through Designer. → Thinker. → Marketeer. → Strategist. →
+  All-Rounder. → repeat, every 1.8s, with a `.swap` class that triggers a quick
   fade-and-rise transition (`.role-word` / `.role-word.swap` in `styles.css`) around
   each change. Skips entirely under `prefers-reduced-motion`, leaving whatever word
-  is already in the HTML (currently "All-Rounder") static — no partial-motion
+  is already in the HTML (currently "All-Rounder.") static — no partial-motion
   fallback, since a word that keeps changing without the transition to soften it
   would arguably be worse for motion-sensitive readers than not changing at all. To
   edit the word list or timing, edit the `words` array or the two delays (220ms
   swap, 1800ms hold) in that block of `script.js`.
-  **Fixed width, so only the word swaps in place.** The words range from 8
-  characters ("Designer") to 11 ("All-Rounder"), and since they're rendered in a
-  proportional font (not monospace), a naive swap would resize `#role-word` on
-  every change and nudge the closing period — and the whole centered headline —
-  left and right. `script.js` measures all five words in the element's own font
-  on load (writing each one in, reading `getBoundingClientRect().width`, taking
-  the max) and locks `#role-word` to that pixel width via inline `style.width`
-  before starting the rotation. `.role-word` is `display: inline-block; text-align:
-  left` in `styles.css` so the word sits at a fixed start position inside that
-  locked box regardless of length.
-- **How I work** — `.how-steps`, four `.how-step` articles alternating image-left/
-  text-right and text-left/image-right (`.how-step-reverse` swaps the grid order via
-  `order`); a centered vertical line (`.how-steps::before`) connects them. Each step has
-  a numbered circle (`.how-number`) in an accent-colored ring. On mobile the line
-  disappears and steps stack single-column. The copy pulls from Hafsah's real skills
-  list (continuous discovery, Double Diamond, CRM/growth strategy) and the FITT Meals
-  case study — nothing invented.
-- **What makes Hafsah different** — `.diff-grid`, a 3-column icon/title/description
+  **Fixed width, so only the word (and its period) swaps in place.** The words range
+  from 9 characters ("Designer.") to 12 ("All-Rounder."), and since they're rendered
+  in a proportional font (not monospace), a naive swap would resize `#role-word` on
+  every change and nudge the whole centered headline left and right. `script.js`
+  measures all five words (period included) in the element's own font on load
+  (writing each one in, reading `getBoundingClientRect().width`, taking the max) and
+  locks `#role-word` to that pixel width via inline `style.width` before starting the
+  rotation. `.role-word` is `display: inline-block; text-align: left` in `styles.css`
+  so the word sits at a fixed start position inside that locked box regardless of
+  length.
+- **How I work** — `.how-steps`, four `.how-step` articles in a single centered column,
+  connected by a vertical line (`.how-steps::before`). Each step is a numbered
+  **bubble** (`.how-bubble`, a 116px circle with `.how-bubble-number` — 01 through 04 —
+  centered inside it in the accent color) with the step's title and one-line
+  description below it. Steps stay hidden and slightly shrunk (`opacity: 0; transform:
+  translateY(36px) scale(0.9)`, gated behind `.js-ready` like the stat-grid pattern
+  below) until scrolled into view, then pop up in place — **one at a time**, not all
+  together. That's driven by a dedicated `IntersectionObserver` block in `script.js`
+  that observes each `.how-step` individually (unlike the stat grid's single shared
+  observer over the whole `.stat-grid`) and adds `.in-view` to whichever one crosses
+  the 0.4 threshold, unobserving it immediately after so it never re-triggers. Respects
+  `prefers-reduced-motion` (steps render visible, no animation). On mobile the
+  connecting line hides and the bubbles shrink to 96px. The copy pulls from Hafsah's
+  real skills list (continuous discovery, Double Diamond, CRM/growth strategy) and the
+  FITT Meals case study — nothing invented.
+- **What makes me different** — `.diff-grid`, a 3-column icon/title/description
   grid (`.diff-item`), inline SVG line icons in a rounded `.diff-icon` box. The three
   claims are all traceable to material already on the site (the design+growth hybrid
   arc, the Double Diamond/discovery process, the real stats) — keep it that way if you
   edit the copy.
+- **What people say** — `.testimonial-grid`, a responsive card grid (`.testimonial-card`,
+  same white/bordered/rounded card language as everywhere else on the site) with a
+  large accent-colored quote mark (`.testimonial-quote-mark`), the quote itself
+  (`.testimonial-text`), and a person row (`.testimonial-person`) pairing a small
+  rounded photo with a bold name and a muted title/company line underneath. **The three
+  cards currently in `index.html` are placeholders** — "Add a real testimonial here…",
+  "Name", "Title, Company" — waiting on real quotes. `.testimonial-photo` is a flat
+  `--primary` circle for now (same placeholder pattern as `.profile-photo` and
+  `.about-photo`); once real photos exist, drop them in `assets/testimonials/` and swap
+  each `<div class="testimonial-photo" aria-hidden="true"></div>` for
+  `<img class="testimonial-photo" src="assets/testimonials/name.jpg" alt="Name">`.
 - **Closing CTA glow** — `.section-glow` (applied to the `#contact` section) adds a
   large blurred single-hue `--primary` glow behind the section via `::before` (a
   `radial-gradient` fading to transparent — see the note on gradients above).
@@ -338,11 +369,15 @@ needs a backend to hold an API key safely, a bigger step up from this static set
 ## Portfolio content guidelines
 
 - **Hero** — headline and supporting line live at the top of `index.html`'s `<main>`:
-  - Headline: "Meet Hafsah, an all-rounder."
+  - Headline: "I'm Hafsah, the All-Rounder." (the role word rotates — see "Rotating role word" above)
   - Supporting line: "After working across design, strategy, marketing, and growth."
 - **Logo strip** — pull company names verbatim from the CV (currently FITT Meals,
   PureHealth, Kahunas, Kaso, PureCS, Jugnu, Mualim, Happa Studios). It renders as a
-  scrolling text marquee below the hero/chat section, not image logos.
+  scrolling text marquee below the hero/chat section, not image logos. `.marquee-track
+  span` is set large and bold on purpose (`font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 700`) so the names read as a real feature of the page, not fine print —
+  the mobile breakpoint (`max-width: 760px`) trims `.marquee`'s padding but doesn't
+  shrink the type further.
 - **Nav** — deliberately minimal: logo + "Resume" + "Get in touch." If you add pages
   later, decide whether they need a nav link, or whether the footer is a better place
   for them — the top bar currently doesn't link to About.
@@ -351,14 +386,25 @@ needs a backend to hold an API key safely, a bigger step up from this static set
   title, 1-2 sentence summary, and a link to its full page in `/work/`.
 - **About** — bio paragraph(s) + a `.skills` pill list. Pull skills verbatim from the
   CV; don't pad the list with aspirational ones.
-- **Resume** — drop the actual `resume.pdf` in the root folder; the download button
-  already points to it.
+- **Resume** — `resume.pdf` in the root folder is the real file (`Hafsah_Zulafiqar_CV.pdf`);
+  the download button on `resume.html` points to it directly. Replace it the same way
+  (drop a new file in named `resume.pdf`) whenever the CV updates.
 - **Contact** — footer CTA + mailto link, consistent across all pages. Currently:
   hafsah.zulafiqar@gmail.com. Fill in real social profile URLs before publishing live
   (currently placeholders).
 - **Numbers over adjectives** — every card and every chat answer should lead with a
   specific stat, not a vague claim ("led a redesign" is weaker than "led a redesign
   that lifted conversion 146%").
+- **First person, active voice.** All of Hafsah's own copy — the hero headline, project
+  cards, "How I work," "What makes me different," and every `/work/*.html` case study —
+  speaks as "I," not "Hafsah" or "she" ("I led the redesign," not "Hafsah led the
+  redesign" or "a redesign was led"). The one deliberate exception is the AI chat
+  assistant: it's a distinct entity answering questions *about* Hafsah, so its own
+  copy (`ANSWERS`/`KEYWORDS` in `script.js`, the chat card header, the suggested
+  question chips) correctly stays third person ("Hafsah's design background spans...",
+  "How did Hafsah improve..."). Page `<title>`s, the footer copyright, and the hero
+  kicker byline ("Hafsah Zulafiqar · Growth & Marketing Manager · ...") are name labels,
+  not sentences, and stay as her name for the same reason a resume header does.
 
 ## Local preview
 
