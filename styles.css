@@ -427,18 +427,39 @@ a { color: inherit; text-decoration: none; }
 .how-text h3 { font-size: 1.3rem; text-transform: none; margin-bottom: 10px; }
 .how-text p { color: var(--text-muted); font-size: 0.95rem; }
 
-/* Scroll-reveal: each bubble stays hidden and slightly shrunk until it
-   scrolls into view, then pops up in place. Gated behind .js-ready so the
-   steps render visible immediately if JS fails (progressive enhancement),
-   matching the stat-grid reveal pattern above. */
-.js-ready .how-step {
-  opacity: 0; transform: translateY(36px) scale(0.9);
-  transition: opacity 0.55s ease, transform 0.55s ease;
+/* Scroll-reveal: each bubble stays hidden until its step scrolls into view
+   (see the per-step IntersectionObserver in script.js — the same one that
+   was already triggering these one at a time), then "shoots" into place
+   like a basketball arcing into a hoop: held low, arcs up and over with an
+   overshoot, dips past its landing spot, rebounds slightly, and settles.
+   The step's title/description fade in just after it lands. Gated behind
+   .js-ready so everything renders visible immediately if JS fails
+   (progressive enhancement), matching the stat-grid reveal pattern above. */
+.js-ready .how-bubble { opacity: 0; }
+.js-ready .how-step.in-view .how-bubble {
+  animation: how-bubble-shoot 0.9s cubic-bezier(0.3, 1, 0.6, 1) forwards;
 }
-.js-ready .how-step.in-view { opacity: 1; transform: translateY(0) scale(1); }
+
+.js-ready .how-text {
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.45s ease 0.4s, transform 0.45s ease 0.4s;
+}
+.js-ready .how-step.in-view .how-text { opacity: 1; transform: translateY(0); }
+
+@keyframes how-bubble-shoot {
+  0%   { opacity: 0; transform: translate(-64px, 86px) scale(0.42) rotate(-28deg); }
+  40%  { opacity: 1; }
+  58%  { transform: translate(18px, -36px) scale(1.14) rotate(12deg); }
+  76%  { transform: translate(-6px, 10px) scale(0.93) rotate(-5deg); }
+  90%  { transform: translate(2px, -4px) scale(1.03) rotate(2deg); }
+  100% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .js-ready .how-step { opacity: 1; transform: none; transition: none; }
+  .js-ready .how-bubble,
+  .js-ready .how-text {
+    opacity: 1; transform: none; animation: none; transition: none;
+  }
 }
 
 /* What Makes Different */
