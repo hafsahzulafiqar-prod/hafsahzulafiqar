@@ -97,10 +97,21 @@ to re-theme the whole site.
   border. Never more than one `.btn-primary` visible at a time in a given view.
 - **Cards** — `.project-card` (work preview cards on the home page) and `.chat-card`
   (the assistant). Same border/radius/hover-lift treatment so they read as one family.
-- **Orb** — `.orb`, a soft radial `--btn-color` glow that pulses gently (`orb-pulse`
-  keyframes, respects `prefers-reduced-motion`). Lives **inside** `.chat-card` on the
-  home page — absolutely positioned behind the card header, clipped by the card's
-  `overflow: hidden` so it reads as a glow within the card rather than floating above it.
+- **Orb (the "eye")** — `.orb`, a soft radial `--btn-color` glow (280px) that pulses
+  gently (`orb-pulse`), with a smaller `.orb-pupil` glossy circle centered inside it
+  that drifts around on its own loop (`pupil-drift`) — reads as an eye that both
+  breathes and looks around. Both respect `prefers-reduced-motion`. Lives inside
+  `.chat-card`, clipped by the card's `overflow: hidden`. If you resize the orb, check
+  that the pupil's center still lands inside the visible (non-clipped) region — it's
+  easy to accidentally position the whole eye above the card's clip boundary.
+- **Profile photo** — `.profile-photo` in the hero, above the name/kicker line.
+  Currently a gradient placeholder circle (`aria-hidden`); swap in a real `<img
+  src="..." alt="Hafsah Zulafiqar">` when a photo is ready, and remove the
+  `aria-hidden`.
+- **Hero background** — `.hero` has its own animated gradient (`hero-gradient-shift`,
+  14s loop) cycling between `--primary` (light blue) and `--secondary` (pink), sitting
+  behind the profile photo, headline, and chat card. Paused under
+  `prefers-reduced-motion`.
 - **Logo strip** — `.marquee`, a scrolling text ticker of company names (not image
   logos — this matches the abmcooks.github.io reference itself, and avoids broken
   image icons since no logo files exist): FITT Meals, PureHealth, Kahunas, Kaso, PureCS,
