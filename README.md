@@ -144,6 +144,16 @@ re-theme the whole site.
   would arguably be worse for motion-sensitive readers than not changing at all. To
   edit the word list or timing, edit the `words` array or the two delays (220ms
   swap, 1800ms hold) in that block of `script.js`.
+  **Fixed width, so only the word swaps in place.** The words range from 8
+  characters ("Designer") to 11 ("All-Rounder"), and since they're rendered in a
+  proportional font (not monospace), a naive swap would resize `#role-word` on
+  every change and nudge the closing period — and the whole centered headline —
+  left and right. `script.js` measures all five words in the element's own font
+  on load (writing each one in, reading `getBoundingClientRect().width`, taking
+  the max) and locks `#role-word` to that pixel width via inline `style.width`
+  before starting the rotation. `.role-word` is `display: inline-block; text-align:
+  left` in `styles.css` so the word sits at a fixed start position inside that
+  locked box regardless of length.
 - **How I work** — `.how-steps`, four `.how-step` articles alternating image-left/
   text-right and text-left/image-right (`.how-step-reverse` swaps the grid order via
   `order`); a centered vertical line (`.how-steps::before`) connects them. Each step has
@@ -247,10 +257,12 @@ re-theme the whole site.
   the `hidden` attribute so only the selected tab's panel shows — it works on any
   `[role="tablist"]`, so it's safe to reuse elsewhere and it no-ops on pages without
   one. Each panel holds a `.case-flow-columns` (Old / New) with a `.case-flow-shots`
-  row per side — a horizontally-scrolling strip of phone-frame screenshots
-  (`overflow-x: auto`); each image sets a fixed height (not width), so mixed-count
-  old/new sets still line up. All three tabs use real screenshots now: "Sign up &
-  sign in" (`assets/purecs/signup/`, 6 old + 6 new), "Goal & dual completion"
+  row per side — `flex-wrap: wrap`, **not** a horizontal scroll (an earlier version
+  used `overflow-x: auto`; the request explicitly asked for everything visible at
+  once instead of a scroll strip, so all screenshots wrap onto as many rows as they
+  need). Each image sets a fixed height (not width), so mixed-count old/new sets
+  still line up. All three tabs use real screenshots: "Sign up & sign in"
+  (`assets/purecs/signup/`, 6 old + 6 new), "Goal & dual completion"
   (`assets/purecs/goal-completion/`, 6 + 6), and "Pure Score"
   (`assets/purecs/purescore/`, 5 + 5) — this tab's real name changed once the folder
   arrived; the deck reference this case study followed called it "Kids score," but
@@ -260,8 +272,23 @@ re-theme the whole site.
   earlier; it's gone now — nobody supplied those screenshots, so it got removed
   rather than left empty. Check the existing asset folders for new additions before
   assuming a set is final; screenshots have shown up in batches across multiple
-  sessions, sometimes for flows this doc didn't originally list (see "Real
-  Experimentation images" below).
+  sessions.
+
+  **The `old`/`new` folder names on disk were correct all along — trust them.**
+  The files came from folders literally named `old` and `new`, and every `old`
+  folder file shows the *original* PureCS app (the "PURA+" wordmark, the
+  Mobility/Recovery/Challenges/Fit Coins tab bar), while every `new` folder file
+  shows the *redesigned* app (no wordmark, no tab bar — cleaner components like
+  the calendar-strip goal dashboard and the plain "Calculate Pure Score" flow).
+  This applies to `hero-compare/`, `signup/`, `goal-completion/`, and
+  `purescore/` alike. A mid-project pass briefly "corrected" this on a wrong
+  heuristic (assuming the PURA+ wordmark meant *new*) and swapped every folder's
+  contents, which broke `hero-compare` too even though it had never been touched
+  before — the giveaway that the heuristic, not the original folder names, was
+  the actual bug. That swap was reverted; the folder contents now match their
+  names again. If a fourth flow folder shows up, trust its `old`/`new` naming by
+  default and only second-guess it if the screens visibly contradict the label
+  (e.g. an "old" folder full of clearly newer-looking UI).
 - **Real hero photo** — `.thumb-purecs-hero` (`assets/purecs/hero.png`, a wide
   three-phone composite) replaces the flat `thumb-4` color on both the home page's
   PureCS card and the case-study page's `.case-hero-image` banner. Because CSS
@@ -269,16 +296,6 @@ re-theme the whole site.
   page that includes it, this one rule works correctly from both `index.html` (root)
   and `work/pura-health-redesign.html` (one level down) without needing a different
   path per page.
-- **Real Experimentation images** — the "Experimentation" section's `.case-compare`
-  (Variant A / Variant B) now shows real screens from `assets/purecs/challenges/`
-  (2 old + 2 new, stacked with `.case-compare-img`, not the scrolling
-  `.case-flow-shots` row — only 2 images per side, so stacking reads more clearly
-  than a scroll strip). The copy describing this section changed to match: the
-  original draft guessed this would be a card/pricing A/B test, but the actual
-  screenshots show the Challenges feature (workout history vs. an "Ongoing
-  Challenges" + Fit Coins redesign) — the "Variant A / Variant B" framing stayed
-  since that's how the request specified it, but the surrounding sentence now
-  describes what the images actually show rather than the earlier guess.
 - **Case-study image assets** — live under `assets/<case-study>/<flow>/<old|new>/`
   (e.g. `assets/purecs/signup/old/1.png`) — sequential numbers, not the original
   export filenames, so ordering stays predictable regardless of source.

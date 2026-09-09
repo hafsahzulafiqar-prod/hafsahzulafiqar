@@ -3,16 +3,32 @@ var yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 // Hero role word (home page only): cycles Designer → Thinker → Marketeer →
-// Strategist → All-Rounder → repeat, with a quick fade+rise swap. Skips
-// entirely under prefers-reduced-motion, leaving the static initial word.
+// Strategist → All-Rounder → repeat, with a quick fade+rise swap. The span is
+// locked to the width of its widest word first, so the swap never nudges the
+// surrounding headline text. Skips entirely under prefers-reduced-motion,
+// leaving the static initial word.
 (function () {
   var el = document.getElementById('role-word');
   if (!el) return;
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   var words = ['Designer', 'Thinker', 'Marketeer', 'Strategist', 'All-Rounder'];
-  var i = words.indexOf(el.textContent.trim());
-  if (i === -1) i = words.length - 1;
+
+  // Measure every word in the element's own font, then lock the span to the
+  // widest one so text after it (the closing period) never shifts.
+  var maxWidth = 0;
+  words.forEach(function (word) {
+    el.textContent = word;
+    maxWidth = Math.max(maxWidth, el.getBoundingClientRect().width);
+  });
+  el.style.width = Math.ceil(maxWidth) + 'px';
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.textContent = 'All-Rounder';
+    return;
+  }
+
+  var i = words.indexOf('All-Rounder');
+  el.textContent = words[i];
 
   setInterval(function () {
     el.classList.add('swap');

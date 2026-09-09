@@ -183,6 +183,8 @@ a { color: inherit; text-decoration: none; }
    change; the transition gives it a quick fade + slight rise. */
 .role-word {
   display: inline-block;
+  text-align: left;
+  vertical-align: top;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 .role-word.swap {
@@ -548,11 +550,10 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 10px;
 }
 .case-flow-shots {
-  display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px;
-  -webkit-overflow-scrolling: touch;
+  display: flex; flex-wrap: wrap; gap: 14px;
 }
 .case-flow-shots img {
-  height: 300px; width: auto; flex-shrink: 0; display: block;
+  height: 260px; width: auto; display: block;
   border-radius: 14px; border: 1px solid var(--border);
 }
 
