@@ -25,7 +25,7 @@
 <main>
   <section class="hero">
     <div class="wrap">
-      <div class="profile-photo" aria-hidden="true"></div>
+      <img class="profile-photo" src="assets/profile/hafsah.png" alt="Hafsah Zulafiqar">
       <div class="eyebrow-bar"></div>
       <p class="kicker">Hafsah Zulafiqar · Growth &amp; Marketing Manager · Product Designer · Dubai, UAE</p>
       <h1>I'm Hafsah, the <span class="role-word" id="role-word">All-Rounder.</span></h1>
@@ -136,6 +136,21 @@
           </div>
         </article>
 
+        <article class="project-card locked">
+          <div class="project-thumb thumb-jugnu-hero" aria-hidden="true">
+            <span class="project-thumb-lock">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+              Locked
+            </span>
+          </div>
+          <div class="project-body">
+            <h3>Jugnu</h3>
+            <p>I ran a 3-month UX overhaul of a B2B retailer app that drove a 60% increase in user acquisition.</p>
+            <div class="tags"><span>B2B Retail</span><span>Analytics</span></div>
+            <a href="work/jugnu-retailer-app.html" class="project-link">Read the case study <span class="arrow">→</span></a>
+          </div>
+        </article>
+
       </div>
     </div>
   </section>
@@ -224,36 +239,60 @@
 
         <article class="testimonial-card">
           <span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
-          <p class="testimonial-text">Add a real testimonial here — a LinkedIn recommendation, a quote from a manager, or a line from an email.</p>
+          <p class="testimonial-text">I had the pleasure of managing Hafsah during her time as a Product Designer at Kahunas, and I can confidently say she was an extremely valuable member of the team. Hafsah consistently demonstrated a strong ability to translate complex product requirements into…</p>
           <div class="testimonial-person">
-            <div class="testimonial-photo" aria-hidden="true"></div>
+            <img class="testimonial-photo" src="assets/testimonials/aaron-kane.png" alt="Aaron Kane">
             <div>
-              <p class="testimonial-name">Name</p>
-              <p class="testimonial-title">Title, Company</p>
+              <p class="testimonial-name">Aaron Kane</p>
+              <p class="testimonial-title">Product Owner, Kahunas</p>
             </div>
           </div>
         </article>
 
         <article class="testimonial-card">
           <span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
-          <p class="testimonial-text">Add a real testimonial here — a LinkedIn recommendation, a quote from a manager, or a line from an email.</p>
+          <p class="testimonial-text">During her 9-month tenure as a CX/UX designer in my team, Hafsah consistently impressed with her expertise and autonomy. Her critical thinking and problem-solving skills shone through in every project, particularly when she managed the implementation of an animated dashboard with a third-party service provider. Hafsah's…</p>
           <div class="testimonial-person">
-            <div class="testimonial-photo" aria-hidden="true"></div>
+            <img class="testimonial-photo" src="assets/testimonials/driss-lahjouji.png" alt="Driss Lahjouji">
             <div>
-              <p class="testimonial-name">Name</p>
-              <p class="testimonial-title">Title, Company</p>
+              <p class="testimonial-name">Driss Lahjouji</p>
+              <p class="testimonial-title">Innovation &amp; Digital Transformation Leader</p>
             </div>
           </div>
         </article>
 
         <article class="testimonial-card">
           <span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
-          <p class="testimonial-text">Add a real testimonial here — a LinkedIn recommendation, a quote from a manager, or a line from an email.</p>
+          <p class="testimonial-text">Hafsah has a keen eye for detail and has always shown the ability to have the perspective of the client in mind. Her designs show the effort put in to be customer centric while at the same time balancing it with the business objectives. She is a great asset to have for any product team.</p>
           <div class="testimonial-person">
-            <div class="testimonial-photo" aria-hidden="true"></div>
+            <img class="testimonial-photo" src="assets/testimonials/craig-pereira.png" alt="Craig Pereira">
             <div>
-              <p class="testimonial-name">Name</p>
-              <p class="testimonial-title">Title, Company</p>
+              <p class="testimonial-name">Craig Pereira</p>
+              <p class="testimonial-title">System and Solutions Engineer, Kahunas.io</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="testimonial-card">
+          <span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
+          <p class="testimonial-text">Hafsah is a brilliant product manager. Relentless is the right word. In the short time of our work together, I can tell that she knows her users well. She is quick to act, usually one step ahead. She is passionate about building the right products that the user didn't know they needed. I highly recommend Hafsah. I would love to work with…</p>
+          <div class="testimonial-person">
+            <img class="testimonial-photo" src="assets/testimonials/jean-marie-cunanan.png" alt="Jean Marie Cunanan">
+            <div>
+              <p class="testimonial-name">Jean Marie Cunanan</p>
+              <p class="testimonial-title">Business Development</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="testimonial-card">
+          <span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
+          <p class="testimonial-text">Hafsah briefly joined my team as a Product Designer, and her passion for delivering the most convenient and ideal UX for customers was immediately clear. She constantly pushed herself to truly understand our users, resulting in designs that genuinely resonated with their needs. I'm confident she'll do wonders in her future roles as a…</p>
+          <div class="testimonial-person">
+            <img class="testimonial-photo" src="assets/testimonials/matin-shoghi.png" alt="Matin Shoghi">
+            <div>
+              <p class="testimonial-name">Matin Shoghi</p>
+              <p class="testimonial-title">Entrepreneur, Product Builder</p>
             </div>
           </div>
         </article>
@@ -270,6 +309,19 @@
     </div>
   </section>
 </main>
+
+<div class="lock-modal" id="lock-modal" hidden>
+  <div class="lock-modal-backdrop" data-lock-close></div>
+  <div class="lock-modal-card" role="dialog" aria-modal="true" aria-labelledby="lock-modal-title">
+    <button type="button" class="lock-modal-close" data-lock-close aria-label="Close">&times;</button>
+    <div class="lock-modal-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+    </div>
+    <h3 id="lock-modal-title">This case study is locked.</h3>
+    <p>Get in touch with Hafsah to unlock it.</p>
+    <a href="mailto:hafsah.zulafiqar@gmail.com" class="btn btn-primary">Get in touch</a>
+  </div>
+</div>
 
 <footer class="site-footer">
   <div class="wrap footer-inner">

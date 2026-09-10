@@ -155,6 +155,7 @@ a { color: inherit; text-decoration: none; }
   border: 3px solid var(--card);
   box-shadow: 0 8px 24px rgba(27,23,48,0.12);
   margin-bottom: 24px;
+  object-fit: cover;
 }
 
 .eyebrow-bar {
@@ -364,7 +365,14 @@ a { color: inherit; text-decoration: none; }
    resume.html) get the pointer cursor and the focus-visible border cue. */
 .project-card:has(.project-link) { cursor: pointer; }
 .project-card:has(.project-link:focus-visible) { border-color: var(--accent); }
-.project-thumb { height: 130px; }
+.project-thumb { height: 130px; position: relative; }
+.project-thumb-lock {
+  position: absolute; top: 14px; right: 14px; z-index: 2;
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.92); color: var(--text);
+  padding: 6px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 700;
+}
+.project-thumb-lock svg { width: 13px; height: 13px; }
 .thumb-1 { background: var(--primary); }
 .thumb-2 { background: var(--secondary); }
 .thumb-3 { background: var(--accent); }
@@ -377,6 +385,11 @@ a { color: inherit; text-decoration: none; }
    rule works correctly from both index.html and work/*.html without adjustment. */
 .thumb-purecs-hero {
   background-image: url('assets/purecs/hero.png');
+  background-size: cover;
+  background-position: center;
+}
+.thumb-jugnu-hero {
+  background-image: url('assets/jugnu/hero.png');
   background-size: cover;
   background-position: center;
 }
@@ -650,6 +663,39 @@ a { color: inherit; text-decoration: none; }
 .socials { display: flex; gap: 22px; }
 .socials a { font-weight: 700; color: var(--text-muted); font-size: 0.88rem; transition: color 0.2s ease; }
 .socials a:hover { color: var(--accent); }
+
+/* Locked case study modal. #lock-modal appears twice: on index.html it opens
+   only when a .project-card.locked link is clicked; on the Jugnu case-study
+   page it opens automatically on load (script.js checks its data-auto-open
+   attribute) and sends every dismissal back to the homepage instead of
+   revealing the page underneath. */
+.lock-modal {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.lock-modal[hidden] { display: none; }
+.lock-modal-backdrop { position: absolute; inset: 0; background: rgba(27,23,48,0.55); }
+.lock-modal-card {
+  position: relative; z-index: 1; max-width: 380px; width: 100%;
+  background: var(--card); border-radius: 24px; border: 1px solid var(--border);
+  box-shadow: 0 30px 60px rgba(20,20,40,0.25);
+  padding: 36px 32px; text-align: center;
+}
+.lock-modal-close {
+  position: absolute; top: 16px; right: 16px; width: 32px; height: 32px;
+  border-radius: 50%; border: none; background: var(--bg-alt); color: var(--text-muted);
+  font-size: 1.2rem; line-height: 1; cursor: pointer; font-family: var(--font-body);
+  display: flex; align-items: center; justify-content: center;
+}
+.lock-modal-close:hover { color: var(--text); }
+.lock-modal-icon {
+  width: 56px; height: 56px; margin: 0 auto 20px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 16px; background: var(--bg-alt); color: var(--accent);
+}
+.lock-modal-icon svg { width: 26px; height: 26px; }
+.lock-modal-card h3 { font-size: 1.3rem; text-transform: none; margin-bottom: 10px; }
+.lock-modal-card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; }
 
 /* Responsive */
 @media (max-width: 760px) {

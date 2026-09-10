@@ -2,6 +2,48 @@
 var yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+// Locked case study modal. #lock-modal appears on two pages with different
+// triggers: on index.html it opens when a .project-card.locked link is
+// clicked (currently just Jugnu); on the Jugnu case-study page itself it
+// opens automatically on load via its data-auto-open attribute, and every
+// way of dismissing it (backdrop, close button, Escape) sends the visitor
+// back to the homepage instead of ever revealing the page underneath.
+(function () {
+  var modal = document.getElementById('lock-modal');
+  if (!modal) return;
+
+  var redirectTo = modal.getAttribute('data-auto-open');
+
+  function openModal() {
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    if (redirectTo) {
+      window.location.href = redirectTo;
+      return;
+    }
+    modal.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  modal.querySelectorAll('[data-lock-close]').forEach(function (el) {
+    el.addEventListener('click', closeModal);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.hidden) closeModal();
+  });
+
+  if (redirectTo) openModal();
+
+  document.querySelectorAll('.project-card.locked .project-link').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      openModal();
+    });
+  });
+})();
+
 // Hero role word (home page only): cycles Designer. → Thinker. → Marketeer. →
 // Strategist. → All-Rounder. → repeat, with a quick fade+rise swap. The full
 // stop lives inside the span (not after it in the HTML), so it swaps in and
