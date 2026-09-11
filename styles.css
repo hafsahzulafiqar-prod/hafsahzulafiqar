@@ -409,10 +409,15 @@ a { color: inherit; text-decoration: none; }
    tablet mockup sits high in the frame with a hand at the very bottom. */
 .project-thumb.thumb-purecs-hero,
 .project-thumb.thumb-jugnu-hero,
-.project-thumb.thumb-mualim-hero,
 .project-thumb.thumb-kahunas-hero,
 .case-hero-image.thumb-kahunas-hero {
   background-position: top;
+}
+/* Mualim's hero has a band of empty gradient above the laptop mockup, so a
+   plain top crop shows mostly blank space on the short card thumbnail —
+   nudge the crop window down past it instead of all the way to the top. */
+.project-thumb.thumb-mualim-hero {
+  background-position: center 22%;
 }
 .project-body { padding: 22px; }
 .project-body h3 { font-size: 1.15rem; margin-bottom: 8px; text-transform: none; }
