@@ -67,6 +67,7 @@ portfolio-site/
 | `--primary` | `#7FB2F0` | Solid accent — hero headline, profile photo, stat rules (light blue) |
 | `--secondary` | `#E28FD0` | Solid accent — chat dot, stat rules (pink) |
 | `--accent` | `#A78BFA` | Solid accent — eyebrow bar, stat rules, hover states (purple) |
+| `--heading` | `#1B4C7A` | Solid heading color — hero `<h1>`, Jugnu case-study empathy-map labels (dark blue) |
 | `--btn-color` | `#BDE3FF` | Solid fill for every button (`.btn-primary`, `.nav-cta`) and the user's chat bubble |
 | `--btn-text` | `#17142A` | Text color on `--btn-color` surfaces (buttons, the user's chat bubble) |
 | `--border` | `rgba(27,23,48,0.08)` | Hairlines on cards, nav, inputs |
@@ -98,9 +99,10 @@ re-theme the whole site.
 - **Body** (`--font-body`): DM Sans, weights 400/500/700 — used for subheadings, nav,
   body copy, and the chat UI. Loads from Google Fonts via `<link>` tags in each page's
   `<head>`.
-- The hero `<h1>` is a flat solid `--accent` (purple). It used to be a gradient
-  text-fill across primary → secondary → accent; this pass flattened it along with
-  every other decorative gradient on the site (see Color palette above).
+- The hero `<h1>` is a flat solid `--heading` (dark blue), changed from `--accent`
+  (purple) in a later pass. Before that it was a gradient text-fill across
+  primary → secondary → accent; that pass flattened it along with every other
+  decorative gradient on the site (see Color palette above).
 
 ### Layout
 
