@@ -312,8 +312,8 @@ main { position: relative; }
 .chat-card-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; }
 .chat-dot {
   width: 10px; height: 10px; border-radius: 50%;
-  background: var(--secondary);
-  box-shadow: 0 0 12px rgba(226,143,208,0.6);
+  background: var(--heading);
+  box-shadow: 0 0 12px rgba(27,76,122,0.6);
   flex-shrink: 0;
 }
 .chat-card-header h2 { font-size: 1.05rem; text-transform: none; }
