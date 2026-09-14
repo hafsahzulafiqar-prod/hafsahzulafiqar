@@ -563,13 +563,17 @@ main { position: relative; }
   gap: 28px;
 }
 .testimonial-card {
-  display: flex; flex-direction: column; gap: 22px;
+  display: flex; flex-direction: column; gap: 18px;
   background: var(--card); border: 1px solid var(--border); border-radius: 20px;
   padding: 30px;
 }
 .testimonial-quote-mark {
   font-family: var(--font-display); font-size: 2.6rem; line-height: 1;
   color: var(--accent);
+  /* The glyph's own font metrics leave a lot of empty space beneath it before
+     the next flex item, on top of the card's own gap — pull it in so the
+     mark reads as attached to the quote instead of floating above it. */
+  margin-bottom: -22px;
 }
 .testimonial-text { color: var(--text); font-size: 1rem; line-height: 1.6; flex-grow: 1; }
 .testimonial-person { display: flex; align-items: center; gap: 12px; }
@@ -581,8 +585,11 @@ main { position: relative; }
   width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
   background: var(--primary); object-fit: cover;
 }
-.testimonial-name { font-weight: 700; font-size: 0.95rem; }
-.testimonial-title { color: var(--text-muted); font-size: 0.85rem; }
+/* .testimonial-name/-title are <p> tags, which carry a browser default
+   top/bottom margin — reset it so the name and title sit tight together
+   as one block instead of spaced like separate paragraphs. */
+.testimonial-name { font-weight: 700; font-size: 0.95rem; margin: 0 0 2px; }
+.testimonial-title { color: var(--text-muted); font-size: 0.85rem; margin: 0; }
 
 /* Closing CTA glow */
 .section-glow { position: relative; overflow: hidden; }
