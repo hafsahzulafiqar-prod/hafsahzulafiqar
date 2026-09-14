@@ -717,6 +717,17 @@ main { position: relative; }
   background: var(--bg-alt); border: 1px dashed var(--border);
 }
 
+/* Real-image grid (e.g. early exploration screens) — unlike .case-gallery's
+   dashed placeholder boxes, these are actual <img> tags. */
+.case-exploration-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px; margin: 20px 0 40px;
+}
+.case-exploration-grid img {
+  display: block; width: 100%; height: auto;
+  border-radius: 14px; border: 1px solid var(--border);
+}
+
 .case-flow-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
 .case-flow-tags button {
   font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
