@@ -444,6 +444,11 @@ main { position: relative; }
   background-size: cover;
   background-position: center;
 }
+.thumb-fitt-hero {
+  background-image: url('assets/fitt-meals/hero.png');
+  background-size: cover;
+  background-position: center;
+}
 /* Card thumbnails (short, cropped strip) align every hero shot to the top so
    the mockup isn't cut off mid-frame. The full-bleed case-study banner keeps
    a centered crop by default — Kahunas's banner is top-aligned too since its
@@ -451,6 +456,7 @@ main { position: relative; }
 .project-thumb.thumb-purecs-hero,
 .project-thumb.thumb-jugnu-hero,
 .project-thumb.thumb-kahunas-hero,
+.project-thumb.thumb-fitt-hero,
 .case-hero-image.thumb-kahunas-hero {
   background-position: top;
 }
