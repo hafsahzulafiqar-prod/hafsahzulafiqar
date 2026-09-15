@@ -260,3 +260,86 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   window.addEventListener('resize', onScroll);
   update();
 })();
+
+// "Thinking orb" above the chat card (home page only): a sphere built from
+// small dots spread evenly across its surface (a Fibonacci sphere — the
+// standard way to distribute N points roughly uniformly over a sphere),
+// rotated a little more each frame and re-projected to 2D. Dots further
+// around the back (lower z after rotation) are drawn smaller and fainter
+// so the whole thing reads as a solid rotating 3D orb of particles rather
+// than a flat pattern. Draws one static frame under prefers-reduced-motion
+// instead of animating.
+(function () {
+  var canvas = document.querySelector('.thinking-orb-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  var POINT_COUNT = 140;
+  var points = [];
+  var offset = 2 / POINT_COUNT;
+  var increment = Math.PI * (3 - Math.sqrt(5));
+  for (var i = 0; i < POINT_COUNT; i++) {
+    var y = (i * offset) - 1 + offset / 2;
+    var r = Math.sqrt(Math.max(0, 1 - y * y));
+    var phi = i * increment;
+    points.push([Math.cos(phi) * r, y, Math.sin(phi) * r]);
+  }
+
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var size = 0;
+
+  function resize() {
+    size = canvas.clientWidth;
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var angle = 0;
+  var t = 0;
+
+  function draw() {
+    var cx = size / 2;
+    var cy = size / 2;
+    var radius = size * 0.46;
+    var pulse = 1 + Math.sin(t) * 0.03;
+    var cos = Math.cos(angle);
+    var sin = Math.sin(angle);
+
+    ctx.clearRect(0, 0, size, size);
+
+    var rotated = points.map(function (p) {
+      return [p[0] * cos + p[2] * sin, p[1], -p[0] * sin + p[2] * cos];
+    });
+    // Back-to-front so nearer dots draw over farther ones.
+    rotated.sort(function (a, b) { return a[2] - b[2]; });
+
+    rotated.forEach(function (p) {
+      var depth = (p[2] + 1) / 2;
+      var dotRadius = (0.7 + depth * 1.3) * (size / 64);
+      var alpha = 0.2 + depth * 0.75;
+      var px = cx + p[0] * radius * pulse;
+      var py = cy + p[1] * radius * pulse;
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(27,76,122,' + alpha + ')';
+      ctx.arc(px, py, dotRadius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    draw();
+    return;
+  }
+
+  function loop() {
+    angle += 0.01;
+    t += 0.04;
+    draw();
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();

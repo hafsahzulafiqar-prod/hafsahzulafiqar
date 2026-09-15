@@ -50,7 +50,7 @@ a { color: inherit; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .marquee-track { animation: none !important; }
-  .orb { animation: none !important; }
+  .chat-card::after { animation: none !important; }
   .hero-aurora::before { animation: none !important; }
 }
 
@@ -278,28 +278,16 @@ main { position: relative; }
 .btn.big { font-size: 1.1rem; padding: 18px 36px; }
 
 /* Chat card */
-.orb {
-  position: absolute;
-  top: -130px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 280px;
-  height: 280px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, rgba(189,227,255,0.95) 0%, rgba(189,227,255,0.45) 45%, rgba(189,227,255,0) 72%);
-  pointer-events: none;
-  animation: orb-pulse 6s ease-in-out infinite;
-  z-index: 0;
-}
-
-/* Pulses (scale/opacity) and drifts (translate) at once, so the orb both
-   breathes and wanders gently rather than staying pinned in place. */
-@keyframes orb-pulse {
-  0%, 100% { transform: translate(-50%, 0) scale(1); opacity: 0.85; }
-  25% { transform: translate(calc(-50% + 16px), -12px) scale(1.06); opacity: 0.95; }
-  50% { transform: translate(calc(-50% - 10px), 8px) scale(1.1); opacity: 1; }
-  75% { transform: translate(calc(-50% + 12px), 10px) scale(1.05); opacity: 0.95; }
-}
+/* A compact "thinking" indicator above the chat header — a sphere made of
+   many small dots spread evenly over its surface and rotated, so it reads
+   as a solid rotating 3D orb of particles rather than a flat ring. The
+   dot layout and rotation are computed in script.js (Fibonacci-sphere
+   point distribution, drawn to a <canvas>) since that geometry isn't
+   practical in CSS alone; this just sizes the container the canvas fills.
+   Sits in normal flow (not absolutely overlapping the card edge) so it
+   isn't clipped by .chat-card's own overflow:hidden. */
+.thinking-orb { width: 64px; height: 64px; margin: 0 auto 18px; }
+.thinking-orb-canvas { display: block; width: 100%; height: 100%; }
 
 .chat-card {
   width: 100%;
@@ -319,7 +307,38 @@ main { position: relative; }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .chat-card { background: var(--card); }
 }
-.chat-content { position: relative; z-index: 1; padding-top: 64px; text-align: left; }
+
+/* Border beam: a single-hue (mono) light chasing around the card's edge.
+   The ring is a conic-gradient hollowed out to just its border thickness
+   via mask-composite:exclude, so only a thin rotating band is visible —
+   the card's own fill and content are untouched. @property lets the
+   custom angle animate smoothly through the gradient instead of jumping;
+   browsers without @property support just show a static ring (no spin),
+   a harmless fallback rather than a broken one. */
+@property --border-beam-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.chat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(from var(--border-beam-angle), transparent 0%, transparent 74%, rgba(27,76,122,0.25) 84%, #1B4C7A 92%, rgba(27,76,122,0.25) 97%, transparent 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-beam-spin 4.5s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+@keyframes border-beam-spin {
+  to { --border-beam-angle: 360deg; }
+}
+
+.chat-content { position: relative; z-index: 1; padding-top: 6px; text-align: left; }
 .chat-card-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; }
 .chat-dot {
   width: 10px; height: 10px; border-radius: 50%;
@@ -1007,8 +1026,7 @@ main { position: relative; }
   .profile-photo { width: 84px; height: 84px; margin-bottom: 18px; }
   .marquee { padding: 20px 0; }
   .chat-card { padding: 24px; }
-  .orb { width: 200px; height: 200px; top: -90px; }
-  .chat-content { padding-top: 46px; }
+  .thinking-orb { width: 48px; height: 48px; margin-bottom: 14px; }
   .case-hero-image { height: 220px; }
   .case-compare-shot { height: 220px; }
   .case-design-system img { width: auto; height: 480px; max-width: none; }
