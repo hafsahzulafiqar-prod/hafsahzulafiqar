@@ -210,3 +210,53 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     chip.addEventListener('click', function () { ask(chip.getAttribute('data-question')); });
   });
 })();
+
+// Home-page work stack (".work-stack .work-stack-card" — see styles.css):
+// the stacking/overlap itself is pure CSS (position: sticky with a staggered
+// `top` per card), so it works with zero JS. This just adds a "shuffle" depth
+// cue on top of that: once a later card has scrolled up and is sitting on
+// top of an earlier one, the covered card scales down and dims slightly, so
+// the deck reads as having real depth rather than flat overlapping rectangles.
+// Skipped entirely under prefers-reduced-motion, same as the other
+// scroll-driven effects on this page — the plain sticky stack still works
+// fine without it, just without the scale/dim.
+(function () {
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.work-stack .work-stack-card'));
+  if (!cards.length) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var ticking = false;
+
+  function update() {
+    ticking = false;
+    var stuck = cards.map(function (card) {
+      var top = parseFloat(getComputedStyle(card).top) || 0;
+      return card.getBoundingClientRect().top <= top + 1;
+    });
+    cards.forEach(function (card, i) {
+      if (!stuck[i]) {
+        card.style.transform = '';
+        card.style.filter = '';
+        return;
+      }
+      var behind = 0;
+      for (var j = i + 1; j < cards.length; j++) {
+        if (stuck[j]) behind++;
+      }
+      var scale = Math.max(0.92, 1 - behind * 0.025);
+      var dim = Math.max(0.75, 1 - behind * 0.07);
+      card.style.transform = 'scale(' + scale + ')';
+      card.style.filter = 'brightness(' + dim + ')';
+    });
+  }
+
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
+})();

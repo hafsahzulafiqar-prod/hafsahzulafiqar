@@ -406,7 +406,7 @@ main { position: relative; }
    resume.html) get the pointer cursor and the focus-visible border cue. */
 .project-card:has(.project-link) { cursor: pointer; }
 .project-card:has(.project-link:focus-visible) { border-color: var(--accent); }
-.project-thumb { height: 130px; position: relative; }
+.project-thumb { height: 170px; position: relative; }
 .project-thumb-lock {
   position: absolute; top: 14px; right: 14px; z-index: 2;
   display: flex; align-items: center; gap: 6px;
@@ -456,9 +456,17 @@ main { position: relative; }
 .project-thumb.thumb-purecs-hero,
 .project-thumb.thumb-jugnu-hero,
 .project-thumb.thumb-kahunas-hero,
-.project-thumb.thumb-fitt-hero,
 .case-hero-image.thumb-kahunas-hero {
   background-position: top;
+}
+/* FITT Meals card: shifted left (rather than centered) so the laptop reads
+   fully instead of being cropped evenly off both edges. */
+/* This image fills the card's width exactly under plain `cover` (it only
+   crops top/bottom), leaving no horizontal room to pan — zoom in a bit so
+   background-position-x actually has slack to shift left. */
+.project-thumb.thumb-fitt-hero {
+  background-size: 115% auto;
+  background-position: 35% top;
 }
 /* Mualim's hero has a band of empty gradient above the laptop mockup, so a
    plain top crop shows mostly blank space on the short card thumbnail —
@@ -477,6 +485,34 @@ main { position: relative; }
    positioning resolves against .project-card (position:relative) instead. */
 .project-link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
 .project-card:hover .project-link .arrow { margin-left: 8px; }
+
+/* Scroll-driven stacking cards (home page "The work." section). Each card is
+   sticky with a slightly deeper `top` than the one before it, so as the page
+   scrolls, cards pile up under the floating nav one at a time — the next
+   card's sticky point is a little lower, so it comes to rest just below the
+   previous card's top edge, leaving a "peeking" sliver visible and reading
+   as an overlapping deck. This is the whole effect: no scroll-jacking, no
+   JS required for the core mechanic (script.js adds a small depth-scale
+   polish on top — see the work-stack block there). Generous margin-bottom
+   per card (not card height) is what gives each reveal room to scroll
+   through, so the cards themselves stay the same size as the .my-work.html
+   grid version. */
+.work-stack { position: relative; padding: 8px 0 40px; }
+.work-stack .work-stack-card {
+  position: sticky;
+  max-width: 640px;
+  margin: 0 auto;
+  margin-bottom: 55vh;
+  box-shadow: 0 24px 50px rgba(27,23,48,0.16);
+  will-change: transform;
+  transition: transform 0.2s ease-out, filter 0.2s ease-out;
+}
+.work-stack .work-stack-card:last-child { margin-bottom: 0; }
+.work-stack .work-stack-card:nth-child(1) { top: 110px; }
+.work-stack .work-stack-card:nth-child(2) { top: 138px; }
+.work-stack .work-stack-card:nth-child(3) { top: 166px; }
+.work-stack .work-stack-card:nth-child(4) { top: 194px; }
+.work-stack .work-stack-card:nth-child(5) { top: 222px; }
 
 /* Tags */
 .tags { display: flex; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
@@ -957,6 +993,12 @@ main { position: relative; }
   .how-bubble { width: 96px; height: 96px; }
   .how-bubble-number { font-size: 1.6rem; }
   .section-glow::before { width: 600px; height: 300px; bottom: -140px; }
+  .work-stack .work-stack-card { margin-bottom: 40vh; }
+  .work-stack .work-stack-card:nth-child(1) { top: 88px; }
+  .work-stack .work-stack-card:nth-child(2) { top: 106px; }
+  .work-stack .work-stack-card:nth-child(3) { top: 124px; }
+  .work-stack .work-stack-card:nth-child(4) { top: 142px; }
+  .work-stack .work-stack-card:nth-child(5) { top: 160px; }
 }
 
 @media (max-width: 360px) {
