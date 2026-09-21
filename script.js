@@ -384,6 +384,7 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
       card.classList.toggle('is-before', i < activeIndex);
       card.classList.toggle('is-after', i > activeIndex);
     });
+    document.dispatchEvent(new Event('cs:change'));
   }
   function update() {
     ticking = false;
@@ -564,165 +565,6 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   update();
 })();
 
-// Hero 3D block grid (home page only, ".grid-scene" — see styles.css).
-// Wide slabs on a tilted plane seen from a low camera. Each cell is a static
-// hit target at z=0; the block inside it rises on a per-block spring while
-// hovered, revealing a blue floor glow beneath it. One rAF loop runs only
-// while something is still moving, and an idle wave keeps the page alive.
-// Under prefers-reduced-motion nothing moves: hover just fades the glow.
-(function () {
-  var scene = document.querySelector('.grid-scene');
-  if (!scene) return;
-  var hero = scene.parentElement;
-  var plane = scene.querySelector('.grid-plane');
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce) scene.classList.add('is-reduced');
-
-  // Rise is quick and near-critically damped; the fall is softer and lets the
-  // block touch down with a small rebound (RESTITUTION) instead of a bounce.
-  var RISE = { k: 220, c: 24 }, FALL = { k: 100, c: 13 };
-  var RESTITUTION = 0.28;
-  var IDLE_MS = 3000, WAVE_EVERY = 8000, WAVE_MS = 3600;
-
-  var cells = [], cols = 0, rows = 0, maxLift = 64;
-  var active = -1, running = false, last = 0;
-  var idleTimer = 0, waveStart = 0;
-
-  function cssPx(name) { return parseFloat(getComputedStyle(scene).getPropertyValue(name)); }
-
-  function build() {
-    var vw = hero.clientWidth, vh = hero.clientHeight;
-    if (!vw || !vh) return;
-    plane.textContent = ''; cells = [];
-    var gap = cssPx('--gap'), bw = cssPx('--block-w'), bd = cssPx('--block-d');
-    var size = Math.ceil(2.2 * Math.max(vw, vh));
-    if (vw < 760) { // fewer, larger blocks on phones
-      bw = vw * 0.42 - gap; bd = bw / 2.4;
-      scene.style.setProperty('--block-w', bw + 'px'); scene.style.setProperty('--block-d', bd + 'px');
-    } else { scene.style.removeProperty('--block-w'); scene.style.removeProperty('--block-d'); }
-    maxLift = cssPx('--lift-max');
-    var pw = bw + gap, pd = bd + gap, depth = size * 2.6; // long far side so rows recede to the horizon
-    cols = Math.ceil(size / pw); rows = Math.ceil(depth / pd);
-    var W = cols * pw, H = rows * pd;
-    plane.style.width = W + 'px'; plane.style.height = H + 'px';
-    plane.style.marginLeft = -W / 2 + 'px'; plane.style.marginTop = -H / 2 + 'px';
-
-    var frag = document.createDocumentFragment();
-    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
-      var el = document.createElement('div');
-      el.className = 'grid-cell';
-      el.style.cssText = 'left:' + c * pw + 'px;top:' + r * pd + 'px;width:' + pw + 'px;height:' + pd + 'px';
-      el.innerHTML = '<i class="grid-glow"></i><div class="grid-block"><i class="grid-top"></i><i class="grid-front"></i><i class="grid-side"></i></div>';
-      frag.appendChild(el);
-      cells.push({ el: el, c: c, r: r, glow: el.firstChild, block: el.lastChild,
-        top: el.lastChild.children[0], front: el.lastChild.children[1],
-        lift: 0, v: 0, target: 0, shown: 0 });
-    }
-    plane.appendChild(frag);
-
-    // Drop cells that project entirely off the hero so we animate ~200-300.
-    var hb = hero.getBoundingClientRect(), keep = [], m = 220, rects = cells.map(function (o) { return o.el.getBoundingClientRect(); });
-    cells.forEach(function (o, i) {
-      var b = rects[i];
-      var off = !b.width || b.width > 4 * vw || b.height < 2.5 || b.bottom < hb.top - m || b.top > hb.bottom + m || b.right < hb.left - m || b.left > hb.right + m;
-      if (off) o.el.remove(); else keep.push(o);
-    });
-    cells = keep;
-    for (var i = 0; i < cells.length; i++) cells[i].el._i = i;
-    active = -1;
-  }
-
-  function write(o) {
-    if (Math.abs(o.lift - o.shown) < 0.0008 && o.lift !== 0) return;
-    o.shown = o.lift;
-    var l = o.lift < 0 ? 0 : o.lift;
-    o.block.style.transform = 'translate3d(0,0,' + (l * maxLift).toFixed(2) + 'px)';
-    o.glow.style.opacity = Math.min(0.9, l * 0.9).toFixed(3);
-    o.top.style.setProperty('--lift', l.toFixed(3));
-    o.front.style.setProperty('--lift', l.toFixed(3));
-  }
-
-  function retarget(t) {
-    var wave = waveStart ? (t - waveStart) / WAVE_MS : -1;
-    var ac = active >= 0 ? cells[active] : null;
-    for (var i = 0; i < cells.length; i++) {
-      var o = cells[i], v = 0;
-      if (ac) {
-        var d = Math.sqrt((o.c - ac.c) * (o.c - ac.c) + (o.r - ac.r) * (o.r - ac.r));
-        v = d === 0 ? 1 : d <= 1.5 ? 0.35 * (1 - (d - 1) / 0.5) : 0;
-        if (v < 0) v = 0;
-      }
-      if (wave >= 0 && wave <= 1.25) {
-        // A soft ridge travelling from the far rows toward the camera.
-        var p = 1 - o.r / rows, x = (wave * 1.25 - p) / 0.09;
-        var w = 0.5 * Math.exp(-x * x);
-        if (w > v) v = w;
-      }
-      o.target = v;
-    }
-    if (wave > 1.25) waveStart = 0;
-  }
-
-  function tick(t) {
-    var dt = Math.min((t - last) / 1000, 1 / 30); last = t;
-    retarget(t);
-    var moving = false;
-    for (var i = 0; i < cells.length; i++) {
-      var o = cells[i], s = o.target > o.lift ? RISE : FALL;
-      o.v += (s.k * (o.target - o.lift) - s.c * o.v) * dt;
-      o.lift += o.v * dt;
-      if (o.lift < 0) { o.lift = 0; o.v = o.v < -0.05 ? -o.v * RESTITUTION : 0; }
-      if (Math.abs(o.target - o.lift) < 0.0015 && Math.abs(o.v) < 0.01) { o.lift = o.target; o.v = 0; }
-      else moving = true;
-      write(o);
-    }
-    if (moving || active >= 0 || waveStart) requestAnimationFrame(tick); else running = false;
-  }
-  function wake() {
-    if (reduce || running) return;
-    running = true; last = performance.now(); requestAnimationFrame(tick);
-  }
-
-  function scheduleIdle(delay) {
-    clearTimeout(idleTimer);
-    if (reduce) return;
-    idleTimer = setTimeout(function () {
-      waveStart = performance.now(); wake();
-      scheduleIdle(WAVE_EVERY);
-    }, delay);
-  }
-
-  function setActive(i) {
-    if (i === active) return;
-    if (reduce) {
-      if (active >= 0 && cells[active]) cells[active].el.classList.remove('is-hot');
-      if (i >= 0) cells[i].el.classList.add('is-hot');
-    }
-    active = i; wake();
-  }
-  function onPoint(e) {
-    waveStart = 0; scheduleIdle(IDLE_MS);
-    var el = document.elementFromPoint(e.clientX, e.clientY);
-    var cell = el && el.closest && el.closest('.grid-cell');
-    if (cell) setActive(cell._i);
-    else if (!el || !el.closest('.hero-circle')) return;
-    else setActive(-1);
-  }
-  function onLeave() { setActive(-1); scheduleIdle(IDLE_MS); }
-
-  hero.addEventListener('pointermove', onPoint);
-  hero.addEventListener('pointerdown', onPoint);
-  hero.addEventListener('pointerleave', onLeave);
-  hero.addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') onLeave(); });
-  hero.addEventListener('pointercancel', onLeave);
-
-  var rt = 0;
-  function rebuild() { clearTimeout(rt); rt = setTimeout(function () { build(); wake(); }, 120); }
-  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(rebuild).observe(hero);
-  else window.addEventListener('resize', rebuild);
-  build();
-  scheduleIdle(IDLE_MS);
-})();
 
 // Back links follow the visitor's actual path: when they arrived from another
 // page on this site, "Back" returns there (history.back keeps scroll position)
@@ -748,11 +590,43 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   });
 })();
 
-// Autoplaying videos hold on their poster frame for visitors who prefer
-// reduced motion.
+// Videos ("video", muted loops): start only while visible and stay paused
+// otherwise, so several never decode at once. Inside the pinned case study
+// deck only the active card's video plays. JS sets the muted state itself and
+// retries on first interaction, since some browsers (Safari, low power mode)
+// refuse the first autoplay. Reduced-motion visitors keep the poster frame.
 (function () {
-  if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
-  document.querySelectorAll('video[autoplay]').forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); });
+  var vids = Array.prototype.slice.call(document.querySelectorAll('video'));
+  if (!vids.length) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var visible = new Map();
+  vids.forEach(function (v) { v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true; });
+  if (reduce) return;
+
+  function wanted(v) {
+    if (!visible.get(v)) return false;
+    var card = v.closest('.case-studies-card');
+    if (card && card.closest('.case-studies.is-pinned')) return card.classList.contains('active');
+    return true;
+  }
+  function sync(v) {
+    if (wanted(v)) {
+      if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    } else if (!v.paused) v.pause();
+  }
+  function syncAll() { vids.forEach(sync); }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { visible.set(e.target, e.isIntersecting); sync(e.target); });
+    }, { threshold: 0.25 });
+    vids.forEach(function (v) { io.observe(v); });
+  } else vids.forEach(function (v) { visible.set(v, true); });
+
+  document.addEventListener('cs:change', syncAll);
+  ['pointerdown', 'touchstart', 'keydown', 'scroll'].forEach(function (t) {
+    document.addEventListener(t, function once() { document.removeEventListener(t, once); syncAll(); }, { passive: true });
+  });
 })();
 
 // Initial concept / Final outcome toggles (case study pages, "[data-case-toggle]").
