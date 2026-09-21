@@ -4,15 +4,25 @@
   --card: #FFFFFF;
   --text: #1B1730;
   --text-muted: #6B6684;
-  --primary: #7FB2F0;
-  --secondary: #E28FD0;
-  --accent: #1B4C7A;
-  --heading: #1B4C7A;
-  --btn-color: #BDE3FF;
-  --btn-text: #17142A;
+  --primary: #4F7DF3;
+  --secondary: #4F7DF3;
+  --accent: #4F7DF3;
+  --heading: #1B1730;
+  --btn-color: #4F7DF3;
+  --btn-text: #FFFFFF;
   --border: rgba(27,23,48,0.08);
-  --font-display: "Impact", "Haettenschweiler", "Arial Narrow Bold", sans-serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  /* Stronger-than-built-in curves: ease-out for anything entering or
+     responding to input, ease-in-out for on-screen movement. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  /* ui-rounded is the standard CSS keyword for the system rounded face
+     (renders as SF Pro Rounded on Apple platforms); named SF fallbacks
+     cover browsers that recognize the family name but not the generic
+     keyword, and DM Sans (already loaded) is the non-Apple fallback.
+     --font-display used to be Impact — replaced everywhere so display
+     and body text share the same SF Pro Rounded family. */
+  --font-display: ui-rounded, "SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, 'DM Sans', system-ui, sans-serif;
+  --font-body: ui-rounded, "SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, 'DM Sans', system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -55,72 +65,53 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* Nav */
+/* A plain full-width bar (not the floating rounded capsule the rest of
+   the site used before) — logo left, links + CTA right, thin bottom
+   border instead of a shadow. */
 .site-header {
   position: sticky;
-  top: 20px;
+  top: 0;
   z-index: 50;
-  padding: 0 24px;
-  margin-bottom: -76px; /* pulls hero up under the floating capsule */
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 
-/* Grid (not flex) so the middle column — "My Work" — sits at the true
-   center of the capsule regardless of how wide the logo or the
-   Resume+CTA group on either side are; minmax(0,1fr) lets those two
-   side columns match widths exactly instead of growing to fit content. */
 .nav-capsule {
   max-width: 1100px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+  display: flex;
   align-items: center;
   gap: 24px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 10px 10px 10px 22px;
-  box-shadow: 0 12px 30px rgba(27,23,48,0.08);
+  padding: 16px 24px;
 }
 
 .logo {
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  font-size: 1.1rem;
-  letter-spacing: 0.02em;
-  color: var(--text);
-  white-space: nowrap;
-  justify-self: start;
-}
-
-.logo .dot { color: var(--secondary); }
-
-.nav-links { display: flex; align-items: center; gap: 22px; justify-self: center; }
-
-/* Resume sits with the CTA button rather than with "My Work" in the
-   centered nav-links group. */
-.nav-right { display: flex; align-items: center; gap: 22px; justify-self: end; }
-
-.nav-links a, .nav-resume {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
   font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
   letter-spacing: 0.04em;
-  transition: color 0.15s ease;
+  text-transform: uppercase;
+  color: var(--text);
   white-space: nowrap;
 }
 
-.nav-links a:hover, .nav-links a:focus-visible, .nav-links a[aria-current="page"],
-.nav-resume:hover, .nav-resume:focus-visible, .nav-resume[aria-current="page"] {
-  color: var(--text);
+.logo-avatar {
+  flex-shrink: 0;
+  font-size: 1.05rem; font-weight: 800; letter-spacing: 0.01em; line-height: 1;
+  color: var(--heading);
 }
+
+.nav-right { display: flex; align-items: center; justify-content: flex-end; gap: 22px; margin-left: auto; }
 
 .nav-cta {
-  background: var(--btn-color);
-  color: var(--btn-text);
+  background: var(--primary);
+  color: #fff;
   font-weight: 700;
   font-size: 0.85rem;
   padding: 10px 20px;
-  border-radius: 999px;
+  border-radius: 16px;
   white-space: nowrap;
 }
 
@@ -157,11 +148,147 @@ a { color: inherit; text-decoration: none; }
   to { transform: translateX(-50%); }
 }
 
+/* Case studies (home page, right after the hero).
+   Default rendering: the 3 case studies stacked as normal white cards in
+   normal document flow, all visible at once — this is the real content,
+   and what no-JS/prefers-reduced-motion visitors get.
+   Enhanced rendering (script.js adds .is-pinned to the section, motion
+   allowed only): the section becomes 3x the viewport tall and its inner
+   .case-studies-sticky pins for that whole distance. Each card is now
+   absolutely stacked on the others at identical position — matching
+   georgegeo.vercel.app's actual "deck" pattern (verified by inspecting
+   its DOM: each slide is one self-contained absolutely-positioned unit
+   toggled by a `.is-current`-equivalent class, not a shared text panel
+   with a separately animated image) — and only the .active one is
+   visible, crossfading in. Because every card's text sits at the exact
+   same layout position, the text reads as staying put across the swap;
+   the image gets its own extra translateY so it visibly rises into place
+   on top of that. The shared counter/heading above the stack never
+   changes position — only its number updates. */
+.case-studies { padding: 40px 0; }
+.case-studies-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px; }
+.case-studies-counter { font-weight: 700; color: var(--text-muted); font-size: 1.1rem; }
+.case-studies-counter .cs-current { color: var(--heading); }
+.case-studies-heading {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  color: var(--heading);
+}
+.case-studies-stack { display: flex; flex-direction: column; gap: 40px; }
+.case-studies-card {
+  /* Needed so .project-link::after (position:absolute; inset:0 — see its
+     rule for why) resolves against this card instead of escaping to the
+     nearest positioned ancestor up the tree (or the page itself, with no
+     positioned ancestor at all) and covering far more than this one card
+     — .project-link was written for .project-card, which already sets
+     this, so every other place that reuses the class needs its own. */
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 56px;
+}
+/* The media is its own block, separate from the text: no shared card
+   background, so the picture and the copy sit directly on the page. */
+.case-studies-media {
+  flex: 1 1 64%;
+  aspect-ratio: 4 / 3;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(27,23,48,0.10);
+  background-size: cover;
+  background-position: center;
+}
+.case-studies-info { flex: 1 1 30%; max-width: 420px; }
+.case-studies-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.case-studies-title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  color: var(--heading);
+  margin-bottom: 24px;
+}
+/* Results grid — matches the Figma frame's "Results" stat block on each
+   card. The real numbers aren't final yet, so each value/caption is a
+   plain gray placeholder bar (like the image boxes) rather than invented
+   figures — swap .ph-number/.ph-caption for real text once the stats are
+   ready. */
+.case-studies-results { margin-bottom: 24px; }
+.case-studies-results-label {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.case-studies-results-grid {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 16px 32px;
+}
+.ph { display: block; border-radius: 6px; background: var(--bg-alt); }
+.ph-number { width: 64px; height: 26px; margin-bottom: 8px; }
+.ph-caption { width: 88px; height: 12px; }
+
+/* --- Enhanced (pinned) rendering --- */
+.case-studies.is-pinned { position: relative; height: 300vh; padding: 0; }
+/* Scoped to .is-pinned like every other rule in this block — sticky +
+   100vh + align-items:center only makes sense once the section is tall
+   enough (300vh, above) to pin against and the panel is height-capped to
+   match (below). Without .is-pinned (mobile, or reduced-motion), this
+   must NOT apply: centering the full un-capped 3-card stack inside a
+   plain 100vh flex box made it overflow symmetrically above and below,
+   bleeding the cards up into the hero section. */
+.case-studies.is-pinned .case-studies-sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; }
+/* Fills nearly the full pinned viewport (not just centered at its own
+   content height) so the deck reads as a full "screen" the way the
+   reference does, rather than leaving a lot of dead space above/below a
+   much shorter card. */
+.case-studies.is-pinned .case-studies-panel { width: 100%; height: calc(100vh - 96px); display: flex; flex-direction: column; }
+.case-studies.is-pinned .case-studies-head { flex-shrink: 0; }
+.case-studies.is-pinned .case-studies-stack { position: relative; flex: 1; min-height: 0; }
+.case-studies.is-pinned .case-studies-card {
+  position: absolute;
+  inset: 0;
+  align-items: stretch;
+  pointer-events: none;
+}
+.case-studies.is-pinned .case-studies-card.active { pointer-events: auto; }
+/* Text: a quick crossfade in place. */
+.case-studies.is-pinned .case-studies-info { opacity: 0; transition: opacity 0.25s var(--ease-out); }
+.case-studies.is-pinned .case-studies-card.active .case-studies-info { opacity: 1; transition-delay: 0.12s; }
+/* Image: flies out and in. A card not yet reached waits below and rises
+   into place; one already shown keeps going and flies out past the top,
+   fading as it goes. */
+.case-studies.is-pinned .case-studies-media {
+  aspect-ratio: auto;
+  height: 100%;
+  opacity: 0;
+  transition: transform 0.6s var(--ease-out), opacity 0.4s var(--ease-out);
+}
+.case-studies.is-pinned .case-studies-card.is-after .case-studies-media { transform: translateY(160px); }
+.case-studies.is-pinned .case-studies-card.is-before .case-studies-media { transform: translateY(-160px); }
+.case-studies.is-pinned .case-studies-card.active .case-studies-media { transform: translateY(0); opacity: 1; }
+.case-studies.is-pinned .case-studies-info { align-self: center; }
+
 /* Hero */
 main { position: relative; }
-.hero { position: relative; padding: 112px 0 80px; }
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 64px 0 40px;
+}
 
-.hero .wrap { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.hero .wrap { position: relative; z-index: 1; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
 
 /* Soft, blurred color-mesh backdrop, drifting right to left in a seamless
    loop. Fixed to the viewport (not just sized to the hero) so it sits behind
@@ -197,6 +324,110 @@ main { position: relative; }
   to { background-position: -1800px 0; }
 }
 
+/* Hero icon row: five icons stacked and overlapping in one condensed row
+   (--cx, set inline in the HTML), which spreads out to an evenly spaced row
+   (--lx) as the visitor scrolls. The scroll handler in script.js only writes
+   one shared --progress (0 at the top, 1 by HERO_SCROLL_RANGE px down) onto
+   the container and every icon's transform interpolates from it. A separate
+   scale() factor (--hover-scale) rides along so hover works at any point. */
+.hero-circles {
+  position: relative;
+  width: 320px;
+  height: 64px;
+  margin: 0 auto 32px;
+}
+.hero-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 56px;
+  height: 56px;
+  margin: -28px;
+  border-radius: 50%;
+  background: #D9D9D9 center / cover no-repeat;
+  transform:
+    translate(
+      calc(var(--cx) + (var(--lx) - var(--cx)) * var(--progress, 0)),
+      0px
+    )
+    scale(var(--hover-scale, 1));
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease-out;
+  cursor: pointer;
+}
+.hero-circle:hover { --hover-scale: 1.12; }
+/* Icons run light blue to purple left to right; later DOM siblings stack on
+   top, so each icon overlaps the one before it. The thin page-colored ring
+   keeps the overlaps readable. */
+.hero-circle { box-shadow: 0 0 0 2px var(--bg); }
+.hero-circle:nth-child(1) { background-image: url('assets/icons/product-design.png'); }
+.hero-circle:nth-child(2) { background-image: url('assets/icons/growth.png'); }
+.hero-circle:nth-child(3) { background-image: url('assets/icons/research.png'); }
+.hero-circle:nth-child(4) { background-image: url('assets/icons/prototype.png'); }
+.hero-circle:nth-child(5) { background-image: url('assets/icons/crm.png'); }
+/* Neighboring circles overlap in the cluster formation, so without this
+   the tooltip of a circle whose sibling happens to sit later in the DOM
+   (e.g. CRM & Lifecycle, next to Prototyping) can render underneath that
+   neighbor. Raising the hovered/focused circle's own stacking level — not
+   just its ::after/::before — lifts the whole thing above every sibling
+   regardless of DOM order. */
+.hero-circle:hover, .hero-circle:focus-visible {
+  z-index: 10;
+}
+/* Tooltip: a plain CSS bubble (content pulled from data-label) rather
+   than the native title="" attribute, so it matches the site instead of
+   the browser's own unstyled tooltip. :focus-visible mirrors :hover so
+   keyboard users (tabindex="0" on each circle) get the same label —
+   aria-label carries the same text for screen readers, since generated
+   ::after content isn't reliably exposed to them. */
+.hero-circle::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  /* Frosted-glass approximation (backdrop-filter, no official system). */
+  background: rgba(255,255,255,0.72);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 20px rgba(27,23,48,0.12);
+  color: var(--heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 125ms var(--ease-out), transform 125ms var(--ease-out);
+  z-index: 5;
+}
+.hero-circle::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(255,255,255,0.85);
+  filter: drop-shadow(0 2px 2px rgba(27,23,48,0.08));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 5;
+}
+.hero-circle:hover::after, .hero-circle:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+.hero-circle:hover::before, .hero-circle:focus-visible::before {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-circles { --progress: 1; }
+  .hero-circle { transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease; }
+}
+
 .profile-photo {
   width: 104px;
   height: 104px;
@@ -223,11 +454,19 @@ main { position: relative; }
   margin: 0 0 6px;
 }
 
-.hero h1 {
-  font-size: clamp(2.4rem, 6vw, 4.4rem);
-  line-height: 1.05;
-  color: var(--heading);
-  margin-bottom: 18px;
+/* Static hero headline (replaces the old rotating "I'm Hafsah, the ___"
+   line) — set in the body font at a bold weight rather than the site's
+   condensed all-caps display font, matching the reference's plain,
+   mixed-case, moderately sized treatment. */
+.hero-static-title {
+  font-family: var(--font-body);
+  text-transform: none;
+  font-weight: 700;
+  font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+  line-height: 1.4;
+  color: var(--text);
+  max-width: 620px;
+  margin: 0 auto;
 }
 
 /* The rotating role word (Designer / Thinker / Marketeer / Strategist /
@@ -259,15 +498,17 @@ main { position: relative; }
 /* Buttons */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 14px 28px; border-radius: 999px; font-weight: 700; font-size: 0.95rem;
-  transition: transform 0.15s ease; border: 2px solid transparent;
+  padding: 10px 20px; border-radius: 16px; font-weight: 700; font-size: 0.85rem;
+  transition: transform 160ms var(--ease-out); border: 2px solid transparent;
 }
-.btn:hover { transform: translateY(-2px); }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover { transform: translateY(-2px); }
+}
+.btn:active { transform: scale(0.97); }
 .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
 .btn-primary {
   background: var(--btn-color);
   color: var(--btn-text);
-  box-shadow: 0 10px 24px rgba(189,227,255,0.5);
 }
 .btn-outline {
   background: var(--card);
@@ -275,7 +516,7 @@ main { position: relative; }
   border-color: var(--btn-color);
 }
 .btn-outline:hover { border-color: var(--accent); }
-.btn.big { font-size: 1.1rem; padding: 18px 36px; }
+.btn.big { font-size: 0.85rem; padding: 10px 20px; }
 
 /* Chat card */
 /* A compact "thinking" indicator above the chat header — a sphere made of
@@ -326,7 +567,7 @@ main { position: relative; }
   inset: 0;
   border-radius: inherit;
   padding: 2px;
-  background: conic-gradient(from var(--border-beam-angle), transparent 0%, transparent 74%, rgba(27,76,122,0.25) 84%, #1B4C7A 92%, rgba(27,76,122,0.25) 97%, transparent 100%);
+  background: conic-gradient(from var(--border-beam-angle), transparent 0%, transparent 74%, rgba(79,125,243,0.25) 84%, #4F7DF3 92%, rgba(79,125,243,0.25) 97%, transparent 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -343,7 +584,7 @@ main { position: relative; }
 .chat-dot {
   width: 10px; height: 10px; border-radius: 50%;
   background: var(--heading);
-  box-shadow: 0 0 12px rgba(27,76,122,0.6);
+  box-shadow: 0 0 12px rgba(79,125,243,0.6);
   flex-shrink: 0;
 }
 .chat-card-header h2 { font-size: 1.05rem; text-transform: none; }
@@ -369,13 +610,13 @@ main { position: relative; }
 .chat-suggestions { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip {
   background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);
-  font-size: 0.78rem; font-weight: 600; padding: 8px 14px; border-radius: 999px;
+  font-size: 0.78rem; font-weight: 600; padding: 8px 14px; border-radius: 16px;
   cursor: pointer; transition: border-color 0.15s ease, color 0.15s ease; font-family: var(--font-body);
 }
 .chip:hover, .chip:focus-visible { border-color: var(--accent); color: var(--text); }
 
 /* Sections */
-.section { padding: 88px 0; }
+.section { padding: 40px 0; }
 /* Translucent (not solid) so the fixed aurora backdrop tints through rather
    than being fully blocked. */
 .section-alt { background: rgba(240,240,240,0.6); }
@@ -429,9 +670,11 @@ main { position: relative; }
   border-radius: 20px;
   overflow: hidden;
   position: relative;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 200ms var(--ease-out), border-color 200ms ease;
 }
-.project-card:hover { transform: translateY(-6px); border-color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover { transform: translateY(-6px); border-color: var(--accent); }
+}
 /* Only cards with a real case-study link (not the plain summary cards on
    resume.html) get the pointer cursor and the focus-visible border cue. */
 .project-card:has(.project-link) { cursor: pointer; }
@@ -479,6 +722,10 @@ main { position: relative; }
   background-size: cover;
   background-position: center;
 }
+/* No real image yet (see .case-gallery-shot) — a plain placeholder, not a
+   real photo like the other .thumb-*-hero classes, until the FITT Meals
+   subscription-journey assets are shared. */
+.thumb-fitt-subscription { background: var(--bg-alt); border: 1px dashed var(--border); }
 /* Card thumbnails (short, cropped strip) align every hero shot to the top so
    the mockup isn't cut off mid-frame. The full-bleed case-study banner keeps
    a centered crop by default — Kahunas's banner is top-aligned too since its
@@ -571,7 +818,7 @@ main { position: relative; }
 /* Tags */
 .tags { display: flex; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
 .tags span {
-  font-size: 0.75rem; font-weight: 700; color: #4A6FA5;
+  font-size: 0.75rem; font-weight: 700; color: var(--accent);
   background: rgba(127,178,240,0.15); padding: 4px 10px; border-radius: 999px;
 }
 
@@ -653,39 +900,117 @@ main { position: relative; }
 .diff-item h3 { font-size: 1.1rem; text-transform: none; margin-bottom: 10px; }
 .diff-item p { color: var(--text-muted); font-size: 0.92rem; }
 
-/* Testimonials */
-.testimonial-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 28px;
-}
-.testimonial-card {
-  display: flex; flex-direction: column; gap: 18px;
-  background: var(--card); border: 1px solid var(--border); border-radius: 20px;
-  padding: 30px;
-}
-.testimonial-quote-mark {
-  font-family: var(--font-display); font-size: 2.6rem; line-height: 1;
-  color: var(--accent);
-  /* The glyph's own font metrics leave a lot of empty space beneath it before
-     the next flex item, on top of the card's own gap — pull it in so the
-     mark reads as attached to the quote instead of floating above it. */
-  margin-bottom: -22px;
-}
-.testimonial-text { color: var(--text); font-size: 1rem; line-height: 1.6; flex-grow: 1; }
-.testimonial-person { display: flex; align-items: center; gap: 12px; }
+/* Testimonials — a single-card carousel (one testimonial visible at a
+   time, prev/next arrows centered below) rather than a grid of all of
+   them at once. Matches the Figma frame: quote text on the left, the
+   person's photo/name/title as their own right-hand column, top-aligned
+   with the quote — not the centered single-column stack used before.
+   Like the case-studies section, every slide's real content stays in the
+   HTML and non-active slides are just hidden (display:none, toggled by
+   script.js) — a no-JS visitor still gets slide 1 (marked active in the
+   markup), and nothing here depends on JS to be readable, just to cycle. */
+.testimonial-carousel { position: relative; }
+.testimonial-slide { display: none; }
+.testimonial-slide.active { display: block; }
+.testimonial-row { display: flex; gap: 64px; align-items: flex-start; }
+.testimonial-text { flex: 1 1 65%; color: var(--text); font-size: 1.1rem; line-height: 1.6; }
+.testimonial-person { flex: 0 0 auto; width: 200px; }
 /* Placeholder avatar (flat color, like .profile-photo/.about-photo elsewhere on
    the site) until real photos are dropped into assets/testimonials/ — swap each
    for <img class="testimonial-photo" src="assets/testimonials/name.jpg" alt="Name">
    and this rule's background no longer matters. */
 .testimonial-photo {
-  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+  display: block;
+  width: 56px; height: 56px; border-radius: 50%;
   background: var(--primary); object-fit: cover;
+  margin-bottom: 12px;
 }
 /* .testimonial-name/-title are <p> tags, which carry a browser default
    top/bottom margin — reset it so the name and title sit tight together
    as one block instead of spaced like separate paragraphs. */
 .testimonial-name { font-weight: 700; font-size: 0.95rem; margin: 0 0 2px; }
 .testimonial-title { color: var(--text-muted); font-size: 0.85rem; margin: 0; }
+.testimonial-nav { display: flex; justify-content: center; gap: 12px; margin-top: 40px; }
+.testimonial-nav button {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--card);
+  color: var(--text); font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s ease, transform 160ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .testimonial-nav button:hover { border-color: var(--accent); transform: translateY(-2px); }
+}
+.testimonial-nav button:active { transform: scale(0.95); }
+
+/* Going above and beyond — no buttons, no manual drag: the track's
+   horizontal position is driven entirely by the section's own scroll
+   progress through the viewport (see script.js), so it just drifts into
+   view as the visitor scrolls past. overflow:hidden on the outer element
+   means the only way to move the track is that scroll-linked transform. */
+.beyond-carousel { overflow: hidden; }
+.beyond-track { display: flex; gap: 28px; width: max-content; }
+.beyond-card { display: block; width: clamp(220px, 30vw, 280px); flex-shrink: 0; }
+.beyond-media {
+  aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden;
+  background: var(--bg-alt); border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.beyond-card h3 { font-family: var(--font-body); font-size: 1rem; text-transform: none; margin-bottom: 4px; }
+.beyond-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+/* About preview (home page teaser — the full story lives on about.html).
+   Matches the Figma frame: heading full-width above, then a photo+bio
+   column on the left with a large supporting image placeholder on the
+   right (not the photo-beside-text row used before). */
+.about-preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; margin-top: 32px; }
+/* position:relative for the same reason as .case-studies-card above — so
+   the "Read the full story" .project-link::after overlay scopes to this
+   column instead of escaping past it. */
+.about-preview-text { position: relative; }
+.about-preview-photo {
+  width: 120px; height: 120px; border-radius: 50%;
+  object-fit: cover; border: 3px solid var(--card);
+  box-shadow: 0 8px 24px rgba(27,23,48,0.12);
+  margin-bottom: 24px;
+}
+.about-preview-text p { color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 20px; max-width: 480px; }
+.about-preview-media {
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+}
+
+/* Let's connect — a dark panel for the closing CTA, echoing the case
+   studies section's departure from the rest of the page but in a near-
+   black rather than light-editorial direction, as a deliberate bookend. */
+.connect-panel {
+  background: #12161F;
+  border-radius: 28px;
+  padding: 64px 48px;
+  text-align: center;
+  color: #fff;
+}
+.connect-panel .section-title { color: #fff; }
+.connect-panel .section-lede { color: rgba(255,255,255,0.65); }
+.connect-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+
+/* The rest of the site's section titles intentionally keep the bold
+   condensed all-caps display font — only this redesigned homepage's new
+   sections switch to the rounded body font at normal case, matching the
+   Figma reference instead of the site's older established look. Scoped
+   by section/component rather than changing .section-title globally, so
+   about.html/resume.html/my-work.html and the case-study pages are
+   unaffected. */
+#beyond .section-title,
+#testimonials .section-title,
+#about-preview .section-title,
+.connect-panel .section-title {
+  font-family: var(--font-body);
+  text-transform: none;
+  font-weight: 700;
+}
 
 /* Closing CTA glow */
 .section-glow { position: relative; overflow: hidden; }
@@ -827,7 +1152,7 @@ main { position: relative; }
 .case-flow-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
 .case-flow-tags button {
   font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
-  background: var(--card); border: 1px solid var(--border); padding: 8px 16px; border-radius: 999px;
+  background: var(--card); border: 1px solid var(--border); padding: 8px 16px; border-radius: 16px;
   cursor: pointer; transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
 .case-flow-tags button:hover { border-color: var(--accent); color: var(--text); }
@@ -855,8 +1180,122 @@ main { position: relative; }
 .case-nav {
   display: flex; justify-content: space-between; align-items: center;
   padding-top: 32px; padding-bottom: 64px;
-  border-top: 1px solid var(--border); flex-wrap: wrap; gap: 16px;
+  flex-wrap: wrap; gap: 16px;
 }
+
+/* Sidebar-nav case study layout (FITT Meals subscription-journey page): a
+   left-column jump nav that stays in view (position: sticky) while the
+   sections scroll past on the right — plain anchor links, no scroll-spy,
+   matching how .case-nav elsewhere on the site keeps navigation simple. */
+.case-meta-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 24px; margin: 28px 0 0; padding-top: 8px;
+}
+.case-meta-grid dt {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-muted); margin-bottom: 8px;
+}
+.case-meta-grid dd { font-size: 0.92rem; color: var(--text); margin: 0; line-height: 1.5; }
+
+.case-layout { display: grid; grid-template-columns: 200px 1fr; gap: 56px; align-items: start; }
+.case-sidebar { position: sticky; top: 96px; }
+.case-sidebar-nav { display: flex; flex-direction: column; gap: 4px; }
+.case-sidebar-nav a {
+  font-size: 0.88rem; font-weight: 700; color: var(--text-muted);
+  padding: 8px 0 8px 14px; border-left: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.case-sidebar-nav a:hover { color: var(--text); }
+.case-sidebar-nav a.active { color: var(--heading); border-left-color: var(--accent); }
+.case-layout .case-body { padding-bottom: 0; }
+.case-layout section + section { margin-top: 48px; }
+
+/* Problem / Context / Result — a numbered vertical list, each item a
+   circular index badge plus a heading and paragraph. */
+.case-steps { list-style: none; margin: 24px 0 32px; padding: 0; display: flex; flex-direction: column; gap: 20px; }
+.case-steps li { display: flex; gap: 18px; align-items: flex-start; }
+.case-step-num {
+  flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg-alt); color: var(--heading); font-weight: 700; font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.case-steps h4 { font-family: var(--font-body); font-size: 1rem; text-transform: none; margin: 0 0 6px; color: var(--heading); }
+.case-steps p { margin: 0; }
+
+/* Defining personas — a row of neutral cards, one per persona: a name plus
+   placeholder blurb bars (real per-persona copy still needed). */
+.case-personas-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px; margin: 20px 0 36px;
+}
+/* Card background is var(--card) (not --bg-alt, which the .ph placeholder
+   bars themselves are colored with) so the bars stay visible against it. */
+.case-persona-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.case-persona-card h4 { font-family: var(--font-body); font-size: 0.92rem; text-transform: none; margin: 0; color: var(--heading); }
+
+/* Research board banner — the whole Research section collapses to this one
+   link out to the actual board rather than reproducing its content inline.
+   href is a placeholder until the real Figjam/board link is given. */
+.case-research-banner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; height: 140px; padding: 0 28px; margin: 20px 0 8px;
+  border-radius: 16px; text-decoration: none;
+}
+.case-research-banner-label { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--heading); }
+.case-research-banner-arrow { font-size: 1.3rem; color: var(--heading); transition: transform 160ms var(--ease-out); }
+.case-research-banner { transition: transform 160ms var(--ease-out); }
+.case-research-banner:active { transform: scale(0.98); }
+@media (hover: hover) and (pointer: fine) {
+  .case-research-banner:hover .case-research-banner-arrow { transform: translateX(4px); }
+}
+
+/* Survey demographic bar chart — real breakdown still needed, so the bar
+   names are .ph placeholder bars too, not just the fill amounts. Follows
+   the site's scroll-driven pattern: the fill's real (final) width is set
+   inline via --pct and is what no-JS/reduced-motion visitors see at rest;
+   script.js only ever animates FROM 0 up TO that value once the chart
+   scrolls into view, it never invents the value itself. */
+.case-chart { margin: 20px 0 8px; }
+.case-chart-label { font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+.case-chart-bars { display: flex; flex-direction: column; gap: 14px; }
+.case-chart-bar-row { display: flex; align-items: center; gap: 14px; }
+.case-chart-bar-name { flex: 0 0 136px; font-size: 0.85rem; color: var(--text); }
+.case-chart-bar-track { flex: 1; height: 14px; border-radius: 999px; background: var(--bg-alt); overflow: hidden; }
+.case-chart-bar-fill {
+  display: block; height: 100%; border-radius: inherit;
+  background: var(--accent);
+  width: calc(var(--pct, 0) * 100%);
+  transition: width 900ms var(--ease-out);
+}
+.case-chart-note { font-size: 0.78rem; color: var(--text-muted); margin: 10px 0 0; }
+/* Before script.js runs (or under reduced motion), the bar starts already
+   at its resting width — animation is added, not required, to see the data. */
+.case-chart-bar-fill.animate-in { width: 0; }
+
+/* Core features — three self-contained blocks, each a short description, a
+   video placeholder, and an expandable "how it works" detail. <details> is
+   used for the expand/collapse so it works with zero JS and is keyboard-
+   and screen-reader-accessible by default. */
+.case-feature-block { margin: 14px 0 22px; }
+.case-feature-block:last-child { border-bottom: none; padding-bottom: 0; }
+.case-feature-block h4 { font-family: var(--font-body); font-size: 1.05rem; text-transform: none; margin: 0 0 8px; color: var(--heading); }
+.case-feature-video {
+  display: flex; align-items: center; justify-content: center;
+  height: 220px; margin: 16px 0;
+  color: var(--text-muted); font-size: 0.78rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.case-feature-expand {
+  border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px;
+}
+.case-feature-expand summary {
+  cursor: pointer; font-weight: 700; color: var(--heading); font-size: 0.92rem;
+  list-style: none;
+}
+.case-feature-expand summary::-webkit-details-marker { display: none; }
+.case-feature-expand summary::after { content: '+'; float: right; color: var(--text-muted); }
+.case-feature-expand[open] summary::after { content: '−'; }
+.case-feature-expand p { margin: 12px 0 0; }
 
 /* Research-heavy case-study components: sticky-note findings grid, empathy
    map quadrant, customer journey table, step-flow diagram, and alternating
@@ -961,12 +1400,22 @@ main { position: relative; }
 }
 
 /* Footer */
-.site-footer { padding: 40px 0; border-top: 1px solid var(--border); }
-.footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-.footer-copy { color: var(--text-muted); font-size: 0.85rem; }
-.socials { display: flex; gap: 22px; }
-.socials a { font-weight: 700; color: var(--text-muted); font-size: 0.88rem; transition: color 0.2s ease; }
-.socials a:hover { color: var(--accent); }
+.site-footer { padding: 96px 0 0; background: #0d0d0f; color: #fff; overflow: hidden; }
+.footer-top { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 32px; }
+.footer-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 32px; }
+.footer-heading {
+  font-family: var(--font-display); font-weight: 700; color: #fff;
+  font-size: clamp(2.4rem, 7vw, 5rem); line-height: 1.02; letter-spacing: -0.03em;
+  text-transform: none; margin: 0; max-width: 12ch;
+}
+/* Same size as the nav bar's Get in touch button. */
+.footer-cta .btn { border: 0; }
+.footer-links { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; font-size: 0.9rem; }
+.footer-links a { color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; transition: opacity 160ms var(--ease-out); }
+.footer-links a:focus-visible { outline: 2px solid #fff; outline-offset: 4px; border-radius: 2px; }
+@media (hover: hover) and (pointer: fine) {
+  .footer-links a:hover { opacity: 0.7; }
+}
 
 /* Locked case study modal. #lock-modal appears twice: on index.html it opens
    only when a .project-card.locked link is clicked; on the Jugnu case-study
@@ -1003,12 +1452,21 @@ main { position: relative; }
 
 /* Responsive */
 @media (max-width: 760px) {
-  .site-header { top: 14px; margin-bottom: -70px; padding: 0 16px; }
-  .nav-capsule { padding: 8px 8px 8px 16px; gap: 8px; }
-  .logo { font-size: 0.95rem; }
-  .nav-links { gap: 10px; }
-  .nav-links a { font-size: 0.68rem; letter-spacing: 0.02em; }
-  .nav-cta { display: none; }
+  .nav-capsule { padding: 12px 16px; gap: 8px; }
+  .logo { font-size: 0.8rem; gap: 8px; }
+  .logo-avatar { font-size: 0.9rem; }
+  .logo { font-size: 0.72rem; }
+  .hero-circles { width: 160px; height: 48px; }
+  .hero-circle { width: 40px; height: 40px; margin: -20px; }
+  /* The pinned/scroll-jacked deck never engages below 760px (see the
+     case-studies script) — mobile always gets this plain stacked-column
+     rendering, one full card after another, no is-pinned overrides needed. */
+  .case-studies-card { flex-direction: column; align-items: flex-start; gap: 24px; }
+  .case-studies-media { width: 100%; flex: none; }
+  .about-preview-grid { grid-template-columns: 1fr; gap: 32px; }
+  .testimonial-row { flex-direction: column; gap: 24px; }
+  .testimonial-person { width: auto; }
+  .connect-panel { padding: 40px 24px; }
   .hero { padding-top: 100px; }
   /* Force the rotating word onto its own line, always — "I'm Hafsah, the"
      stays together on line 1 no matter which word is showing. Without this,
@@ -1035,6 +1493,11 @@ main { position: relative; }
   .case-flow-shots img { height: 220px; }
   .empathy-grid { grid-template-columns: 1fr; }
   .ps-pair { grid-template-columns: 1fr; }
+  .case-layout { grid-template-columns: 1fr; gap: 0; }
+  /* The jump nav only earns its space once there's a viewport tall enough
+     to keep it in view alongside the content it points to — on mobile it's
+     just one more thing to scroll past before reaching the real content. */
+  .case-sidebar { display: none; }
   .journey-flow .step { font-size: 0.78rem; padding: 10px 14px; }
   .about-grid { grid-template-columns: 1fr; }
   .about-photo { width: 140px; height: 140px; }
@@ -1054,7 +1517,292 @@ main { position: relative; }
   .work-stack .work-stack-card:nth-child(5) { top: 160px; }
 }
 
-@media (max-width: 360px) {
-  .nav-links { gap: 7px; }
-  .nav-links a { font-size: 0.62rem; }
+
+/* Press feedback: every pressable confirms it heard the tap. */
+.chip, .case-flow-tags button {
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease, transform 160ms var(--ease-out);
 }
+.chip:active, .case-flow-tags button:active, .case-feature-expand summary:active { transform: scale(0.97); }
+.case-feature-expand summary { transition: transform 160ms var(--ease-out); }
+
+/* New motion honors reduced motion too: keep the state changes, drop the
+   movement. */
+@media (prefers-reduced-motion: reduce) {
+  .case-studies.is-pinned .case-studies-media { transition: none; }
+  .case-chart-bar-fill { transition: none; }
+  .btn:active, .chip:active { transform: none; }
+}
+
+/* Type polish: comfortable reading measure for case-study prose, and
+   tighter tracking/leading on large display headings so multi-line titles
+   read as one block instead of loosely spaced lines. */
+.case-body p, .case-body li { max-width: 65ch; }
+.case-hero h1 { line-height: 1.1; letter-spacing: -0.02em; }
+.case-body h2, .case-studies-heading { letter-spacing: -0.015em; line-height: 1.2; }
+.case-callout, .case-steps p { max-width: 65ch; }
+
+/* Shape scale (one rule, used everywhere): buttons = 16px radius,
+   containers = 12-16px, large feature cards = 24px. */
+
+/* 3D block grid behind the hero (see script.js). The scene is a low camera
+   looking across a tilted plane of slabs; each cell is a static, invisible
+   hit target at z=0 so the raised block never moves out from under the
+   pointer. The content wrapper lets pointer events fall through to the
+   grid, with the tooltip circles opted back in. */
+.hero { overflow: hidden; }
+.hero .wrap { pointer-events: none; }
+.hero .hero-circle { pointer-events: auto; }
+
+.grid-scene {
+  --cam-tilt: 76deg;
+  --cam-yaw: -14deg;
+  --block-w: 240px;
+  --block-d: 100px;
+  --block-h: 36px;
+  --gap: 14px;
+  --lift-max: 64px;
+  --floor: var(--bg);
+  --block-top: #ffffff;
+  --block-front: linear-gradient(#ececef, #d8d8dd);
+  --block-side: #d0d0d6;
+  --block-edge: rgba(255,255,255,0.9);
+  --glow: 79, 125, 243;
+  position: absolute; inset: 0; z-index: 0;
+  overflow: hidden; contain: layout paint;
+  perspective: 1600px; perspective-origin: 50% 35%;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.25) 14%, rgba(0,0,0,0.7) 32%, #000 55%);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.25) 14%, rgba(0,0,0,0.7) 32%, #000 55%);
+}
+.grid-plane {
+  position: absolute; left: 50%; top: 50%;
+  transform-style: preserve-3d;
+  transform: translateY(var(--cam-shift, 0px)) rotateX(var(--cam-tilt)) rotateZ(var(--cam-yaw));
+}
+.grid-cell {
+  position: absolute; transform-style: preserve-3d;
+  pointer-events: auto;
+}
+.grid-glow {
+  position: absolute; left: calc(var(--gap) / 2 - 90px); top: calc(var(--gap) / 2 - 90px);
+  width: calc(var(--block-w) + 180px); height: calc(var(--block-d) + 180px);
+  background: radial-gradient(closest-side, rgba(var(--glow), 0.55) 0%, rgba(var(--glow), 0.4) 25%,
+    rgba(var(--glow), 0.22) 50%, rgba(var(--glow), 0.08) 75%, transparent 100%);
+  opacity: 0; pointer-events: none; will-change: opacity;
+}
+.grid-block {
+  position: absolute; left: calc(var(--gap) / 2); top: calc(var(--gap) / 2);
+  width: var(--block-w); height: var(--block-d);
+  transform-style: preserve-3d; will-change: transform; pointer-events: none;
+}
+.grid-block i { position: absolute; display: block; pointer-events: none; }
+.grid-top {
+  inset: 0; background: var(--block-top);
+  transform: translateZ(var(--block-h));
+  box-shadow: inset 0 0 0 1px rgba(27,23,48,0.06), inset 0 1px 0 var(--block-edge);
+}
+.grid-top::after, .grid-front::after { content: ''; position: absolute; inset: 0; opacity: 0; }
+.grid-top::after { background: #fff; opacity: calc(var(--lift, 0) * 1); }
+.grid-front {
+  left: 0; top: 100%; width: 100%; height: var(--block-h);
+  background: var(--block-front);
+  transform-origin: 50% 0; transform: translateZ(var(--block-h)) rotateX(-90deg);
+}
+.grid-front::after {
+  inset: auto 0 0 0; height: 14px;
+  background: linear-gradient(rgba(var(--glow), 0), rgba(var(--glow), 0.4));
+  opacity: calc(var(--lift, 0) * 1);
+}
+.grid-side {
+  left: 0; top: 0; width: var(--block-h); height: 100%;
+  background: var(--block-side); backface-visibility: visible;
+  transform-origin: 0 0; transform: translateZ(var(--block-h)) rotateY(90deg);
+}
+/* Keeps the headline block readable: a soft wash of the page color behind
+   the text, plus a fade at the bottom edge. Light because this page is. */
+.grid-scrim {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 52% 40% at 50% 54%, rgba(250,250,250,0.92) 0%, rgba(250,250,250,0.7) 45%, rgba(250,250,250,0) 100%),
+    linear-gradient(to top, rgba(250,250,250,0.9) 0%, rgba(250,250,250,0) 22%);
+}
+/* Reduced motion: no movement; the glow just cross-fades. */
+.grid-scene.is-reduced .grid-glow { transition: opacity 150ms ease; }
+.grid-scene.is-reduced .grid-cell.is-hot .grid-glow { opacity: 0.9; }
+
+/* Phones: blocks are large, so keep the whole grid quieter. */
+@media (max-width: 760px) {
+  .grid-scene {
+    --block-front: linear-gradient(#f3f3f5, #e6e6ea);
+    --block-side: #e2e2e7;
+    opacity: 0.7;
+  }
+  .grid-top { box-shadow: inset 0 0 0 1px rgba(27,23,48,0.04), inset 0 1px 0 var(--block-edge); }
+  .grid-scrim {
+    background:
+      radial-gradient(ellipse 80% 44% at 50% 56%, rgba(250,250,250,0.95) 0%, rgba(250,250,250,0.75) 55%, rgba(250,250,250,0) 100%),
+      linear-gradient(to top, rgba(250,250,250,0.9) 0%, rgba(250,250,250,0) 22%);
+  }
+}
+
+/* Real video in place of the FITT Meals placeholder: fills its frame,
+   cropped to cover. The case-page frame keeps the source's 16:9. */
+.case-video-fill { display: block; width: 100%; height: 100%; object-fit: cover; }
+.case-video { aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: var(--bg-alt); margin-bottom: 48px; }
+.case-studies-media:has(> .case-video-fill) { overflow: hidden; }
+
+/* Initial concept / Final outcome toggle above a section's visual.
+   Segmented pill (interactive = pill, like the rest of the site); the
+   thumb slides on transform, the panels crossfade on opacity. */
+.case-toggle { margin: 28px 0 8px; }
+.case-toggle-bar {
+  position: relative; display: inline-grid; grid-template-columns: 1fr 1fr;
+  padding: 4px; border-radius: 16px; background: var(--bg-alt);
+  border: 1px solid var(--border); margin-bottom: 16px;
+}
+.case-toggle-bar button {
+  position: relative; z-index: 1; border: 0; background: none; cursor: pointer;
+  font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+  padding: 8px 18px; border-radius: 12px; white-space: nowrap;
+  transition: color 160ms var(--ease-out), transform 160ms var(--ease-out);
+}
+.case-toggle-bar button[aria-selected="true"] { color: var(--heading); }
+.case-toggle-bar button:active { transform: scale(0.97); }
+.case-toggle-bar button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.case-toggle-thumb {
+  position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px);
+  border-radius: 12px; background: var(--card);
+  box-shadow: 0 1px 3px rgba(27,23,48,0.12);
+  transition: transform 220ms var(--ease-out);
+}
+.case-toggle-bar:has(button:last-of-type[aria-selected="true"]) .case-toggle-thumb { transform: translateX(100%); }
+@media (hover: hover) and (pointer: fine) {
+  .case-toggle-bar button[aria-selected="false"]:hover { color: var(--heading); }
+}
+.case-toggle-panels { display: grid; }
+.case-toggle-panel {
+  grid-area: 1 / 1; opacity: 0; visibility: hidden;
+  transition: opacity 200ms var(--ease-out), visibility 0s linear 200ms;
+}
+.case-toggle-panel.is-active { opacity: 1; visibility: visible; transition-delay: 0s; }
+@media (max-width: 760px) { .case-toggle-bar { display: grid; } }
+@media (prefers-reduced-motion: reduce) { .case-toggle-thumb { transition: none; } }
+
+/* "The full story" callout: collapsed by default, opens on click. */
+.case-story summary {
+  cursor: pointer; list-style: none; font-weight: 700; color: var(--heading);
+  transition: transform 160ms var(--ease-out);
+}
+.case-story summary::-webkit-details-marker { display: none; }
+.case-story summary::after { content: '+'; float: right; color: var(--text-muted); font-weight: 400; }
+.case-story[open] summary::after { content: '\2212'; }
+.case-story summary:active { transform: scale(0.99); }
+.case-story summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+.case-story p { margin: 12px 0 0; }
+.case-story[open] p { animation: case-story-in 220ms var(--ease-out); }
+@keyframes case-story-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .case-story[open] p { animation: none; } }
+
+/* Overview step icons replace the numbered circles. */
+.case-step-icon { flex-shrink: 0; width: 44px; height: 44px; object-fit: contain; }
+
+/* FITT Meals card results (real numbers instead of placeholder bars). */
+.case-studies-result { display: flex; flex-direction: column; gap: 4px; }
+.case-studies-stat { font-size: 1.7rem; font-weight: 700; line-height: 1.1; color: var(--heading); letter-spacing: -0.01em; }
+.case-studies-stat-label { font-size: 0.85rem; color: var(--text-muted); }
+
+/* Screenshot carousel: native scroll-snap track with prev/next buttons. */
+.case-carousel-track {
+  display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+  scrollbar-width: none; border-radius: 14px; border: 1px solid var(--border);
+}
+.case-carousel-track::-webkit-scrollbar { display: none; }
+.case-carousel-track:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.case-carousel-slide { flex: 0 0 100%; scroll-snap-align: start; margin: 0; }
+.case-carousel-slide img { display: block; width: 100%; height: auto; }
+.case-carousel-controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 14px; }
+.case-carousel-count { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); min-width: 3.5em; text-align: center; }
+.case-carousel-btn {
+  width: 40px; height: 40px; border-radius: 16px; border: 1px solid var(--border);
+  background: var(--card); color: var(--heading); font: inherit; font-size: 1.4rem; line-height: 1;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  transition: transform 160ms var(--ease-out), opacity 160ms var(--ease-out), background-color 160ms var(--ease-out);
+}
+.case-carousel-btn:active:not(:disabled) { transform: scale(0.95); }
+.case-carousel-btn:disabled { opacity: 0.35; cursor: default; }
+.case-carousel-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) { .case-carousel-btn:hover:not(:disabled) { background: var(--bg-alt); } }
+
+/* Full-width image banners that link out to the research board / survey
+   results (the banner artwork carries its own title and arrow). */
+.case-link-banner {
+  display: block; margin: 20px 0 8px; border-radius: 16px; overflow: hidden;
+  border: 1px solid var(--border); background: #fff;
+  transition: transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out);
+}
+.case-link-banner img { display: block; width: 100%; height: auto; }
+.case-link-banner:active { transform: scale(0.99); }
+.case-link-banner:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .case-link-banner:hover { box-shadow: 0 10px 30px rgba(27,23,48,0.10); } }
+.case-link-banner--static { transition: none; }
+.case-link-banner--static:active { transform: none; }
+@media (hover: hover) and (pointer: fine) { .case-link-banner--static:hover { box-shadow: none; } }
+
+/* Survey chart: two groups (age, subscriber status) with a value on each
+   row, then two headline stats underneath. Numbers count up on scroll-in. */
+.case-chart-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px 40px; }
+.case-body .case-chart-group-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 12px; }
+.case-chart-bar-value { flex: 0 0 3ch; text-align: right; font-size: 0.85rem; font-weight: 700; color: var(--heading); font-variant-numeric: tabular-nums; }
+.case-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px 40px; margin: 28px 0 24px; }
+.case-body .case-stat-num { font-size: clamp(2.4rem, 5vw, 3.2rem); font-weight: 700; line-height: 1; color: var(--heading); letter-spacing: -0.02em; margin: 0 0 8px; font-variant-numeric: tabular-nums; }
+.case-body .case-stat-text { margin: 0; color: var(--text-muted); font-size: 0.95rem; max-width: 26ch; }
+
+/* Persona cards */
+.case-personas-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); align-items: stretch; }
+.case-persona-card { padding: 22px; gap: 14px; }
+.case-persona-head { display: flex; align-items: center; gap: 12px; }
+.case-persona-initial {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-alt);
+  color: var(--heading); font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+.case-persona-head h4 { font-size: 1.05rem; }
+.case-body .case-persona-meta { margin: 2px 0 0; font-size: 0.78rem; color: var(--text-muted); }
+.case-body .case-persona-title { margin: 0; font-weight: 700; color: var(--accent); font-size: 0.95rem; }
+.case-persona-facts { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+.case-persona-facts dt { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 3px; }
+.case-persona-facts dd { margin: 0; font-size: 0.88rem; line-height: 1.5; }
+.case-persona-quote { margin: auto 0 0; padding-top: 14px; border-top: 1px solid var(--border); font-style: italic; font-size: 0.85rem; line-height: 1.5; }
+@media (max-width: 760px) { .case-chart-bar-name { flex-basis: 136px; } }
+
+/* Wide chart group (top pain points): full width, long labels get a roomier
+   name column; on phones the label sits on its own line above its bar. */
+.case-chart-group--wide { grid-column: 1 / -1; }
+.case-chart-group--wide .case-chart-bar-name { flex-basis: 300px; }
+@media (max-width: 760px) {
+  .case-chart-group--wide .case-chart-bar-row { flex-wrap: wrap; row-gap: 6px; }
+  .case-chart-group--wide .case-chart-bar-name { flex: 1 0 100%; }
+  .case-chart-group--wide .case-chart-bar-track { flex: 1; }
+}
+.beyond-media video { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* "More case studies" at the foot of each case study page: the other two
+   cards from the home page, side by side (stacked media over text so two
+   fit in one row). */
+.next-cases { padding-top: 64px; padding-bottom: 32px; }
+.next-cases-title { font-size: clamp(1.4rem, 3vw, 1.9rem); margin: 0 0 28px; }
+.next-cases-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 32px; }
+.next-case { position: relative; display: flex; flex-direction: column; gap: 20px; }
+.next-case .case-studies-media { flex: none; width: 100%; aspect-ratio: 4 / 3; }
+.next-case .case-studies-info { flex: none; max-width: none; }
+@media (max-width: 760px) { .next-cases-grid { grid-template-columns: 1fr; } }
+#about-preview { background: #F3F3F3; }
+
+/* Plain Dubai skyline silhouette along the foot of the footer. Drawn as a mask
+   (assets/skyline.svg) so its color is just the background below. */
+.footer-skyline {
+  margin-top: 80px; aspect-ratio: 6001 / 1726; width: 100%;
+  background: #2b2b30;
+  -webkit-mask: url('assets/skyline.svg') center bottom / 100% 100% no-repeat;
+  mask: url('assets/skyline.svg') center bottom / 100% 100% no-repeat;
+}
+@media (max-width: 640px) { .footer-links { align-items: flex-start; } }

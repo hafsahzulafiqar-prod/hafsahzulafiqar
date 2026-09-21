@@ -92,13 +92,14 @@ re-theme the whole site.
 
 ### Typography
 
-- **Display** (`--font-display`): `"Impact", "Haettenschweiler", "Arial Narrow Bold", sans-serif`
-  — used for the hero headline, page titles, and stat numbers. Impact is a display-only
-  font with no weight variants and inconsistent OS-level availability, so the fallback
-  chain matters — test on Windows and Mac before publishing.
-- **Body** (`--font-body`): DM Sans, weights 400/500/700 — used for subheadings, nav,
-  body copy, and the chat UI. Loads from Google Fonts via `<link>` tags in each page's
-  `<head>`.
+- **Display** (`--font-display`) and **Body** (`--font-body`): both
+  `ui-rounded, "SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+  'DM Sans', system-ui, sans-serif` — the same stack, used everywhere (hero headline,
+  page titles, stat numbers, subheadings, nav, body copy, chat UI). `ui-rounded` is the
+  standard CSS keyword for the system rounded face and renders as SF Pro Rounded on
+  Apple platforms; DM Sans (loaded from Google Fonts via `<link>` tags in each page's
+  `<head>`) is the fallback everywhere else. `--font-display` used to be Impact —
+  replaced so display and body text match.
 - The hero `<h1>` is a flat solid `--heading` (dark blue), changed from `--accent`
   (purple) in a later pass. Before that it was a gradient text-fill across
   primary → secondary → accent; that pass flattened it along with every other

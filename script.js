@@ -324,7 +324,7 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
       var px = cx + p[0] * radius * pulse;
       var py = cy + p[1] * radius * pulse;
       ctx.beginPath();
-      ctx.fillStyle = 'rgba(27,76,122,' + alpha + ')';
+      ctx.fillStyle = 'rgba(79,125,243,' + alpha + ')';
       ctx.arc(px, py, dotRadius, 0, Math.PI * 2);
       ctx.fill();
     });
@@ -342,4 +342,503 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
+})();
+
+// Case studies (home page only, ".case-studies" — see styles.css). All 3
+// cards already carry their own full real content in the HTML and are
+// stacked normally by default — that's what no-JS/reduced-motion
+// visitors get. When motion is allowed, this adds .is-pinned (CSS then
+// makes the section 3x the viewport tall and stacks the cards on top of
+// each other) and just toggles which card has .active as the user
+// scrolls, plus keeps the shared counter's number in sync — matching
+// georgegeo.vercel.app's actual deck (each slide is a self-contained
+// absolutely-stacked unit crossfading via a class toggle, confirmed by
+// inspecting its DOM — not a shared text panel with a separately
+// animated image).
+(function () {
+  var section = document.querySelector('.case-studies');
+  var cards = document.querySelectorAll('.case-studies-card');
+  var currentEl = document.querySelector('.case-studies .cs-current');
+  if (!section || !cards.length) return;
+  // Below 760px the cards already read fine as a plain stacked column
+  // (see the mobile media query) and there isn't room for a pinned,
+  // scroll-jacked deck; reduced-motion visitors get the same fallback.
+  // Both are re-checked live (resize, rotate, preference change) so a page
+  // loaded wide and then narrowed doesn't stay pinned and overlap.
+  var mqSmall = window.matchMedia('(max-width: 760px)');
+  var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function pinnedAllowed() { return !mqSmall.matches && !mqReduce.matches; }
+
+  var activeIndex = 0;
+  var ticking = false;
+
+  // Each card carries its position relative to the active one, not just
+  // whether it's active — the image needs to know which way to fly
+  // (already-shown cards rest above/"is-before", not-yet-shown cards rest
+  // below/"is-after") so the exit and entry motions can go in opposite
+  // directions instead of mirroring each other. The text stays put and
+  // just crossfades with the card's own opacity transition.
+  function classify() {
+    cards.forEach(function (card, i) {
+      card.classList.toggle('active', i === activeIndex);
+      card.classList.toggle('is-before', i < activeIndex);
+      card.classList.toggle('is-after', i > activeIndex);
+    });
+  }
+  function update() {
+    ticking = false;
+    if (!section.classList.contains('is-pinned')) return;
+    var rect = section.getBoundingClientRect();
+    var scrollable = rect.height - window.innerHeight;
+    var progress = scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0;
+    var index = Math.round(progress * (cards.length - 1));
+    if (index === activeIndex) return;
+    activeIndex = index;
+    classify();
+    if (currentEl) currentEl.textContent = activeIndex + 1;
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  function sync() {
+    var on = pinnedAllowed();
+    section.classList.toggle('is-pinned', on);
+    if (on) { activeIndex = -1; update(); }
+  }
+  [mqSmall, mqReduce].forEach(function (mq) {
+    if (mq.addEventListener) mq.addEventListener('change', sync); else mq.addListener(sync);
+  });
+  sync();
+})();
+
+// Hero icon row (home page only, ".hero-circles" — see styles.css): writes
+// one --progress custom property (0 at the top of the page, 1 by
+// HERO_SCROLL_RANGE px down) onto the container; every icon's CSS transform
+// reads it to spread from the condensed, overlapping stack to an evenly
+// spaced row. Under prefers-reduced-motion CSS pins --progress to 1.
+// The range is short because the row sits right under the nav capsule and
+// scrolls out from behind it after ~120px.
+(function () {
+  var circles = document.querySelector('.hero-circles');
+  if (!circles) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var HERO_SCROLL_RANGE = 110;
+  var ticking = false;
+
+  function update() {
+    ticking = false;
+    circles.style.setProperty('--progress', Math.min(1, Math.max(0, window.scrollY / HERO_SCROLL_RANGE)));
+  }
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }, { passive: true });
+  update();
+})();
+
+// Testimonial carousel (home page only, ".testimonial-carousel"): swaps
+// which .testimonial-slide has the .active class (CSS shows only that
+// one). Slide 1 is marked active in the markup, so nothing here is
+// required just to read the first testimonial — this only wires up the
+// prev/next buttons to cycle, wrapping around at either end.
+(function () {
+  var slides = document.querySelectorAll('.testimonial-slide');
+  var prevBtn = document.querySelector('.testimonial-prev');
+  var nextBtn = document.querySelector('.testimonial-next');
+  if (!slides.length || !prevBtn || !nextBtn) return;
+
+  var index = 0;
+  function show(newIndex) {
+    index = (newIndex + slides.length) % slides.length;
+    slides.forEach(function (slide, i) {
+      slide.classList.toggle('active', i === index);
+    });
+  }
+  prevBtn.addEventListener('click', function () { show(index - 1); });
+  nextBtn.addEventListener('click', function () { show(index + 1); });
+})();
+
+// "Going above and beyond" (home page only, "#beyond-carousel"): no
+// buttons, no drag — the track just drifts horizontally in lockstep with
+// scroll position. Progress is 0 when the section's top just enters the
+// bottom of the viewport and 1 once its bottom has passed the top of the
+// viewport, so the drift plays out over exactly the scroll distance the
+// section itself occupies, not a separate pinned range like the case
+// studies section. Skipped under prefers-reduced-motion (track stays at
+// its default position — every card is still reachable via normal page
+// scroll, nothing here is required to see them).
+(function () {
+  var section = document.getElementById('beyond-carousel');
+  var track = document.getElementById('beyond-track');
+  if (!section || !track) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var ticking = false;
+
+  function update() {
+    ticking = false;
+    var rect = section.getBoundingClientRect();
+    var total = rect.height + window.innerHeight;
+    var progress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / total));
+    var maxShift = track.scrollWidth - section.clientWidth;
+    if (maxShift <= 0) {
+      track.style.transform = 'none';
+      return;
+    }
+    track.style.transform = 'translateX(-' + (progress * maxShift) + 'px)';
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
+})();
+
+// Survey demographic bar chart (case-study pages, ".case-chart-bar-fill" —
+// see styles.css): each bar's real/final width is already set inline via
+// --pct, so a no-JS or reduced-motion visitor sees the real chart at rest.
+// Here, JS drops every bar to 0 width, then uses an IntersectionObserver to
+// grow it back to its real --pct once the chart scrolls into view — a
+// one-shot "enter" animation rather than a continuous scroll-position
+// mapping, since there's nothing to interpolate between once it's in view.
+(function () {
+  var bars = document.querySelectorAll('.case-chart-bar-fill');
+  if (!bars.length) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!('IntersectionObserver' in window)) return;
+
+  bars.forEach(function (bar) { bar.classList.add('animate-in'); });
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.remove('animate-in');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.4 });
+
+  bars.forEach(function (bar) { observer.observe(bar); });
+})();
+
+// Case-study sidebar jump nav (".case-sidebar-nav", see styles.css): marks
+// the link for whichever section is currently at the top of the viewport
+// as .active, so the highlight follows the reader instead of staying on
+// "Overview". Links are plain anchors, so with no JS they still work —
+// only the highlight needs this.
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.case-sidebar-nav a[href^="#"]'));
+  if (!links.length) return;
+  var targets = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  var ticking = false;
+
+  function setActive(index) {
+    links.forEach(function (a, i) { a.classList.toggle('active', i === index); });
+  }
+  function update() {
+    ticking = false;
+    var current = 0;
+    targets.forEach(function (el, i) {
+      if (el && el.getBoundingClientRect().top <= 140) current = i;
+    });
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) current = links.length - 1;
+    setActive(current);
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
+})();
+
+// Hero 3D block grid (home page only, ".grid-scene" — see styles.css).
+// Wide slabs on a tilted plane seen from a low camera. Each cell is a static
+// hit target at z=0; the block inside it rises on a per-block spring while
+// hovered, revealing a blue floor glow beneath it. One rAF loop runs only
+// while something is still moving, and an idle wave keeps the page alive.
+// Under prefers-reduced-motion nothing moves: hover just fades the glow.
+(function () {
+  var scene = document.querySelector('.grid-scene');
+  if (!scene) return;
+  var hero = scene.parentElement;
+  var plane = scene.querySelector('.grid-plane');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) scene.classList.add('is-reduced');
+
+  // Rise is quick and near-critically damped; the fall is softer and lets the
+  // block touch down with a small rebound (RESTITUTION) instead of a bounce.
+  var RISE = { k: 220, c: 24 }, FALL = { k: 100, c: 13 };
+  var RESTITUTION = 0.28;
+  var IDLE_MS = 3000, WAVE_EVERY = 8000, WAVE_MS = 3600;
+
+  var cells = [], cols = 0, rows = 0, maxLift = 64;
+  var active = -1, running = false, last = 0;
+  var idleTimer = 0, waveStart = 0;
+
+  function cssPx(name) { return parseFloat(getComputedStyle(scene).getPropertyValue(name)); }
+
+  function build() {
+    var vw = hero.clientWidth, vh = hero.clientHeight;
+    if (!vw || !vh) return;
+    plane.textContent = ''; cells = [];
+    var gap = cssPx('--gap'), bw = cssPx('--block-w'), bd = cssPx('--block-d');
+    var size = Math.ceil(2.2 * Math.max(vw, vh));
+    if (vw < 760) { // fewer, larger blocks on phones
+      bw = vw * 0.42 - gap; bd = bw / 2.4;
+      scene.style.setProperty('--block-w', bw + 'px'); scene.style.setProperty('--block-d', bd + 'px');
+    } else { scene.style.removeProperty('--block-w'); scene.style.removeProperty('--block-d'); }
+    maxLift = cssPx('--lift-max');
+    var pw = bw + gap, pd = bd + gap, depth = size * 2.6; // long far side so rows recede to the horizon
+    cols = Math.ceil(size / pw); rows = Math.ceil(depth / pd);
+    var W = cols * pw, H = rows * pd;
+    plane.style.width = W + 'px'; plane.style.height = H + 'px';
+    plane.style.marginLeft = -W / 2 + 'px'; plane.style.marginTop = -H / 2 + 'px';
+
+    var frag = document.createDocumentFragment();
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var el = document.createElement('div');
+      el.className = 'grid-cell';
+      el.style.cssText = 'left:' + c * pw + 'px;top:' + r * pd + 'px;width:' + pw + 'px;height:' + pd + 'px';
+      el.innerHTML = '<i class="grid-glow"></i><div class="grid-block"><i class="grid-top"></i><i class="grid-front"></i><i class="grid-side"></i></div>';
+      frag.appendChild(el);
+      cells.push({ el: el, c: c, r: r, glow: el.firstChild, block: el.lastChild,
+        top: el.lastChild.children[0], front: el.lastChild.children[1],
+        lift: 0, v: 0, target: 0, shown: 0 });
+    }
+    plane.appendChild(frag);
+
+    // Drop cells that project entirely off the hero so we animate ~200-300.
+    var hb = hero.getBoundingClientRect(), keep = [], m = 220, rects = cells.map(function (o) { return o.el.getBoundingClientRect(); });
+    cells.forEach(function (o, i) {
+      var b = rects[i];
+      var off = !b.width || b.width > 4 * vw || b.height < 2.5 || b.bottom < hb.top - m || b.top > hb.bottom + m || b.right < hb.left - m || b.left > hb.right + m;
+      if (off) o.el.remove(); else keep.push(o);
+    });
+    cells = keep;
+    for (var i = 0; i < cells.length; i++) cells[i].el._i = i;
+    active = -1;
+  }
+
+  function write(o) {
+    if (Math.abs(o.lift - o.shown) < 0.0008 && o.lift !== 0) return;
+    o.shown = o.lift;
+    var l = o.lift < 0 ? 0 : o.lift;
+    o.block.style.transform = 'translate3d(0,0,' + (l * maxLift).toFixed(2) + 'px)';
+    o.glow.style.opacity = Math.min(0.9, l * 0.9).toFixed(3);
+    o.top.style.setProperty('--lift', l.toFixed(3));
+    o.front.style.setProperty('--lift', l.toFixed(3));
+  }
+
+  function retarget(t) {
+    var wave = waveStart ? (t - waveStart) / WAVE_MS : -1;
+    var ac = active >= 0 ? cells[active] : null;
+    for (var i = 0; i < cells.length; i++) {
+      var o = cells[i], v = 0;
+      if (ac) {
+        var d = Math.sqrt((o.c - ac.c) * (o.c - ac.c) + (o.r - ac.r) * (o.r - ac.r));
+        v = d === 0 ? 1 : d <= 1.5 ? 0.35 * (1 - (d - 1) / 0.5) : 0;
+        if (v < 0) v = 0;
+      }
+      if (wave >= 0 && wave <= 1.25) {
+        // A soft ridge travelling from the far rows toward the camera.
+        var p = 1 - o.r / rows, x = (wave * 1.25 - p) / 0.09;
+        var w = 0.5 * Math.exp(-x * x);
+        if (w > v) v = w;
+      }
+      o.target = v;
+    }
+    if (wave > 1.25) waveStart = 0;
+  }
+
+  function tick(t) {
+    var dt = Math.min((t - last) / 1000, 1 / 30); last = t;
+    retarget(t);
+    var moving = false;
+    for (var i = 0; i < cells.length; i++) {
+      var o = cells[i], s = o.target > o.lift ? RISE : FALL;
+      o.v += (s.k * (o.target - o.lift) - s.c * o.v) * dt;
+      o.lift += o.v * dt;
+      if (o.lift < 0) { o.lift = 0; o.v = o.v < -0.05 ? -o.v * RESTITUTION : 0; }
+      if (Math.abs(o.target - o.lift) < 0.0015 && Math.abs(o.v) < 0.01) { o.lift = o.target; o.v = 0; }
+      else moving = true;
+      write(o);
+    }
+    if (moving || active >= 0 || waveStart) requestAnimationFrame(tick); else running = false;
+  }
+  function wake() {
+    if (reduce || running) return;
+    running = true; last = performance.now(); requestAnimationFrame(tick);
+  }
+
+  function scheduleIdle(delay) {
+    clearTimeout(idleTimer);
+    if (reduce) return;
+    idleTimer = setTimeout(function () {
+      waveStart = performance.now(); wake();
+      scheduleIdle(WAVE_EVERY);
+    }, delay);
+  }
+
+  function setActive(i) {
+    if (i === active) return;
+    if (reduce) {
+      if (active >= 0 && cells[active]) cells[active].el.classList.remove('is-hot');
+      if (i >= 0) cells[i].el.classList.add('is-hot');
+    }
+    active = i; wake();
+  }
+  function onPoint(e) {
+    waveStart = 0; scheduleIdle(IDLE_MS);
+    var el = document.elementFromPoint(e.clientX, e.clientY);
+    var cell = el && el.closest && el.closest('.grid-cell');
+    if (cell) setActive(cell._i);
+    else if (!el || !el.closest('.hero-circle')) return;
+    else setActive(-1);
+  }
+  function onLeave() { setActive(-1); scheduleIdle(IDLE_MS); }
+
+  hero.addEventListener('pointermove', onPoint);
+  hero.addEventListener('pointerdown', onPoint);
+  hero.addEventListener('pointerleave', onLeave);
+  hero.addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') onLeave(); });
+  hero.addEventListener('pointercancel', onLeave);
+
+  var rt = 0;
+  function rebuild() { clearTimeout(rt); rt = setTimeout(function () { build(); wake(); }, 120); }
+  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(rebuild).observe(hero);
+  else window.addEventListener('resize', rebuild);
+  build();
+  scheduleIdle(IDLE_MS);
+})();
+
+// Back links follow the visitor's actual path: when they arrived from another
+// page on this site, "Back" returns there (history.back keeps scroll position)
+// instead of always jumping to My Work. Direct loads keep the default link.
+(function () {
+  var links = document.querySelectorAll('.breadcrumb');
+  if (!links.length || !document.referrer) return;
+  var ref;
+  try { ref = new URL(document.referrer); } catch (e) { return; }
+  if (ref.origin !== location.origin || ref.pathname === location.pathname || history.length < 2) return;
+  var name = ref.pathname.split('/').pop().replace('.html', '');
+  var names = {
+    index: 'home', '': 'home',
+    'fitt-subscription-journey': 'FITT Meals',
+    'ai-tutor-ksa': 'Mualim',
+    'pura-health-redesign': 'PureCS',
+    'jugnu-retailer-app': 'Jugnu'
+  };
+  var label = names[name] || name;
+  links.forEach(function (a) {
+    a.textContent = '\u2190 Back to ' + label;
+    a.addEventListener('click', function (e) { e.preventDefault(); history.back(); });
+  });
+})();
+
+// Autoplaying videos hold on their poster frame for visitors who prefer
+// reduced motion.
+(function () {
+  if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  document.querySelectorAll('video[autoplay]').forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); });
+})();
+
+// Initial concept / Final outcome toggles (case study pages, "[data-case-toggle]").
+// A two-tab tablist: click or arrow keys switch, the thumb and panels are
+// driven by aria-selected / .is-active in CSS.
+(function () {
+  document.querySelectorAll('[data-case-toggle]').forEach(function (root) {
+    var tabs = Array.prototype.slice.call(root.querySelectorAll('[role="tab"]'));
+    var panels = Array.prototype.slice.call(root.querySelectorAll('[role="tabpanel"]'));
+    function select(i, focus) {
+      tabs.forEach(function (t, k) {
+        t.setAttribute('aria-selected', k === i ? 'true' : 'false');
+        t.tabIndex = k === i ? 0 : -1;
+        panels[k].classList.toggle('is-active', k === i);
+      });
+      if (focus) tabs[i].focus();
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(i); });
+      t.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); select(i === 0 ? 1 : 0, true); }
+      });
+    });
+  });
+})();
+
+// Screenshot carousels ("[data-case-carousel]"): prev/next buttons scroll the
+// snap track one slide at a time; the counter and disabled ends follow the
+// scroll position, so swiping or arrow keys on the track stay in sync.
+(function () {
+  document.querySelectorAll('[data-case-carousel]').forEach(function (root) {
+    var track = root.querySelector('.case-carousel-track');
+    var btns = root.querySelectorAll('.case-carousel-btn');
+    var cur = root.querySelector('[data-current]');
+    var slides = track.children.length;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function index() { return Math.round(track.scrollLeft / track.clientWidth); }
+    function sync() {
+      var i = index();
+      cur.textContent = i + 1;
+      btns[0].disabled = i <= 0;
+      btns[1].disabled = i >= slides - 1;
+    }
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = Math.max(0, Math.min(slides - 1, index() + parseInt(b.dataset.dir, 10)));
+        track.scrollTo({ left: i * track.clientWidth, behavior: reduce ? 'auto' : 'smooth' });
+      });
+    });
+    track.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+  });
+})();
+
+// Number count-up ("[data-count-to]", case study pages): each figure starts at
+// 0 and counts to its real value (ease-out, 900ms) when it scrolls into view.
+// The real number is already in the markup, so no-JS and reduced-motion
+// visitors just see the final figures.
+(function () {
+  var els = document.querySelectorAll('[data-count-to]');
+  if (!els.length) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!('IntersectionObserver' in window)) return;
+
+  function suffix(el) { return el.textContent.replace(/^[\d.]+/, ''); }
+  function run(el) {
+    var to = parseFloat(el.dataset.countTo), tail = el.dataset.suffix, start = null, DUR = 900;
+    function step(t) {
+      if (start === null) start = t;
+      var p = Math.min(1, (t - start) / DUR), e = 1 - Math.pow(1 - p, 4);
+      el.textContent = Math.round(to * e) + tail;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      io.unobserve(entry.target);
+      run(entry.target);
+    });
+  }, { threshold: 0.6 });
+  els.forEach(function (el) {
+    el.dataset.suffix = suffix(el);
+    el.textContent = '0' + el.dataset.suffix;
+    io.observe(el);
+  });
 })();
