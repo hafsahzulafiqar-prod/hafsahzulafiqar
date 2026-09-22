@@ -996,29 +996,6 @@ main { position: relative; }
 @media (hover: hover) and (pointer: fine) { .beyond-lightbox-close:hover { background: rgba(255,255,255,0.22); } }
 .beyond-lightbox-close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
-/* About preview (home page teaser — the full story lives on about.html).
-   Matches the Figma frame: heading full-width above, then a photo+bio
-   column on the left with a large supporting image placeholder on the
-   right (not the photo-beside-text row used before). */
-.about-preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; margin-top: 32px; }
-/* position:relative for the same reason as .case-studies-card above — so
-   the "Read the full story" .project-link::after overlay scopes to this
-   column instead of escaping past it. */
-.about-preview-text { position: relative; }
-.about-preview-photo {
-  width: 120px; height: 120px; border-radius: 50%;
-  object-fit: cover; border: 3px solid var(--card);
-  box-shadow: 0 8px 24px rgba(27,23,48,0.12);
-  margin-bottom: 24px;
-}
-.about-preview-text p { color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 20px; max-width: 480px; }
-.about-preview-media {
-  aspect-ratio: 4 / 5;
-  border-radius: 20px;
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-}
-
 /* Let's connect — a dark panel for the closing CTA, echoing the case
    studies section's departure from the rest of the page but in a near-
    black rather than light-editorial direction, as a deliberate bookend. */
@@ -1047,12 +1024,10 @@ main { position: relative; }
   font-weight: 700;
 }
 
-/* "Going above and beyond." and "About me." match the hero's "Product
-   Designer" treatment (Fira Sans 800, all-caps — inherited from the base
-   h1/h2/h3 rule since it's not overridden to none here like the pair
-   above). */
-#beyond .section-title,
-#about-preview .section-title {
+/* "Going above and beyond." matches the hero's own headline treatment
+   (Fira Sans 800, all-caps — inherited from the base h1/h2/h3 rule since
+   it's not overridden to none here like the pair above). */
+#beyond .section-title {
   font-family: 'Fira Sans', var(--font-display);
   font-weight: 800;
 }
@@ -1531,7 +1506,6 @@ main { position: relative; }
      rendering, one full card after another, no is-pinned overrides needed. */
   .case-studies-card { flex-direction: column; align-items: flex-start; gap: 24px; }
   .case-studies-media { width: 100%; flex: none; }
-  .about-preview-grid { grid-template-columns: 1fr; gap: 32px; }
   .testimonial-row { flex-direction: column; gap: 24px; }
   .testimonial-person { width: auto; }
   .connect-panel { padding: 40px 24px; }
@@ -1778,7 +1752,6 @@ main { position: relative; }
 .next-case .case-studies-media { flex: none; width: 100%; aspect-ratio: 4 / 3; }
 .next-case .case-studies-info { flex: none; max-width: none; }
 @media (max-width: 760px) { .next-cases-grid { grid-template-columns: 1fr; } }
-#about-preview { background: #F3F3F3; }
 
 /* Plain Dubai skyline silhouette along the foot of the footer. Drawn as a
    mask (assets/skyline.svg) so its color is just the background below. The
