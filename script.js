@@ -344,72 +344,155 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   requestAnimationFrame(loop);
 })();
 
-// Case studies (home page only, ".case-studies" — see styles.css). All 3
+// Case studies (home page only, ".case-studies" — see styles.css). All
 // cards already carry their own full real content in the HTML and are
-// stacked normally by default — that's what no-JS/reduced-motion
-// visitors get. When motion is allowed, this adds .is-pinned (CSS then
-// makes the section 3x the viewport tall and stacks the cards on top of
-// each other) and just toggles which card has .active as the user
-// scrolls, plus keeps the shared counter's number in sync — matching
-// georgegeo.vercel.app's actual deck (each slide is a self-contained
-// absolutely-stacked unit crossfading via a class toggle, confirmed by
-// inspecting its DOM — not a shared text panel with a separately
-// animated image).
+// stacked normally by default — that's what no-JS/reduced-motion/mobile
+// visitors get. When motion is allowed, this pins the section and rolls
+// the cards over a 3D "drum": scroll position picks a discrete target
+// slide, but the actual displayed position is a continuous spring value
+// that overshoots toward it rather than snapping or tracking 1:1 — so
+// transform/opacity/veil are written per rAF frame from that spring, not
+// via a class toggle + CSS transition (a competing transition would fight
+// the spring's own easing). A short idle timer nudges the real scroll
+// position to the exact slide boundary once the user stops scrolling.
 (function () {
   var section = document.querySelector('.case-studies');
-  var cards = document.querySelectorAll('.case-studies-card');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.case-studies-card'));
+  var medias = cards.map(function (c) { return c.querySelector('.case-studies-media'); });
+  var infos = cards.map(function (c) { return c.querySelector('.case-studies-info'); });
+  var bg = document.querySelector('.case-studies-bg');
   var currentEl = document.querySelector('.case-studies .cs-current');
+  var totalEl = document.querySelector('.case-studies .cs-total');
   if (!section || !cards.length) return;
-  // Below 760px the cards already read fine as a plain stacked column
-  // (see the mobile media query) and there isn't room for a pinned,
-  // scroll-jacked deck; reduced-motion visitors get the same fallback.
-  // Both are re-checked live (resize, rotate, preference change) so a page
-  // loaded wide and then narrowed doesn't stay pinned and overlap.
-  var mqSmall = window.matchMedia('(max-width: 760px)');
+  if (totalEl) totalEl.textContent = cards.length;
+  section.style.setProperty('--cs-count', cards.length);
+
+  // This deck's own breakpoint (900px) — independent of the hero's 760px,
+  // since a 3D-rotated multi-card deck needs more room to read clearly
+  // than the hero's simpler two-stage reveal does.
+  var mqSmall = window.matchMedia('(max-width: 900px)');
   var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   function pinnedAllowed() { return !mqSmall.matches && !mqReduce.matches; }
 
-  var activeIndex = 0;
-  var ticking = false;
+  function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
-  // Each card carries its position relative to the active one, not just
-  // whether it's active — the image needs to know which way to fly
-  // (already-shown cards rest above/"is-before", not-yet-shown cards rest
-  // below/"is-after") so the exit and entry motions can go in opposite
-  // directions instead of mirroring each other. The text stays put and
-  // just crossfades with the card's own opacity transition.
-  function classify() {
+  var targetIndex = 0;
+  var pos = 0; // continuous, spring-driven displayed position
+  var vel = 0;
+  var rafId = null;
+  var lastT = 0;
+  var idleTimer = null;
+  var STIFFNESS = 120, DAMPING = 14;
+
+  function springTick(dt) {
+    var accel = -STIFFNESS * (pos - targetIndex) - DAMPING * vel;
+    vel += accel * dt;
+    pos += vel * dt;
+  }
+
+  // Applies the current spring position to every card. Direct inline
+  // styles (not CSS custom-property calc() chains) since the numbers come
+  // from a continuous rAF loop — simplest to compute and tune in one
+  // place rather than splitting the math between JS and CSS.
+  function render() {
+    var closestIndex = 0, closestAbs = Infinity;
     cards.forEach(function (card, i) {
-      card.classList.toggle('active', i === activeIndex);
-      card.classList.toggle('is-before', i < activeIndex);
-      card.classList.toggle('is-after', i > activeIndex);
+      var delta = i - pos;
+      var absDelta = Math.min(Math.abs(delta), 2.2);
+      if (Math.abs(delta) < closestAbs) { closestAbs = Math.abs(delta); closestIndex = i; }
+
+      var media = medias[i];
+      if (media) {
+        var rotate = clamp(-delta * 55, -60, 60);
+        media.style.transform = 'translateY(' + (delta * 62) + '%) rotateX(' + rotate + 'deg) scale(' + (1 - absDelta * 0.12) + ')';
+        media.style.opacity = clamp(1 - absDelta * 0.4, 0, 1);
+        media.style.setProperty('--veil', clamp(absDelta * 0.5, 0, 0.75));
+      }
+      var info = infos[i];
+      if (info) {
+        var infoOpacity = clamp(1 - absDelta * 1.4, 0, 1);
+        info.style.transform = 'translateY(' + (delta * 24) + 'px)';
+        info.style.opacity = infoOpacity;
+        info.style.pointerEvents = infoOpacity < 0.05 ? 'none' : '';
+      }
     });
+    cards.forEach(function (card, i) { card.classList.toggle('active', i === closestIndex); });
     document.dispatchEvent(new Event('cs:change'));
   }
-  function update() {
-    ticking = false;
-    if (!section.classList.contains('is-pinned')) return;
+
+  function loop(t) {
+    var dt = lastT ? clamp((t - lastT) / 1000, 0, 0.05) : 0.016;
+    lastT = t;
+    springTick(dt);
+    render();
+    if (Math.abs(vel) > 0.001 || Math.abs(pos - targetIndex) > 0.001) {
+      rafId = requestAnimationFrame(loop);
+    } else {
+      pos = targetIndex;
+      render();
+      rafId = null;
+      lastT = 0;
+    }
+  }
+  function startLoop() {
+    if (rafId == null) rafId = requestAnimationFrame(loop);
+  }
+
+  function sectionMetrics() {
     var rect = section.getBoundingClientRect();
     var scrollable = rect.height - window.innerHeight;
-    var progress = scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0;
-    var index = Math.round(progress * (cards.length - 1));
-    if (index === activeIndex) return;
-    activeIndex = index;
-    classify();
-    if (currentEl) currentEl.textContent = activeIndex + 1;
+    return { rect: rect, scrollable: scrollable };
   }
+
   function onScroll() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(update);
+    if (!section.classList.contains('is-pinned')) return;
+    var m = sectionMetrics();
+    var progress = m.scrollable > 0 ? clamp(-m.rect.top / m.scrollable, 0, 1) : 0;
+    var newTarget = Math.round(progress * (cards.length - 1));
+    if (newTarget !== targetIndex) {
+      targetIndex = newTarget;
+      if (currentEl) currentEl.textContent = targetIndex + 1;
+      startLoop();
+    }
+    // Slow decorative drift — reads continuous progress directly, not the
+    // stepped slide index, so it moves smoothly through the whole section.
+    if (bg) bg.style.transform = 'translateY(' + (progress * 40 - 20) + 'px)';
+
+    // After ~80ms of no scroll events, correct the real scroll position to
+    // the exact target-slide boundary — a debounced nudge, not a takeover
+    // of live scrolling.
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () {
+      var mm = sectionMetrics();
+      if (mm.scrollable <= 0) return;
+      var docTop = window.scrollY + mm.rect.top;
+      var snapY = docTop + (targetIndex / (cards.length - 1)) * mm.scrollable;
+      if (Math.abs(window.scrollY - snapY) > 1) {
+        window.scrollTo({ top: snapY, behavior: 'smooth' });
+      }
+    }, 80);
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
+
+  function clearInline() {
+    medias.forEach(function (m) { if (m) { m.style.transform = ''; m.style.opacity = ''; m.style.removeProperty('--veil'); } });
+    infos.forEach(function (i) { if (i) { i.style.transform = ''; i.style.opacity = ''; i.style.pointerEvents = ''; } });
+  }
   function sync() {
     var on = pinnedAllowed();
     section.classList.toggle('is-pinned', on);
-    if (on) { activeIndex = -1; update(); }
+    clearTimeout(idleTimer);
+    if (rafId != null) { cancelAnimationFrame(rafId); rafId = null; lastT = 0; }
+    if (on) {
+      targetIndex = 0; pos = 0; vel = 0;
+      render();
+      onScroll();
+    } else {
+      clearInline();
+      cards.forEach(function (card, i) { card.classList.toggle('active', i === 0); });
+    }
   }
   [mqSmall, mqReduce].forEach(function (mq) {
     if (mq.addEventListener) mq.addEventListener('change', sync); else mq.addListener(sync);

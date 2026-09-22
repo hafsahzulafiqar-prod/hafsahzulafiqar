@@ -251,54 +251,60 @@ a { color: inherit; text-decoration: none; }
 .ph-number { width: 64px; height: 26px; margin-bottom: 8px; }
 .ph-caption { width: 88px; height: 12px; }
 
-/* --- Enhanced (pinned) rendering --- */
-.case-studies.is-pinned { position: relative; height: 300vh; padding: 0; }
-/* Scoped to .is-pinned like every other rule in this block — sticky +
-   100vh + align-items:center only makes sense once the section is tall
-   enough (300vh, above) to pin against and the panel is height-capped to
-   match (below). Without .is-pinned (mobile, or reduced-motion), this
-   must NOT apply: centering the full un-capped 3-card stack inside a
-   plain 100vh flex box made it overflow symmetrically above and below,
-   bleeding the cards up into the hero section. */
-.case-studies.is-pinned .case-studies-sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; }
-/* Fills nearly the full pinned viewport (not just centered at its own
-   content height) so the deck reads as a full "screen" the way the
-   reference does, rather than leaving a lot of dead space above/below a
-   much shorter card. */
-.case-studies.is-pinned .case-studies-panel { width: 100%; height: calc(100vh - 96px); display: flex; flex-direction: column; }
+/* --- Enhanced (pinned) rendering: scroll-controlled 3D "drum" deck ---
+   Cards rotate around the X axis as they move from front-and-center to
+   peeking beyond the top/bottom edge, like slides rolling over a drum.
+   The displayed position is a continuous spring value (script.js),
+   independently interpolated every rAF frame — not a discrete
+   active/is-before/is-after class swap — so transform/opacity/the veil
+   are all written inline per frame instead of via CSS transitions (a
+   transition here would fight the spring's own easing/overshoot). */
+.case-studies.is-pinned { position: relative; height: calc(var(--cs-count, 4) * 100vh); padding: 0; }
+.case-studies.is-pinned .case-studies-sticky {
+  position: sticky; top: 0; height: 100vh;
+  display: flex; align-items: center;
+  perspective: 1200px;
+  /* Clips the decorative parallax background's travel range — NOT the
+     cards themselves, which need to visibly rotate/peek past the panel's
+     own edges rather than being cropped flush to it. */
+  overflow: hidden;
+}
+/* Slow decorative drift (script.js writes its transform from continuous
+   scroll progress, not the stepped slide index) — sits behind the panel. */
+.case-studies-bg {
+  position: absolute; inset: -20% -10%;
+  background: radial-gradient(circle at 30% 30%, rgba(79,125,243,0.08), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+.case-studies.is-pinned .case-studies-panel { width: 100%; height: calc(100vh - 96px); display: flex; flex-direction: column; position: relative; z-index: 1; }
 .case-studies.is-pinned .case-studies-head { flex-shrink: 0; }
-/* overflow:hidden is what turns the peeking neighbor cards below into an
-   actual "sliver at the edge" rather than a full desaturated image
-   floating past the container's own bounds. */
-.case-studies.is-pinned .case-studies-stack { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+.case-studies.is-pinned .case-studies-stack { position: relative; flex: 1; min-height: 0; perspective: 1200px; }
 .case-studies.is-pinned .case-studies-card {
   position: absolute;
   inset: 0;
   align-items: stretch;
   pointer-events: none;
+  transform-style: preserve-3d;
 }
 .case-studies.is-pinned .case-studies-card.active { pointer-events: auto; }
-/* Text: a quick crossfade in place. */
-.case-studies.is-pinned .case-studies-info { opacity: 0; transition: opacity 0.25s var(--ease-out); }
-.case-studies.is-pinned .case-studies-card.active .case-studies-info { opacity: 1; transition-delay: 0.12s; }
-/* Image: a card not yet reached rests mostly below the frame with just
-   its top edge peeking in at the bottom; one already shown rests mostly
-   above with its bottom edge peeking in at the top — like a deck where
-   you can see a sliver of the next/previous card, not just an empty gap.
-   Desaturating + dimming the peeking slice (rather than hiding it, as
-   before) is what actually reads as "the rest of the stack" instead of
-   a stray crop of a full-color photo. On scroll they swap by sliding the
-   full height into/out of place. */
 .case-studies.is-pinned .case-studies-media {
   aspect-ratio: auto;
   height: 100%;
-  opacity: 0.32;
-  filter: grayscale(1) brightness(1.35);
-  transition: transform 0.6s var(--ease-out), opacity 0.5s var(--ease-out), filter 0.5s var(--ease-out);
+  position: relative;
+  transform-origin: 50% 50%;
 }
-.case-studies.is-pinned .case-studies-card.is-after .case-studies-media { transform: translateY(calc(100% - 72px)); }
-.case-studies.is-pinned .case-studies-card.is-before .case-studies-media { transform: translateY(calc(-100% + 72px)); }
-.case-studies.is-pinned .case-studies-card.active .case-studies-media { transform: translateY(0); opacity: 1; filter: none; }
+/* The veil: darkens a card as it rolls away from center. --veil is set
+   inline (0 to 0.75) by script.js each frame, not via a class. */
+.case-studies.is-pinned .case-studies-media::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background: #0b0b12;
+  opacity: var(--veil, 0);
+  pointer-events: none;
+}
 .case-studies.is-pinned .case-studies-info { align-self: center; }
 
 /* Hero */
@@ -312,6 +318,39 @@ main { position: relative; }
 .hero.is-pinned { height: 220vh; }
 .hero.is-pinned .hero-sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; }
 .hero-sticky { position: relative; min-height: 100vh; display: flex; align-items: center; padding: 64px 0 40px; }
+
+/* Decorative wireframe grid behind the hero content. Muted by default;
+   each cell's border + diagonal (not its pill, which is static) brighten
+   to the primary color when that cell is hovered — the hit area is a
+   transparent rect covering the whole cell, not just the thin lines
+   themselves, since a stroke a couple of px wide is too small a target
+   to hover reliably. */
+.hero-grid {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  overflow: visible;
+}
+.hero-grid .hit { fill: transparent; pointer-events: fill; }
+.hero-grid .border,
+.hero-grid .diag {
+  stroke: var(--border);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.2s var(--ease-out);
+  pointer-events: none;
+}
+.hero-grid .pill {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+.hero-grid-cell:hover .border,
+.hero-grid-cell:hover .diag {
+  stroke: var(--primary);
+}
 
 .hero .wrap { position: relative; z-index: 1; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
 
@@ -1155,17 +1194,18 @@ main { position: relative; }
    by section/component rather than changing .section-title globally, so
    about.html/resume.html/my-work.html and the case-study pages are
    unaffected. */
-#testimonials .section-title,
 .connect-panel .section-title {
   font-family: var(--font-body);
   text-transform: none;
   font-weight: 700;
 }
 
-/* "Going above and beyond." matches the hero's own headline treatment
-   (Fira Sans 800, all-caps — inherited from the base h1/h2/h3 rule since
-   it's not overridden to none here like the pair above). */
-#beyond .section-title {
+/* "Going above and beyond." and "What people say about me" match the
+   hero's own headline treatment (Fira Sans 800, all-caps — inherited from
+   the base h1/h2/h3 rule since it's not overridden to none here like
+   .connect-panel above). */
+#beyond .section-title,
+#testimonials .section-title {
   font-family: 'Fira Sans', var(--font-display);
   font-weight: 800;
 }
@@ -1562,9 +1602,9 @@ main { position: relative; }
 .footer-top { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 32px; }
 .footer-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
 .footer-heading {
-  font-family: var(--font-display); font-weight: 700; color: #fff;
+  font-family: 'Fira Sans', var(--font-display); font-weight: 800; color: #fff;
   font-size: clamp(2.4rem, 7vw, 5rem); line-height: 1.02; letter-spacing: -0.03em;
-  text-transform: none; margin: 0; max-width: 12ch;
+  margin: 0; max-width: 12ch;
 }
 /* Same size as the nav bar's Get in touch button. */
 .footer-cta .btn { border: 0; }
