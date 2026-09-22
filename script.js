@@ -404,9 +404,13 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
       var media = medias[i];
       if (media) {
         var rotate = clamp(-delta * 55, -60, 60);
-        media.style.transform = 'translateY(' + (delta * 62) + '%) rotateX(' + rotate + 'deg) scale(' + (1 - absDelta * 0.12) + ')';
-        media.style.opacity = clamp(1 - absDelta * 0.4, 0, 1);
-        media.style.setProperty('--veil', clamp(absDelta * 0.5, 0, 0.75));
+        // 100% (not 62%) so a neighbor's box fully clears the active card's
+        // box at |delta|=1 — no geometric overlap left to ghost through.
+        media.style.transform = 'translateY(' + (delta * 100) + '%) rotateX(' + rotate + 'deg) scale(' + (1 - absDelta * 0.12) + ')';
+        // Steeper falloff (0.85, was 0.4) — "much lower opacity" for the
+        // immediate neighbors (~0.15 at |delta|=1, was ~0.6).
+        media.style.opacity = clamp(1 - absDelta * 0.85, 0, 1);
+        media.style.setProperty('--veil', clamp(absDelta * 0.6, 0, 0.85));
       }
       var info = infos[i];
       if (info) {
@@ -444,10 +448,35 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     return { rect: rect, scrollable: scrollable };
   }
 
+  // Aligns the 3D perspective's vanishing point with the MEDIA box's own
+  // center, not the whole stack's (media + gap + text column) center —
+  // .case-studies-stack's default perspective-origin:50% 50% sits over the
+  // stack's midpoint, which is well to the right of the media box (media is
+  // only the left ~64% of the stack). Since only the active card sits at
+  // rotateX(0) (no perspective displacement), every rotated neighbor was
+  // visibly sliding sideways toward that off-center vanishing point.
+  // Computed from real geometry (not a guessed fixed %) so it stays correct
+  // regardless of the exact flex-basis/gap values, and re-run on resize.
+  function updatePerspectiveOrigin() {
+    var stack = document.querySelector('.case-studies-stack');
+    var media = medias[0];
+    if (!stack || !media) return;
+    var stackRect = stack.getBoundingClientRect();
+    var mediaRect = media.getBoundingClientRect();
+    if (!stackRect.width) return;
+    var pct = ((mediaRect.left + mediaRect.width / 2) - stackRect.left) / stackRect.width * 100;
+    stack.style.setProperty('perspective-origin', pct + '% 50%');
+  }
+
   function onScroll() {
     if (!section.classList.contains('is-pinned')) return;
     var m = sectionMetrics();
-    var progress = m.scrollable > 0 ? clamp(-m.rect.top / m.scrollable, 0, 1) : 0;
+    // Unclamped — tells us whether the pinned range is actually engaged
+    // right now, as opposed to `progress` below (clamped for the index
+    // math, which reads 0 both "not reached yet" and "sitting exactly at
+    // the first slide").
+    var rawProgress = m.scrollable > 0 ? -m.rect.top / m.scrollable : -1;
+    var progress = clamp(rawProgress, 0, 1);
     var newTarget = Math.round(progress * (cards.length - 1));
     if (newTarget !== targetIndex) {
       targetIndex = newTarget;
@@ -458,23 +487,32 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     // stepped slide index, so it moves smoothly through the whole section.
     if (bg) bg.style.transform = 'translateY(' + (progress * 40 - 20) + 'px)';
 
-    // After ~80ms of no scroll events, correct the real scroll position to
-    // the exact target-slide boundary — a debounced nudge, not a takeover
-    // of live scrolling.
+    // The idle-snap below must only ever fire while the pinned range is
+    // actually engaged. Without this check it used to fire from ANYWHERE
+    // on the page (e.g. scrolling near the top, inside the hero) — since
+    // .is-pinned is gated purely on viewport width, not scroll position,
+    // it'd compute a "nearest slide" of 0 regardless and smooth-scroll the
+    // whole page down to this section's document-top, which read as the
+    // hero (or anything above this section) "bouncing down" on its own.
     clearTimeout(idleTimer);
-    idleTimer = setTimeout(function () {
-      var mm = sectionMetrics();
-      if (mm.scrollable <= 0) return;
-      var docTop = window.scrollY + mm.rect.top;
-      var snapY = docTop + (targetIndex / (cards.length - 1)) * mm.scrollable;
-      if (Math.abs(window.scrollY - snapY) > 1) {
-        window.scrollTo({ top: snapY, behavior: 'smooth' });
-      }
-    }, 80);
+    if (rawProgress > -0.02 && rawProgress < 1.02) {
+      // After ~80ms of no scroll events, correct the real scroll position
+      // to the exact target-slide boundary — a debounced nudge, not a
+      // takeover of live scrolling.
+      idleTimer = setTimeout(function () {
+        var mm = sectionMetrics();
+        if (mm.scrollable <= 0) return;
+        var docTop = window.scrollY + mm.rect.top;
+        var snapY = docTop + (targetIndex / (cards.length - 1)) * mm.scrollable;
+        if (Math.abs(window.scrollY - snapY) > 1) {
+          window.scrollTo({ top: snapY, behavior: 'smooth' });
+        }
+      }, 80);
+    }
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
+  window.addEventListener('resize', function () { updatePerspectiveOrigin(); onScroll(); });
 
   function clearInline() {
     medias.forEach(function (m) { if (m) { m.style.transform = ''; m.style.opacity = ''; m.style.removeProperty('--veil'); } });
@@ -487,6 +525,7 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     if (rafId != null) { cancelAnimationFrame(rafId); rafId = null; lastT = 0; }
     if (on) {
       targetIndex = 0; pos = 0; vel = 0;
+      updatePerspectiveOrigin();
       render();
       onScroll();
     } else {
@@ -498,6 +537,47 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     if (mq.addEventListener) mq.addEventListener('change', sync); else mq.addListener(sync);
   });
   sync();
+})();
+
+// Hero decorative grid hover glow (home page only, ".hero-grid" — see
+// styles.css): each cell's lines read var(--glow) via color-mix, so
+// "lighting up" a cell is just setting a number, not swapping a class.
+// Hovering one cell sets --glow on it AND on cells further along its own
+// row/column with linear falloff, so the color spreads into the connecting
+// lines and fades out with distance instead of a hard on/off cutoff
+// confined to the exact cell under the pointer.
+(function () {
+  var grid = document.querySelector('.hero-grid');
+  var cells = document.querySelectorAll('.hero-grid-cell');
+  if (!grid || !cells.length) return;
+  var GLOW_RADIUS = 2; // cells lit on either side along the row/column
+
+  function setGlow(cell, value) {
+    var current = parseFloat(cell.style.getPropertyValue('--glow') || '0');
+    if (current < value) cell.style.setProperty('--glow', value);
+  }
+  function clearGlow() {
+    cells.forEach(function (cell) { cell.style.removeProperty('--glow'); });
+  }
+  function onOver(e) {
+    var cell = e.target.closest('.hero-grid-cell');
+    if (!cell) return;
+    clearGlow();
+    var row = cell.getAttribute('data-row');
+    var col = cell.getAttribute('data-col');
+    cells.forEach(function (other) {
+      var r = other.getAttribute('data-row');
+      var c = other.getAttribute('data-col');
+      var dist = null;
+      if (r === row) dist = Math.abs(c - col);
+      else if (c === col) dist = Math.abs(r - row);
+      if (dist !== null && dist <= GLOW_RADIUS) {
+        setGlow(other, 1 - dist / (GLOW_RADIUS + 1));
+      }
+    });
+  }
+  grid.addEventListener('pointerover', onOver);
+  grid.addEventListener('pointerleave', clearGlow);
 })();
 
 // Hero card stack (home page only, ".hero" / ".hero-sticky" — see
