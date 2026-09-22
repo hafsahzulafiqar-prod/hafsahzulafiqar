@@ -417,31 +417,69 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   sync();
 })();
 
-// Hero icon row (home page only, ".hero-circles" — see styles.css): writes
-// one --progress custom property (0 at the top of the page, 1 by
-// HERO_SCROLL_RANGE px down) onto the container; every icon's CSS transform
-// reads it to spread from the condensed, overlapping stack to an evenly
-// spaced row. Under prefers-reduced-motion CSS pins --progress to 1.
-// The range is short because the row sits right under the nav capsule and
-// scrolls out from behind it after ~120px.
+// Hero card stack (home page only, ".hero" / ".hero-sticky" — see
+// styles.css): a two-stage, scroll-scrubbed reveal, structurally identical
+// to the case-studies pinned deck below — same is-pinned toggle, same
+// getBoundingClientRect()-based progress formula, same live matchMedia
+// re-check on resize/preference change — except progress here drives two
+// CONTINUOUS custom properties (--stage1, --stage2) instead of a discrete
+// "which card is active" index, so the cards/heading/tagline interpolate
+// smoothly frame-by-frame and reverse cleanly at any scroll position,
+// rather than snapping between fixed states.
+// Stage 1 (progress 0 -> 0.5 of the pinned range): cards 2-4 fan out from
+// resting position to their Figma rotation, uncovering the badges that sit
+// behind them, while the heading fades up to full color.
+// Stage 2 (0.5 -> 1): cards/heading hold steady; the tagline fades up to
+// full color. Both default to 1 on .hero (see styles.css), so mobile and
+// prefers-reduced-motion — where this never pins or attaches a listener —
+// just render the fully-revealed end state immediately.
 (function () {
-  var circles = document.querySelector('.hero-circles');
-  if (!circles) return;
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var section = document.querySelector('.hero');
+  var sticky = document.querySelector('.hero-sticky');
+  if (!section || !sticky) return;
 
-  var HERO_SCROLL_RANGE = 110;
+  var mqSmall = window.matchMedia('(max-width: 760px)');
+  var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function pinnedAllowed() { return !mqSmall.matches && !mqReduce.matches; }
+
   var ticking = false;
 
   function update() {
     ticking = false;
-    circles.style.setProperty('--progress', Math.min(1, Math.max(0, window.scrollY / HERO_SCROLL_RANGE)));
+    if (!section.classList.contains('is-pinned')) return;
+    var rect = section.getBoundingClientRect();
+    var scrollable = rect.height - window.innerHeight;
+    var progress = scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0;
+    var stage1 = Math.min(1, Math.max(0, progress / 0.5));
+    var stage2 = Math.min(1, Math.max(0, (progress - 0.5) / 0.5));
+    section.style.setProperty('--stage1', stage1);
+    section.style.setProperty('--stage2', stage2);
   }
-  window.addEventListener('scroll', function () {
+  function onScroll() {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(update);
-  }, { passive: true });
-  update();
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  function sync() {
+    var on = pinnedAllowed();
+    section.classList.toggle('is-pinned', on);
+    if (on) {
+      update();
+    } else {
+      // Drop back to the CSS defaults (both 1, i.e. fully revealed) rather
+      // than leaving a stale inline value from before a breakpoint/
+      // preference change.
+      section.style.removeProperty('--stage1');
+      section.style.removeProperty('--stage2');
+    }
+  }
+  [mqSmall, mqReduce].forEach(function (mq) {
+    if (mq.addEventListener) mq.addEventListener('change', sync); else mq.addListener(sync);
+  });
+  sync();
 })();
 
 // Testimonial carousel (home page only, ".testimonial-carousel"): swaps
@@ -715,4 +753,55 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     el.textContent = '0' + el.dataset.suffix;
     io.observe(el);
   });
+})();
+
+// "Going above and beyond" lightbox: clicking a card's video opens it larger
+// in an overlay whose own layer scrolls vertically, so a tall clip or a
+// short viewport never gets clipped. Reuses the card's own <video> element
+// by moving it into the lightbox stage and back (rather than a second copy)
+// so there's only ever one decoder per clip. A comment node left in the
+// card marks exactly where the video came from, so close() always knows
+// where to put it back regardless of how many times this runs.
+(function () {
+  var lightbox = document.getElementById('beyond-lightbox');
+  var triggers = document.querySelectorAll('[data-beyond-open]');
+  if (!lightbox || !triggers.length) return;
+  var scrollEl = lightbox.querySelector('.beyond-lightbox-scroll');
+  var stage = lightbox.querySelector('.beyond-lightbox-stage');
+  var closeBtn = lightbox.querySelector('.beyond-lightbox-close');
+  var homeVideo = null, homeMarker = null, lastFocus = null;
+
+  function open(trigger) {
+    var v = trigger.querySelector('video');
+    if (!v || homeVideo) return;
+    homeVideo = v;
+    homeMarker = document.createComment('beyond-video-slot');
+    v.parentNode.insertBefore(homeMarker, v);
+    stage.appendChild(v);
+    v.classList.add('beyond-lightbox-video');
+    v.controls = true;
+    v.muted = false;
+    v.play().catch(function () {});
+    lastFocus = document.activeElement;
+    lightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+  function close() {
+    if (!homeVideo) return;
+    homeVideo.pause();
+    homeVideo.controls = false;
+    homeVideo.muted = true;
+    homeVideo.classList.remove('beyond-lightbox-video');
+    homeMarker.parentNode.insertBefore(homeVideo, homeMarker);
+    homeMarker.remove();
+    homeVideo = null; homeMarker = null;
+    lightbox.hidden = true;
+    document.body.style.overflow = '';
+    scrollEl.scrollTop = 0;
+    if (lastFocus) lastFocus.focus();
+  }
+  triggers.forEach(function (t) { t.addEventListener('click', function () { open(t); }); });
+  lightbox.addEventListener('click', function (e) { if (e.target.closest('[data-beyond-close]')) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !lightbox.hidden) close(); });
 })();

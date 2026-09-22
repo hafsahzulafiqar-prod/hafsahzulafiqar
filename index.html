@@ -18,10 +18,10 @@
 <meta name="twitter:description" content="Customer Experience &amp; Design Manager and Product Design Manager based in Dubai, UAE — design and growth case studies from FITT Meals, Kahunas, PureCS, and more.">
 <meta name="twitter:image" content="https://hafsahzulafiqar-prod.github.io/hafsahzulafiqar/assets/profile/hafsah.png">
 <script>document.documentElement.classList.add('js-ready');</script>
-<link rel="stylesheet" href="styles.css?v=20260922g">
+<link rel="stylesheet" href="styles.css?v=202609221c">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -39,15 +39,36 @@
 
 <main>
   <section class="hero">
-    <div class="wrap">
-      <div class="hero-circles">
-        <span class="hero-circle" tabindex="0" data-label="Product Design" aria-label="Product Design" style="--cx:-48px; --cy:0px; --lx:-132px;"></span>
-        <span class="hero-circle" tabindex="0" data-label="Growth Strategy" aria-label="Growth Strategy" style="--cx:-24px; --cy:0px; --lx:-66px;"></span>
-        <span class="hero-circle" tabindex="0" data-label="UX Research" aria-label="UX Research" style="--cx:0px; --cy:0px; --lx:0px;"></span>
-        <span class="hero-circle" tabindex="0" data-label="Prototyping" aria-label="Prototyping" style="--cx:24px; --cy:0px; --lx:66px;"></span>
-        <span class="hero-circle" tabindex="0" data-label="CRM &amp; Lifecycle" aria-label="CRM &amp; Lifecycle" style="--cx:48px; --cy:0px; --lx:132px;"></span>
+    <div class="hero-sticky">
+      <div class="wrap hero-inner">
+        <div class="hero-stack">
+          <!-- Cards paint first, badges last, so the badges sit in FRONT of
+               the stack (z-index below reinforces this regardless of DOM
+               order) — they fade in on scroll rather than being covered.
+               Badges are hidden for now (display:none in CSS); the markup
+               stays so bringing them back is a one-line flip. -->
+          <div class="hero-card hero-card-4" style="background-image:url('assets/kahunas/hero.png')" aria-hidden="true"></div>
+          <div class="hero-card hero-card-3" style="background-image:url('assets/purecs/hero.png')" aria-hidden="true"></div>
+          <div class="hero-card hero-card-2" style="background-image:url('assets/mualim/hero.png')" aria-hidden="true"></div>
+          <div class="hero-card hero-card-1" style="background-image:url('assets/fitt-meals/hero.png')" aria-hidden="true"></div>
+
+          <span class="hero-badge hero-badge-1" style="background-image:url('assets/icons/product-design.png')" aria-hidden="true"></span>
+          <span class="hero-badge hero-badge-2" style="background-image:url('assets/icons/research.png')" aria-hidden="true"></span>
+          <span class="hero-badge hero-badge-3" style="background-image:url('assets/icons/growth.png')" aria-hidden="true"></span>
+          <span class="hero-badge hero-badge-4" style="background-image:url('assets/icons/prototype.png')" aria-hidden="true"></span>
+          <span class="hero-badge hero-badge-5" style="background-image:url('assets/icons/crm.png')" aria-hidden="true"></span>
+        </div>
+
+        <h1 class="hero-role-heading">Product Designer</h1>
+        <p class="tagline hero-tagline">I design products that solve problems for the users and perform better for the business</p>
       </div>
-      <h1 class="hero-static-title">I design products that solve problems for the users and perform better for the business</h1>
+    </div>
+  </section>
+
+  <section class="marquee" id="experience" aria-label="Companies I've worked with">
+    <div class="marquee-track" aria-hidden="true">
+      <span>FITT Meals</span><span>·</span><span>PureHealth</span><span>·</span><span>Kahunas</span><span>·</span><span>Kaso</span><span>·</span><span>PureCS</span><span>·</span><span>Jugnu</span><span>·</span><span>Mualim</span><span>·</span><span>Happa Studios</span><span>·</span>
+      <span>FITT Meals</span><span>·</span><span>PureHealth</span><span>·</span><span>Kahunas</span><span>·</span><span>Kaso</span><span>·</span><span>PureCS</span><span>·</span><span>Jugnu</span><span>·</span><span>Mualim</span><span>·</span><span>Happa Studios</span><span>·</span>
     </div>
   </section>
 
@@ -129,13 +150,6 @@
     </div>
   </section>
 
-  <section class="marquee" id="experience" aria-label="Companies I've worked with">
-    <div class="marquee-track" aria-hidden="true">
-      <span>FITT Meals</span><span>·</span><span>PureHealth</span><span>·</span><span>Kahunas</span><span>·</span><span>Kaso</span><span>·</span><span>PureCS</span><span>·</span><span>Jugnu</span><span>·</span><span>Mualim</span><span>·</span><span>Happa Studios</span><span>·</span>
-      <span>FITT Meals</span><span>·</span><span>PureHealth</span><span>·</span><span>Kahunas</span><span>·</span><span>Kaso</span><span>·</span><span>PureCS</span><span>·</span><span>Jugnu</span><span>·</span><span>Mualim</span><span>·</span><span>Happa Studios</span><span>·</span>
-    </div>
-  </section>
-
   <section class="section" id="beyond">
     <div class="wrap">
       <h2 class="section-title">Going above and beyond.</h2>
@@ -143,15 +157,15 @@
       <div class="beyond-carousel" id="beyond-carousel">
         <div class="beyond-track" id="beyond-track">
           <div class="beyond-card">
-            <div class="beyond-media" aria-hidden="true"><video src="assets/beyond/beyond-1.mp4" poster="assets/beyond/beyond-1-poster.jpg" muted loop playsinline preload="none"></video></div>
+            <button type="button" class="beyond-media" data-beyond-open aria-haspopup="dialog" aria-label="Expand video"><video src="assets/beyond/beyond-1.mp4" poster="assets/beyond/beyond-1-poster.jpg" muted loop playsinline preload="none"></video><span class="beyond-play" aria-hidden="true"></span></button>
             <h3>2D animation</h3>
           </div>
           <div class="beyond-card">
-            <div class="beyond-media" aria-hidden="true"><video src="assets/beyond/beyond-2.mp4" poster="assets/beyond/beyond-2-poster.jpg" muted loop playsinline preload="none"></video></div>
+            <button type="button" class="beyond-media" data-beyond-open aria-haspopup="dialog" aria-label="Expand video"><video src="assets/beyond/beyond-2.mp4" poster="assets/beyond/beyond-2-poster.jpg" muted loop playsinline preload="none"></video><span class="beyond-play" aria-hidden="true"></span></button>
             <h3>Logo and branding</h3>
           </div>
           <div class="beyond-card">
-            <div class="beyond-media" aria-hidden="true"><video src="assets/beyond/beyond-3.mp4" poster="assets/beyond/beyond-3-poster.jpg" muted loop playsinline preload="none"></video></div>
+            <button type="button" class="beyond-media" data-beyond-open aria-haspopup="dialog" aria-label="Expand video"><video src="assets/beyond/beyond-3.mp4" poster="assets/beyond/beyond-3-poster.jpg" muted loop playsinline preload="none"></video><span class="beyond-play" aria-hidden="true"></span></button>
             <h3>3D modeling and animation</h3>
           </div>
         </div>
@@ -270,6 +284,16 @@
 </div>
 
 
-<script src="script.js?v=20260922g"></script>
+<div class="beyond-lightbox" id="beyond-lightbox" hidden>
+  <div class="beyond-lightbox-backdrop" data-beyond-close></div>
+  <div class="beyond-lightbox-scroll">
+    <div class="beyond-lightbox-card" role="dialog" aria-modal="true" aria-label="Video">
+      <button type="button" class="beyond-lightbox-close" data-beyond-close aria-label="Close">&times;</button>
+      <div class="beyond-lightbox-stage"></div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js?v=202609221c"></script>
 </body>
 </html>

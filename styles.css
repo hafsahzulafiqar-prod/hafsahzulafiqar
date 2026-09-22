@@ -115,9 +115,15 @@ a { color: inherit; text-decoration: none; }
   white-space: nowrap;
 }
 
-/* Logo / company marquee */
+/* Logo / company marquee. Sits directly under the pinned hero, and its
+   glass effect (backdrop-filter) samples whatever is behind it — right at
+   the scroll position where the hero's sticky content is detaching, that
+   was blurring straight over the tail end of the tagline with zero gap to
+   separate them. A real margin here (rather than relying on the hero's own
+   unpin math) keeps the two comfortably apart regardless of scroll timing. */
 .marquee {
   overflow: hidden;
+  margin-top: 6vh;
   border-top: 1px solid rgba(255,255,255,0.4);
   border-bottom: 1px solid rgba(255,255,255,0.4);
   background: rgba(255,255,255,0.25);
@@ -166,6 +172,12 @@ a { color: inherit; text-decoration: none; }
    on top of that. The shared counter/heading above the stack never
    changes position — only its number updates. */
 .case-studies { padding: 40px 0; }
+/* Only on the pinned/scroll-jacked desktop path (mirrors the hero's own
+   .is-pinned gate): a plain, un-hijacked scroll buffer between the hero's
+   two stages finishing and this deck's own sticky engaging, so there's a
+   real stretch of ordinary scrolling as the "third scroll" rather than
+   one scroll-jack running straight into the next. */
+.case-studies.is-pinned { margin-top: 18vh; }
 .case-studies-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px; }
 .case-studies-counter { font-weight: 700; color: var(--text-muted); font-size: 1.1rem; }
 .case-studies-counter .cs-current { color: var(--heading); }
@@ -280,15 +292,113 @@ a { color: inherit; text-decoration: none; }
 
 /* Hero */
 main { position: relative; }
-.hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  padding: 64px 0 40px;
-}
+.hero { position: relative; }
+/* Pinned only once script.js confirms motion + width allow it (mirrors
+   .case-studies.is-pinned): the section grows tall enough to give the
+   two-stage scroll-scrub a deliberate distance, and .hero-sticky pins for
+   that whole range. Unpinned (mobile / reduced-motion / no-JS) it's just a
+   normal in-flow section — see the --stage1/--stage2 defaults below. */
+.hero.is-pinned { height: 220vh; }
+.hero.is-pinned .hero-sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; }
+.hero-sticky { min-height: 100vh; display: flex; align-items: center; padding: 64px 0 40px; }
 
 .hero .wrap { position: relative; z-index: 1; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+/* Card-stack + badge reveal, driven by --stage1 (0 at rest, 1 once the
+   cards have fully fanned out) and --stage2 (0 until stage 1 finishes, 1
+   once the tagline has fully darkened) — see script.js for how these are
+   written from scroll position. Both default to 1 on .hero itself, so any
+   path that never runs the scroll JS (mobile, reduced-motion, no-JS) just
+   renders the fully-revealed end state instead of getting stuck at rest. */
+.hero { --stage1: 1; --stage2: 1; }
+
+/* Tight bottom margin per the taste skill's spacing-consistency principle
+   (the gap between the stack and the copy below it should read as
+   intentional, not incidental) — the headings' own margins do the rest of
+   the vertical rhythm. Negative top margin pulls the whole stack up now
+   that the "Hafsah Zulafiqar" heading above it is gone. */
+.hero-stack { position: relative; width: min(800px, 94vw); height: 600px; margin: -24px auto 8px; }
+
+/* Badges are hidden for now — the line pattern above stands in as the
+   background texture instead. Positions/motion are left defined below so
+   turning them back on is a one-line `display` flip, nothing to redo. */
+.hero-badge {
+  display: none;
+  position: absolute; top: 50%; left: 50%;
+  width: 72px; height: 72px; margin: -36px 0 0 -36px;
+  border-radius: 50%;
+  background-size: cover; background-position: center;
+  box-shadow: 0 6px 16px rgba(27,23,48,0.18);
+  z-index: 50;
+  opacity: var(--stage1);
+  transform: translate(calc(var(--badge-x) * var(--stage1)), calc(var(--badge-y) * var(--stage1)));
+}
+.hero-badge-1 { --badge-x: -330px; --badge-y: -230px; }
+.hero-badge-2 { --badge-x: 10px;   --badge-y: -320px; }
+.hero-badge-3 { --badge-x: 360px;  --badge-y: -110px; }
+.hero-badge-4 { --badge-x: 280px;  --badge-y: 280px; }
+.hero-badge-5 { --badge-x: -300px; --badge-y: 260px; }
+
+/* Card fan: kept centered at BOTH ends of the animation rather than
+   following the literal Figma canvas coordinates — each set of offsets
+   below sums to (0,0) across the 4 cards, so the cluster's own visual
+   center never drifts from the stack's center, at rest, at full fan, or
+   anywhere in between (checked directly, not eyeballed). Figma's
+   rotation values are still used exactly as given; only position was
+   re-derived for this. Rest is a flat, unrotated, evenly-spaced cascade
+   (matching the reference); the fanned target spreads into a symmetric
+   X, two cards up, two down. */
+.hero-card {
+  position: absolute; top: 50%; left: 50%;
+  width: 300px; height: 300px;
+  margin: -150px 0 0 -150px;
+  border-radius: 24px;
+  background-size: cover; background-position: center;
+  box-shadow: 0px 6px 23.7px 0px rgba(0,0,0,0.17);
+  /* Centering is done once, via the negative margin above — no
+     translate(-50%,-50%) here too, since stacking both would double the
+     offset (by the card's own half-size). */
+  transform:
+    translate(
+      calc(var(--rest-x, 0px) + (var(--target-x, 0px) - var(--rest-x, 0px)) * var(--stage1)),
+      calc(var(--rest-y, 0px) * (1 - var(--stage1)) + var(--target-y, 0px) * var(--stage1))
+    )
+    rotate(calc(var(--card-rot, 0deg) * var(--stage1)));
+}
+.hero-card-1 { z-index: 40; --rest-x: -135px; --target-x: -220px; --target-y: 25px;   --card-rot: 0deg; }
+.hero-card-2 { z-index: 30; --rest-x: -45px;  --target-x: -75px;  --target-y: -135px; --card-rot: 14.27deg; }
+.hero-card-3 { z-index: 20; --rest-x: 45px;   --target-x: 75px;   --target-y: 135px;  --card-rot: -7.18deg; }
+.hero-card-4 { z-index: 10; --rest-x: 135px;  --target-x: 220px;  --target-y: -25px;  --card-rot: 6.24deg; }
+
+.hero-role-heading {
+  font-family: 'Fira Sans', var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.6rem, 8vw, 110px);
+  line-height: 1;
+  text-align: center;
+  margin: 0 0 8px;
+}
+
+/* "Product Designer" fades up to full weight/color across stage 1, in
+   step with the cards fanning out above it. */
+.hero-role-heading {
+  margin-top: 8px;
+  color: color-mix(in srgb, var(--heading) calc(var(--stage1) * 100%), transparent);
+  opacity: calc(0.15 + var(--stage1) * 0.85);
+}
+
+/* Tagline holds at its dim resting color through all of stage 1 (it only
+   reads --stage2) and darkens across stage 2, once the cards/heading have
+   already settled. Compound selector so this beats .tagline's own
+   color: var(--text-muted) regardless of which rule comes later in the
+   file — both are single-class selectors, so source order would otherwise
+   decide the winner. */
+.tagline.hero-tagline {
+  font-family: 'Fira Sans', var(--font-body);
+  font-size: clamp(1.1rem, 2.4vw, 32px);
+  opacity: calc(0.15 + var(--stage2) * 0.85);
+  color: color-mix(in srgb, var(--text) calc(var(--stage2) * 100%), var(--text-muted) calc((1 - var(--stage2)) * 100%));
+}
 
 /* Soft, blurred color-mesh backdrop, drifting right to left in a seamless
    loop. Fixed to the viewport (not just sized to the hero) so it sits behind
@@ -324,110 +434,6 @@ main { position: relative; }
   to { background-position: -1800px 0; }
 }
 
-/* Hero icon row: five icons stacked and overlapping in one condensed row
-   (--cx, set inline in the HTML), which spreads out to an evenly spaced row
-   (--lx) as the visitor scrolls. The scroll handler in script.js only writes
-   one shared --progress (0 at the top, 1 by HERO_SCROLL_RANGE px down) onto
-   the container and every icon's transform interpolates from it. A separate
-   scale() factor (--hover-scale) rides along so hover works at any point. */
-.hero-circles {
-  position: relative;
-  width: 320px;
-  height: 64px;
-  margin: 0 auto 32px;
-}
-.hero-circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 56px;
-  height: 56px;
-  margin: -28px;
-  border-radius: 50%;
-  background: #D9D9D9 center / cover no-repeat;
-  transform:
-    translate(
-      calc(var(--cx) + (var(--lx) - var(--cx)) * var(--progress, 0)),
-      0px
-    )
-    scale(var(--hover-scale, 1));
-  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease-out;
-  cursor: pointer;
-}
-.hero-circle:hover { --hover-scale: 1.12; }
-/* Icons run light blue to purple left to right; later DOM siblings stack on
-   top, so each icon overlaps the one before it. The thin page-colored ring
-   keeps the overlaps readable. */
-.hero-circle { box-shadow: 0 0 0 2px var(--bg); }
-.hero-circle:nth-child(1) { background-image: url('assets/icons/product-design.png'); }
-.hero-circle:nth-child(2) { background-image: url('assets/icons/growth.png'); }
-.hero-circle:nth-child(3) { background-image: url('assets/icons/research.png'); }
-.hero-circle:nth-child(4) { background-image: url('assets/icons/prototype.png'); }
-.hero-circle:nth-child(5) { background-image: url('assets/icons/crm.png'); }
-/* Neighboring circles overlap in the cluster formation, so without this
-   the tooltip of a circle whose sibling happens to sit later in the DOM
-   (e.g. CRM & Lifecycle, next to Prototyping) can render underneath that
-   neighbor. Raising the hovered/focused circle's own stacking level — not
-   just its ::after/::before — lifts the whole thing above every sibling
-   regardless of DOM order. */
-.hero-circle:hover, .hero-circle:focus-visible {
-  z-index: 10;
-}
-/* Tooltip: a plain CSS bubble (content pulled from data-label) rather
-   than the native title="" attribute, so it matches the site instead of
-   the browser's own unstyled tooltip. :focus-visible mirrors :hover so
-   keyboard users (tabindex="0" on each circle) get the same label —
-   aria-label carries the same text for screen readers, since generated
-   ::after content isn't reliably exposed to them. */
-.hero-circle::after {
-  content: attr(data-label);
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  /* Frosted-glass approximation (backdrop-filter, no official system). */
-  background: rgba(255,255,255,0.72);
-  -webkit-backdrop-filter: blur(14px) saturate(180%);
-  backdrop-filter: blur(14px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.7);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 20px rgba(27,23,48,0.12);
-  color: var(--heading);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: 10px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 125ms var(--ease-out), transform 125ms var(--ease-out);
-  z-index: 5;
-}
-.hero-circle::before {
-  content: '';
-  position: absolute;
-  bottom: calc(100% + 5px);
-  left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: rgba(255,255,255,0.85);
-  filter: drop-shadow(0 2px 2px rgba(27,23,48,0.08));
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-  z-index: 5;
-}
-.hero-circle:hover::after, .hero-circle:focus-visible::after {
-  opacity: 1;
-  transform: translateX(-50%) translateY(-2px);
-}
-.hero-circle:hover::before, .hero-circle:focus-visible::before {
-  opacity: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-circles { --progress: 1; }
-  .hero-circle { transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease; }
-}
-
 .profile-photo {
   width: 104px;
   height: 104px;
@@ -452,21 +458,6 @@ main { position: relative; }
   color: var(--text-muted);
   font-size: 0.95rem;
   margin: 0 0 6px;
-}
-
-/* Static hero headline (replaces the old rotating "I'm Hafsah, the ___"
-   line) — set in the body font at a bold weight rather than the site's
-   condensed all-caps display font, matching the reference's plain,
-   mixed-case, moderately sized treatment. */
-.hero-static-title {
-  font-family: var(--font-body);
-  text-transform: none;
-  font-weight: 700;
-  font-size: clamp(1.3rem, 2.4vw, 1.6rem);
-  line-height: 1.4;
-  color: var(--text);
-  max-width: 620px;
-  margin: 0 auto;
 }
 
 /* The rotating role word (Designer / Thinker / Marketeer / Strategist /
@@ -952,12 +943,55 @@ main { position: relative; }
 .beyond-track { display: flex; gap: 28px; width: max-content; }
 .beyond-card { display: block; width: clamp(220px, 30vw, 280px); flex-shrink: 0; }
 .beyond-media {
+  padding: 0; border: 0; cursor: pointer; text-align: left; display: block; position: relative;
   aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden;
   background: var(--bg-alt); border: 1px solid var(--border);
   margin-bottom: 16px;
 }
 .beyond-card h3 { font-family: var(--font-body); font-size: 1rem; text-transform: none; margin-bottom: 4px; }
 .beyond-card p { color: var(--text-muted); font-size: 0.9rem; }
+/* A small play affordance on the thumbnail hints the card expands. */
+.beyond-play {
+  position: absolute; inset: 0; margin: auto; width: 44px; height: 44px;
+  border-radius: 50%; background: rgba(13,13,15,0.55);
+  opacity: 0; transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out);
+  transform: scale(0.9);
+}
+.beyond-play::after {
+  content: ''; position: absolute; top: 50%; left: 54%; transform: translate(-50%, -50%);
+  border-style: solid; border-width: 8px 0 8px 14px; border-color: transparent transparent transparent #fff;
+}
+@media (hover: hover) and (pointer: fine) {
+  .beyond-media:hover .beyond-play { opacity: 1; transform: scale(1); }
+}
+.beyond-media:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.beyond-media:active .beyond-play { transform: scale(0.94); }
+
+/* Lightbox: click a "Going above and beyond" video to see it larger. The
+   outer layer scrolls vertically (not the card) so a tall video, or a short
+   viewport, never clips — you scroll the overlay itself to see all of it. */
+.beyond-lightbox { position: fixed; inset: 0; z-index: 300; }
+.beyond-lightbox[hidden] { display: none; }
+.beyond-lightbox-backdrop { position: fixed; inset: 0; background: rgba(13,13,15,0.82); }
+.beyond-lightbox-scroll {
+  position: relative; height: 100%; overflow-y: auto; overscroll-behavior: contain;
+  display: flex; align-items: center; justify-content: center; padding: 56px 24px;
+}
+.beyond-lightbox-card { position: relative; width: min(560px, 100%); }
+.beyond-lightbox-stage { line-height: 0; }
+.beyond-lightbox-video {
+  display: block; width: 100%; max-height: calc(100vh - 112px);
+  border-radius: 16px; background: #000;
+}
+.beyond-lightbox-close {
+  position: absolute; top: -44px; right: 0; width: 36px; height: 36px;
+  border-radius: 50%; border: none; background: rgba(255,255,255,0.12); color: #fff;
+  font-size: 1.3rem; line-height: 1; cursor: pointer; font-family: var(--font-body);
+  display: flex; align-items: center; justify-content: center;
+  transition: background-color 160ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) { .beyond-lightbox-close:hover { background: rgba(255,255,255,0.22); } }
+.beyond-lightbox-close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 /* About preview (home page teaser — the full story lives on about.html).
    Matches the Figma frame: heading full-width above, then a photo+bio
@@ -1400,9 +1434,9 @@ main { position: relative; }
 }
 
 /* Footer */
-.site-footer { padding: 96px 0 0; background: #0d0d0f; color: #fff; overflow: hidden; }
+.site-footer { padding: 56px 0 0; background: #0d0d0f; color: #fff; overflow: hidden; }
 .footer-top { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 32px; }
-.footer-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 32px; }
+.footer-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
 .footer-heading {
   font-family: var(--font-display); font-weight: 700; color: #fff;
   font-size: clamp(2.4rem, 7vw, 5rem); line-height: 1.02; letter-spacing: -0.03em;
@@ -1456,8 +1490,20 @@ main { position: relative; }
   .logo { font-size: 0.8rem; gap: 8px; }
   .logo-avatar { font-size: 0.9rem; }
   .logo { font-size: 0.72rem; }
-  .hero-circles { width: 160px; height: 48px; }
-  .hero-circle { width: 40px; height: 40px; margin: -20px; }
+  /* The pin never actually applies below 760px (see the hero-scroll script's
+     pinnedAllowed() check), so --stage1/--stage2 stay at their CSS default
+     of 1 and the stack/heading/tagline just render fully revealed — only
+     sizing needs a mobile override here, no animation values. The fanned
+     layout's card/badge offsets are all real px sized for the ~760px
+     desktop stack, so a uniform scale-down (rather than re-deriving every
+     offset for a narrow screen) is what keeps the whole composition —
+     cards and badges alike, since they share the same coordinate system —
+     proportionally intact instead of clipping at the screen edge. */
+  /* -60px used to pull "Product Designer" up close enough that the fanned
+     cards' real (scaled) bottom edge — taller than the box's own declared
+     height, since the fan's unscaled footprint is much bigger than 340px —
+     overlapped the heading by about 9px. -20px leaves a clean gap instead. */
+  .hero-stack { width: 100%; height: 340px; transform: scale(0.42); transform-origin: 50% 50%; margin-bottom: -20px; }
   /* The pinned/scroll-jacked deck never engages below 760px (see the
      case-studies script) — mobile always gets this plain stacked-column
      rendering, one full card after another, no is-pinned overrides needed. */
@@ -1467,7 +1513,22 @@ main { position: relative; }
   .testimonial-row { flex-direction: column; gap: 24px; }
   .testimonial-person { width: auto; }
   .connect-panel { padding: 40px 24px; }
-  .hero { padding-top: 100px; }
+  /* Mobile never pins (see the hero-scroll script), so .hero-sticky is just
+     a normal-flow box — but it was still inheriting min-height:100vh plus
+     align-items:center from the desktop/pinned rule, which vertically
+     centers the whole card+heading+tagline block in a near-fullscreen box.
+     Since the block is shorter than that, centering left a large empty gap
+     above the cards and pushed everything down toward the middle of the
+     screen. Top-aligning with a much smaller min-height moves the cards up
+     right under the header instead. */
+  .hero-sticky { min-height: 0; align-items: flex-start; padding: 32px 0 16px; }
+  /* Tighter than the desktop 36px — on a narrow screen the marquee reads as
+     a divider between the hero and Case Studies, not a section of its own,
+     so it doesn't need much breathing room on either side. */
+  /* Mobile never pins the hero, so there's no sticky-detach frame for the
+     marquee's blur to catch — the desktop-only 6vh buffer above would just
+     be dead space here, working against the tighter gap already set above. */
+  .marquee { margin-top: 0; padding: 16px 0; }
   /* Force the rotating word onto its own line, always — "I'm Hafsah, the"
      stays together on line 1 no matter which word is showing. Without this,
      shorter words wrap onto line 1 with "the" and longer ones don't, so the
@@ -1482,7 +1543,6 @@ main { position: relative; }
     text-align: center;
   }
   .profile-photo { width: 84px; height: 84px; margin-bottom: 18px; }
-  .marquee { padding: 20px 0; }
   .chat-card { padding: 24px; }
   .thinking-orb { width: 48px; height: 48px; margin-bottom: 14px; }
   .case-hero-image { height: 220px; }
@@ -1698,12 +1758,16 @@ main { position: relative; }
 @media (max-width: 760px) { .next-cases-grid { grid-template-columns: 1fr; } }
 #about-preview { background: #F3F3F3; }
 
-/* Plain Dubai skyline silhouette along the foot of the footer. Drawn as a mask
-   (assets/skyline.svg) so its color is just the background below. */
+/* Plain Dubai skyline silhouette along the foot of the footer. Drawn as a
+   mask (assets/skyline.svg) so its color is just the background below. The
+   mask is scaled up and top-anchored, so any cropping comes off the empty
+   ground/base of the artwork at the bottom rather than off the rooflines
+   at the top — both axes scaled by the same factor (1726/1176), so the
+   buildings aren't stretched, just cropped. */
 .footer-skyline {
-  margin-top: 80px; aspect-ratio: 6001 / 1726; width: 100%;
+  margin-top: 40px; aspect-ratio: 6001 / 1176; width: 100%;
   background: #2b2b30;
-  -webkit-mask: url('assets/skyline.svg') center bottom / 100% 100% no-repeat;
-  mask: url('assets/skyline.svg') center bottom / 100% 100% no-repeat;
+  -webkit-mask: url('assets/skyline.svg') center top / 100% 146.8% no-repeat;
+  mask: url('assets/skyline.svg') center top / 100% 146.8% no-repeat;
 }
 @media (max-width: 640px) { .footer-links { align-items: flex-start; } }
