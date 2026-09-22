@@ -18,7 +18,7 @@
 <meta name="twitter:description" content="Customer Experience &amp; Design Manager and Product Design Manager based in Dubai, UAE — design and growth case studies from FITT Meals, Kahunas, PureCS, and more.">
 <meta name="twitter:image" content="https://hafsahzulafiqar-prod.github.io/hafsahzulafiqar/assets/profile/hafsah.png">
 <script>document.documentElement.classList.add('js-ready');</script>
-<link rel="stylesheet" href="styles.css?v=202609221e">
+<link rel="stylesheet" href="styles.css?v=202609221j">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -59,8 +59,18 @@
           <span class="hero-badge hero-badge-5" style="background-image:url('assets/icons/crm.png')" aria-hidden="true"></span>
         </div>
 
-        <h1 class="hero-role-heading">Product Designer</h1>
-        <p class="tagline hero-tagline">I design products that solve problems for the users and perform better for the business</p>
+        <!-- "Product Designer" is gone — the tagline itself now carries the
+             H1 treatment, and comes into focus one line at a time: line 1
+             with --stage1 (alongside the cards fanning out), line 2 with
+             --stage2, same as the heading/tagline pair did before. Each
+             line is forced onto its own row (rather than left to wrap)
+             specifically so "one line at a time" is a real, fixed split,
+             not whatever the browser's line-wrapping happens to do at a
+             given width. -->
+        <h1 class="tagline hero-tagline">
+          <span class="hero-tagline-line hero-tagline-line-1">I design products that solve problems for the users</span>
+          <span class="hero-tagline-line hero-tagline-line-2">and perform better for the business</span>
+        </h1>
       </div>
     </div>
   </section>
@@ -294,6 +304,6 @@
   </div>
 </div>
 
-<script src="script.js?v=202609221e"></script>
+<script src="script.js?v=202609221j"></script>
 </body>
 </html>

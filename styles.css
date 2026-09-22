@@ -370,34 +370,37 @@ main { position: relative; }
 .hero-card-3 { z-index: 20; --rest-x: 45px;   --target-x: 75px;   --target-y: 135px;  --card-rot: -7.18deg; }
 .hero-card-4 { z-index: 10; --rest-x: 135px;  --target-x: 220px;  --target-y: -25px;  --card-rot: 6.24deg; }
 
-.hero-role-heading {
+/* The tagline now carries the H1 treatment that "Product Designer" used to
+   (same family/weight/uppercase — text-transform:uppercase comes from the
+   base h1/h2/h3 rule since it's an <h1> now), just sized for a full
+   sentence instead of two words. Compound selector so this beats
+   .tagline's own font-size/color regardless of source order — both .tagline
+   and .hero-tagline are single-class selectors otherwise. */
+.tagline.hero-tagline {
   font-family: 'Fira Sans', var(--font-display);
   font-weight: 800;
-  font-size: clamp(2.6rem, 8vw, 110px);
-  line-height: 1;
-  text-align: center;
-  margin: 0 0 8px;
+  font-size: clamp(1.35rem, 3.3vw, 2.2rem);
+  line-height: 1.25;
+  /* .tagline's own max-width:600px is meant for a body-copy paragraph —
+     too narrow for an H1-sized headline, which is why each line was
+     wrapping a second time inside it. */
+  max-width: none;
+  margin: 0;
 }
 
-/* "Product Designer" fades up to full weight/color across stage 1, in
-   step with the cards fanning out above it. */
-.hero-role-heading {
-  margin-top: 8px;
-  color: color-mix(in srgb, var(--heading) calc(var(--stage1) * 100%), transparent);
+/* Each line comes into focus on its own scroll stage — line 1 with the
+   cards fanning out (--stage1), line 2 once that's settled (--stage2) —
+   rather than the whole tagline fading in at once. display:block forces
+   each span onto its own row regardless of viewport width, so "one line
+   at a time" is a fixed split, not just wherever the text happens to wrap. */
+.hero-tagline-line { display: block; }
+.hero-tagline-line-1 {
+  color: color-mix(in srgb, var(--text) calc(var(--stage1) * 100%), var(--text-muted) calc((1 - var(--stage1)) * 100%));
   opacity: calc(0.15 + var(--stage1) * 0.85);
 }
-
-/* Tagline holds at its dim resting color through all of stage 1 (it only
-   reads --stage2) and darkens across stage 2, once the cards/heading have
-   already settled. Compound selector so this beats .tagline's own
-   color: var(--text-muted) regardless of which rule comes later in the
-   file — both are single-class selectors, so source order would otherwise
-   decide the winner. */
-.tagline.hero-tagline {
-  font-family: var(--font-body);
-  font-size: clamp(1.1rem, 2.4vw, 32px);
-  opacity: calc(0.15 + var(--stage2) * 0.85);
+.hero-tagline-line-2 {
   color: color-mix(in srgb, var(--text) calc(var(--stage2) * 100%), var(--text-muted) calc((1 - var(--stage2)) * 100%));
+  opacity: calc(0.15 + var(--stage2) * 0.85);
 }
 
 /* Soft, blurred color-mesh backdrop, drifting right to left in a seamless
@@ -1512,11 +1515,13 @@ main { position: relative; }
      height, since the fan's unscaled footprint is much bigger than 340px —
      overlapped the heading by about 9px. -20px leaves a clean gap instead. */
   .hero-stack { width: 100%; height: 340px; transform: scale(0.42); transform-origin: 50% 50%; margin-bottom: -20px; }
-  /* At the base 17.6px this wraps to 3 lines on a narrow phone; 15px is the
-     largest size that reliably fits it on 2 (checked against the actual
-     rendered line count, not guessed from character counts). Matches
-     .tagline.hero-tagline's own specificity so it actually wins here. */
-  .tagline.hero-tagline { font-size: 15px; }
+  /* Fitting BOTH lines on one row each, at a true H1 size, isn't possible
+     on a phone-width screen no matter how small the font goes short of
+     genuinely illegible (~12-14px) — checked directly, not assumed. This
+     size keeps it reading as a bold headline; each line may still wrap
+     once on the narrowest phones, which reads better than either shrinking
+     it into single-line-but-tiny or keeping it desktop-huge and overflowing. */
+  .tagline.hero-tagline { font-size: 1.2rem; }
   /* The pinned/scroll-jacked deck never engages below 760px (see the
      case-studies script) — mobile always gets this plain stacked-column
      rendering, one full card after another, no is-pinned overrides needed. */
