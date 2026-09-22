@@ -312,12 +312,12 @@ main { position: relative; }
    renders the fully-revealed end state instead of getting stuck at rest. */
 .hero { --stage1: 1; --stage2: 1; }
 
-/* Tight bottom margin per the taste skill's spacing-consistency principle
-   (the gap between the stack and the copy below it should read as
-   intentional, not incidental) — the headings' own margins do the rest of
-   the vertical rhythm. Negative top margin pulls the whole stack up now
-   that the "Hafsah Zulafiqar" heading above it is gone. */
-.hero-stack { position: relative; width: min(800px, 94vw); height: 600px; margin: -24px auto 8px; }
+/* 8px read as basically nothing once the cards are fully fanned — their
+   real (rotated) bottom edge sits much closer to the tagline than the
+   box's own declared 600px height suggests, leaving only ~5px of actual
+   clearance. 44px gives it real breathing room instead. Negative top
+   margin pulls the whole stack up within the vertically-centered hero. */
+.hero-stack { position: relative; width: min(800px, 94vw); height: 600px; margin: -70px auto 44px; }
 
 /* Badges are hidden for now — the line pattern above stands in as the
    background texture instead. Positions/motion are left defined below so
@@ -1514,7 +1514,11 @@ main { position: relative; }
      cards' real (scaled) bottom edge — taller than the box's own declared
      height, since the fan's unscaled footprint is much bigger than 340px —
      overlapped the heading by about 9px. -20px leaves a clean gap instead. */
-  .hero-stack { width: 100%; height: 340px; transform: scale(0.42); transform-origin: 50% 50%; margin-bottom: -20px; }
+  /* margin-top here overrides the desktop rule's -70px (that value nudges
+     the stack up within a vertically-CENTERED 100vh box; mobile is already
+     top-aligned — see .hero-sticky below — so that much negative margin
+     would push the cards up under the nav bar instead). */
+  .hero-stack { width: 100%; height: 340px; margin-top: -24px; transform: scale(0.42); transform-origin: 50% 50%; margin-bottom: -20px; }
   /* Fitting BOTH lines on one row each, at a true H1 size, isn't possible
      on a phone-width screen no matter how small the font goes short of
      genuinely illegible (~12-14px) — checked directly, not assumed. This
