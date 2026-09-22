@@ -123,7 +123,7 @@ a { color: inherit; text-decoration: none; }
    unpin math) keeps the two comfortably apart regardless of scroll timing. */
 .marquee {
   overflow: hidden;
-  margin-top: 6vh;
+  margin-top: 2vh;
   border-top: 1px solid rgba(255,255,255,0.4);
   border-bottom: 1px solid rgba(255,255,255,0.4);
   background: rgba(255,255,255,0.25);
@@ -176,8 +176,10 @@ a { color: inherit; text-decoration: none; }
    .is-pinned gate): a plain, un-hijacked scroll buffer between the hero's
    two stages finishing and this deck's own sticky engaging, so there's a
    real stretch of ordinary scrolling as the "third scroll" rather than
-   one scroll-jack running straight into the next. */
-.case-studies.is-pinned { margin-top: 18vh; }
+   one scroll-jack running straight into the next. 18vh (plus the
+   marquee's own margin, stacked on top of it) read as too much empty
+   space; 6vh is enough to still feel like a distinct scroll. */
+.case-studies.is-pinned { margin-top: 6vh; }
 .case-studies-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px; }
 .case-studies-counter { font-weight: 700; color: var(--text-muted); font-size: 1.1rem; }
 .case-studies-counter .cs-current { color: var(--heading); }
@@ -265,7 +267,10 @@ a { color: inherit; text-decoration: none; }
    much shorter card. */
 .case-studies.is-pinned .case-studies-panel { width: 100%; height: calc(100vh - 96px); display: flex; flex-direction: column; }
 .case-studies.is-pinned .case-studies-head { flex-shrink: 0; }
-.case-studies.is-pinned .case-studies-stack { position: relative; flex: 1; min-height: 0; }
+/* overflow:hidden is what turns the peeking neighbor cards below into an
+   actual "sliver at the edge" rather than a full desaturated image
+   floating past the container's own bounds. */
+.case-studies.is-pinned .case-studies-stack { position: relative; flex: 1; min-height: 0; overflow: hidden; }
 .case-studies.is-pinned .case-studies-card {
   position: absolute;
   inset: 0;
@@ -276,18 +281,24 @@ a { color: inherit; text-decoration: none; }
 /* Text: a quick crossfade in place. */
 .case-studies.is-pinned .case-studies-info { opacity: 0; transition: opacity 0.25s var(--ease-out); }
 .case-studies.is-pinned .case-studies-card.active .case-studies-info { opacity: 1; transition-delay: 0.12s; }
-/* Image: flies out and in. A card not yet reached waits below and rises
-   into place; one already shown keeps going and flies out past the top,
-   fading as it goes. */
+/* Image: a card not yet reached rests mostly below the frame with just
+   its top edge peeking in at the bottom; one already shown rests mostly
+   above with its bottom edge peeking in at the top — like a deck where
+   you can see a sliver of the next/previous card, not just an empty gap.
+   Desaturating + dimming the peeking slice (rather than hiding it, as
+   before) is what actually reads as "the rest of the stack" instead of
+   a stray crop of a full-color photo. On scroll they swap by sliding the
+   full height into/out of place. */
 .case-studies.is-pinned .case-studies-media {
   aspect-ratio: auto;
   height: 100%;
-  opacity: 0;
-  transition: transform 0.6s var(--ease-out), opacity 0.4s var(--ease-out);
+  opacity: 0.32;
+  filter: grayscale(1) brightness(1.35);
+  transition: transform 0.6s var(--ease-out), opacity 0.5s var(--ease-out), filter 0.5s var(--ease-out);
 }
-.case-studies.is-pinned .case-studies-card.is-after .case-studies-media { transform: translateY(160px); }
-.case-studies.is-pinned .case-studies-card.is-before .case-studies-media { transform: translateY(-160px); }
-.case-studies.is-pinned .case-studies-card.active .case-studies-media { transform: translateY(0); opacity: 1; }
+.case-studies.is-pinned .case-studies-card.is-after .case-studies-media { transform: translateY(calc(100% - 72px)); }
+.case-studies.is-pinned .case-studies-card.is-before .case-studies-media { transform: translateY(calc(-100% + 72px)); }
+.case-studies.is-pinned .case-studies-card.active .case-studies-media { transform: translateY(0); opacity: 1; filter: none; }
 .case-studies.is-pinned .case-studies-info { align-self: center; }
 
 /* Hero */
