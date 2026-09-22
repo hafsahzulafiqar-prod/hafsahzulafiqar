@@ -312,6 +312,110 @@ main { position: relative; }
    renders the fully-revealed end state instead of getting stuck at rest. */
 .hero { --stage1: 1; --stage2: 1; }
 
+/* Original icon row, brought back in place of the card stack (hidden
+   below). Five icons overlap in a condensed cluster and spread into an
+   evenly spaced row as --stage1 goes 0 -> 1 — the same variable the card
+   fan used to read, so it expands on "one scroll" exactly like before,
+   with no separate scroll listener needed. --cx/--lx (condensed/spread
+   x-offset) are set inline per icon in the HTML; a shared --hover-scale
+   rides along so hover works at any point in the expansion. */
+.hero-circles {
+  position: relative;
+  width: 320px;
+  height: 64px;
+  margin: 0 auto 32px;
+}
+.hero-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 56px;
+  height: 56px;
+  margin: -28px;
+  border-radius: 50%;
+  background: #D9D9D9 center / cover no-repeat;
+  transform:
+    translate(
+      calc(var(--cx) + (var(--lx) - var(--cx)) * var(--stage1, 0)),
+      0px
+    )
+    scale(var(--hover-scale, 1));
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease-out;
+  cursor: pointer;
+}
+.hero-circle:hover { --hover-scale: 1.12; }
+/* Icons run light blue to purple left to right; later DOM siblings stack on
+   top, so each icon overlaps the one before it. The thin page-colored ring
+   keeps the overlaps readable. */
+.hero-circle { box-shadow: 0 0 0 2px var(--bg); }
+.hero-circle:nth-child(1) { background-image: url('assets/icons/product-design.png'); }
+.hero-circle:nth-child(2) { background-image: url('assets/icons/growth.png'); }
+.hero-circle:nth-child(3) { background-image: url('assets/icons/research.png'); }
+.hero-circle:nth-child(4) { background-image: url('assets/icons/prototype.png'); }
+.hero-circle:nth-child(5) { background-image: url('assets/icons/crm.png'); }
+/* Neighboring circles overlap in the cluster formation, so without this
+   the tooltip of a circle whose sibling happens to sit later in the DOM
+   (e.g. CRM & Lifecycle, next to Prototyping) can render underneath that
+   neighbor. Raising the hovered/focused circle's own stacking level — not
+   just its ::after/::before — lifts the whole thing above every sibling
+   regardless of DOM order. */
+.hero-circle:hover, .hero-circle:focus-visible {
+  z-index: 10;
+}
+/* Tooltip: a plain CSS bubble (content pulled from data-label) rather
+   than the native title="" attribute, so it matches the site instead of
+   the browser's own unstyled tooltip. :focus-visible mirrors :hover so
+   keyboard users (tabindex="0" on each circle) get the same label —
+   aria-label carries the same text for screen readers, since generated
+   ::after content isn't reliably exposed to them. */
+.hero-circle::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: rgba(255,255,255,0.72);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 20px rgba(27,23,48,0.12);
+  color: var(--heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 125ms var(--ease-out), transform 125ms var(--ease-out);
+  z-index: 5;
+}
+.hero-circle::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(255,255,255,0.85);
+  filter: drop-shadow(0 2px 2px rgba(27,23,48,0.08));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 5;
+}
+.hero-circle:hover::after, .hero-circle:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+.hero-circle:hover::before, .hero-circle:focus-visible::before {
+  opacity: 1;
+}
+
+/* Card stack hidden in favor of the icon row above — see the HTML comment
+   next to it for why the markup is left in place. */
+.hero-stack { display: none; }
+
 /* 8px read as basically nothing once the cards are fully fanned — their
    real (rotated) bottom edge sits much closer to the tagline than the
    box's own declared 600px height suggests, leaving only ~5px of actual
@@ -1517,6 +1621,8 @@ main { position: relative; }
      top-aligned — see .hero-sticky below — so that much negative margin
      would push the cards up under the nav bar instead). */
   .hero-stack { width: 100%; height: 340px; margin-top: -24px; transform: scale(0.42); transform-origin: 50% 50%; margin-bottom: -20px; }
+  .hero-circles { width: 160px; height: 48px; }
+  .hero-circle { width: 40px; height: 40px; margin: -20px; }
   /* Fitting BOTH lines on one row each, at a true H1 size, isn't possible
      on a phone-width screen no matter how small the font goes short of
      genuinely illegible (~12-14px) — checked directly, not assumed. This

@@ -18,7 +18,7 @@
 <meta name="twitter:description" content="Customer Experience &amp; Design Manager and Product Design Manager based in Dubai, UAE — design and growth case studies from FITT Meals, Kahunas, PureCS, and more.">
 <meta name="twitter:image" content="https://hafsahzulafiqar-prod.github.io/hafsahzulafiqar/assets/profile/hafsah.png">
 <script>document.documentElement.classList.add('js-ready');</script>
-<link rel="stylesheet" href="styles.css?v=202609221o">
+<link rel="stylesheet" href="styles.css?v=202609221p">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -41,6 +41,9 @@
   <section class="hero">
     <div class="hero-sticky">
       <div class="wrap hero-inner">
+        <!-- Card stack hidden for now (display:none in CSS) in favor of the
+             original icon row below — markup stays so bringing it back is a
+             one-line flip. -->
         <div class="hero-stack">
           <!-- Cards paint first, badges last, so the badges sit in FRONT of
                the stack (z-index below reinforces this regardless of DOM
@@ -57,6 +60,21 @@
           <span class="hero-badge hero-badge-3" style="background-image:url('assets/icons/growth.png')" aria-hidden="true"></span>
           <span class="hero-badge hero-badge-4" style="background-image:url('assets/icons/prototype.png')" aria-hidden="true"></span>
           <span class="hero-badge hero-badge-5" style="background-image:url('assets/icons/crm.png')" aria-hidden="true"></span>
+        </div>
+
+        <!-- The original overlapping icon row is back, now driven by the
+             hero's own --stage1 (already written by script.js's pinned-hero
+             IIFE) instead of its old standalone scroll listener — so it
+             expands in step with "one scroll" the same way the card fan
+             used to, no new JS needed. Defaults to --stage1:1 (fully spread)
+             on mobile/reduced-motion/no-JS, matching every other stage1
+             consumer in this hero. -->
+        <div class="hero-circles">
+          <span class="hero-circle" tabindex="0" data-label="Product Design" aria-label="Product Design" style="--cx:-48px; --cy:0px; --lx:-132px;"></span>
+          <span class="hero-circle" tabindex="0" data-label="Growth Strategy" aria-label="Growth Strategy" style="--cx:-24px; --cy:0px; --lx:-66px;"></span>
+          <span class="hero-circle" tabindex="0" data-label="UX Research" aria-label="UX Research" style="--cx:0px; --cy:0px; --lx:0px;"></span>
+          <span class="hero-circle" tabindex="0" data-label="Prototyping" aria-label="Prototyping" style="--cx:24px; --cy:0px; --lx:66px;"></span>
+          <span class="hero-circle" tabindex="0" data-label="CRM &amp; Lifecycle" aria-label="CRM &amp; Lifecycle" style="--cx:48px; --cy:0px; --lx:132px;"></span>
         </div>
 
         <!-- "Product Designer" is gone — the tagline itself now carries the
@@ -303,6 +321,6 @@
   </div>
 </div>
 
-<script src="script.js?v=202609221o"></script>
+<script src="script.js?v=202609221p"></script>
 </body>
 </html>
