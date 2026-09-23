@@ -1177,9 +1177,7 @@ main { position: relative; }
 .about-preview-text p { color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 20px; max-width: 480px; }
 .about-preview-media {
   aspect-ratio: 4 / 5;
-  border-radius: 20px;
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
+  background: url('assets/about/awards.png') center / contain no-repeat;
 }
 
 /* Let's connect — a dark panel for the closing CTA, echoing the case
