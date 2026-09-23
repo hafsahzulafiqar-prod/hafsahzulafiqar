@@ -15,13 +15,14 @@
      responding to input, ease-in-out for on-screen movement. */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  /* ui-rounded is the standard CSS keyword for the system rounded face
-     (renders as SF Pro Rounded on Apple platforms); named SF fallbacks
-     cover browsers that recognize the family name but not the generic
-     keyword, and DM Sans (already loaded) is the non-Apple fallback.
-     --font-display used to be Impact — replaced everywhere so display
-     and body text share the same SF Pro Rounded family. */
-  --font-display: ui-rounded, "SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, 'DM Sans', system-ui, sans-serif;
+  /* Headings site-wide are Fira Sans (bold, loaded via Google Fonts on
+     every page) — this single token drives every h1/h2/h3, the marquee/
+     logo strip, and every other place that already reads var(--font-display)
+     directly, so they all picked up Fira Sans automatically instead of
+     needing a per-selector edit. Body copy stays on the rounded system
+     stack (ui-rounded = SF Pro Rounded on Apple platforms; DM Sans, also
+     loaded, is the non-Apple fallback). */
+  --font-display: 'Fira Sans', ui-rounded, "SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, 'DM Sans', system-ui, sans-serif;
   --font-body: ui-rounded, "SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, 'DM Sans', system-ui, sans-serif;
 }
 
@@ -42,6 +43,7 @@ body {
 
 h1, h2, h3 {
   font-family: var(--font-display);
+  font-weight: 800;
   margin: 0;
   text-wrap: balance;
   text-transform: uppercase;
@@ -267,7 +269,12 @@ a { color: inherit; text-decoration: none; }
    inset:-20% of "the whole page" added ~600px of dead empty space below
    the footer. */
 .case-studies-sticky { position: relative; overflow: hidden; }
-.case-studies.is-pinned { position: relative; height: calc(var(--cs-count, 4) * 100vh); padding: 0; }
+/* One sticky viewport (for the first slide to sit still in) plus a SHORT
+   fixed scroll distance per additional slide — not another full 100vh
+   each, which took many scroll ticks to get through one transition. 160px
+   is roughly a single wheel/trackpad scroll gesture, so one scroll is
+   enough to move to the next slide instead of several. */
+.case-studies.is-pinned { position: relative; height: calc(100vh + (var(--cs-count, 4) - 1) * 160px); padding: 0; }
 .case-studies.is-pinned .case-studies-sticky {
   position: sticky; top: 0; height: 100vh;
   display: flex; align-items: center;

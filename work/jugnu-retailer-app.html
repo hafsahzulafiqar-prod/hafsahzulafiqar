@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jugnu — Hafsah Zulafiqar</title>
-<link rel="stylesheet" href="../styles.css?v=2026092212">
+<link rel="stylesheet" href="../styles.css?v=2026092213">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -216,7 +216,7 @@
       <section id="competitor-analysis">
         <h2>Competitor analysis</h2>
         <p>We audited how other B2B and grocery apps solved the same problems: categories and subcategories listed together, tile-style browsing for easy ordering, an accessible cart, clear quantity and pricing shown upfront, promotions surfaced before checkout, and popups used to avoid back-and-forth navigation between pages. Those patterns directly shaped the redesign that followed.</p>
-        <div class="case-gallery-shot" style="height:280px;" aria-hidden="true">Competitor analysis board</div>
+        <img src="../assets/jugnu/case-study/competitor-analysis.png" alt="Competitor analysis board comparing category browsing, cart, and pricing patterns across other B2B and grocery apps" style="width:100%;border-radius:16px;">
       </section>
 
       <section id="opportunities">
@@ -249,13 +249,13 @@
           <span>Flip card — 1</span>
           <span>Flip card — 2</span>
         </div>
-        <div class="case-gallery-shot" style="height:280px;" aria-hidden="true">Prototype formats</div>
+        <img src="../assets/jugnu/case-study/redesign-formats.png" alt="Low-fidelity prototype formats tested for adding an SKU to cart: pop up, multi-SKU drawer, drawer, drop down, slide, and two flip-card variants" style="width:100%;border-radius:16px;">
       </section>
 
       <section id="market-testing">
         <h2>Market testing</h2>
         <p>We put the leading formats in front of real retailers to see which one they actually understood and could use unassisted.</p>
-        <div class="case-gallery-shot" style="height:280px;" aria-hidden="true">Market testing</div>
+        <img src="../assets/jugnu/case-study/market-testing-phones.png" alt="Market testing session comparing how retailers interacted with the leading prototype formats" style="width:100%;border-radius:16px;">
         <h3>Key takeaways</h3>
         <ul>
           <li>Retailers click on the image, not the plus button</li>
@@ -272,41 +272,69 @@
         <div class="case-feature-block">
           <h4>SKU browsing</h4>
           <p>With a single-page homepage that only displayed categories, users were limited to finding the desired product on their own with no exploration. The Urdu text was difficult to read and brands were randomly assorted. Users could not find featured products.</p>
-          <div class="case-gallery-shot case-feature-video" aria-hidden="true">Video placeholder</div>
-          <details class="case-feature-expand">
-            <summary>The solution: homepage carousels</summary>
-            <p>With a long page of carousels, categories, and recommended products, we could encourage the retailer to explore more products, upsell more, and give him vertical and horizontal scrolling.</p>
-          </details>
+          <p>The solution — homepage carousels: with a long page of carousels, categories, and recommended products, we could encourage the retailer to explore more products, upsell more, and give him vertical and horizontal scrolling.</p>
+          <div class="case-toggle" data-case-toggle>
+            <div class="case-toggle-bar" role="tablist" aria-label="SKU browsing view">
+              <span class="case-toggle-thumb" aria-hidden="true"></span>
+              <button type="button" role="tab" id="sku-tab-a" aria-selected="true" aria-controls="sku-panel-a">Old design</button>
+              <button type="button" role="tab" id="sku-tab-b" aria-selected="false" aria-controls="sku-panel-b" tabindex="-1">Updated</button>
+            </div>
+            <div class="case-toggle-panels">
+              <div class="case-toggle-panel is-active" role="tabpanel" id="sku-panel-a" aria-labelledby="sku-tab-a"><img src="../assets/jugnu/case-study/sku-browsing-problem.png" alt="Old design: single-page homepage listing only categories, with no way to explore products" style="width:100%;border-radius:12px;"></div>
+              <div class="case-toggle-panel" role="tabpanel" id="sku-panel-b" aria-labelledby="sku-tab-b"><img src="../assets/jugnu/case-study/homepage-carousels-solution.png" alt="Updated design: homepage carousels surfacing categories and recommended products for exploration" style="width:100%;border-radius:12px;"></div>
+            </div>
+          </div>
         </div>
 
         <div class="case-feature-block">
           <h4>Lost campaigns</h4>
           <p>Since the app was designed in a tabular form, retailers never got to know about the campaigns — they didn't know they had to interact with all the tabs to find them.</p>
-          <div class="case-gallery-shot case-feature-video" aria-hidden="true">Video placeholder</div>
-          <details class="case-feature-expand">
-            <summary>The solution: upfront campaigns</summary>
-            <p>We gave slots to all important campaigns on the homepage, making the design modular and easy to scroll. A banner space on top let us summarize the discounts at a glance.</p>
-          </details>
+          <p>The solution — upfront campaigns: we gave slots to all important campaigns on the homepage, making the design modular and easy to scroll. A banner space on top let us summarize the discounts at a glance.</p>
+          <div class="case-toggle" data-case-toggle>
+            <div class="case-toggle-bar" role="tablist" aria-label="Lost campaigns view">
+              <span class="case-toggle-thumb" aria-hidden="true"></span>
+              <button type="button" role="tab" id="campaigns-tab-a" aria-selected="true" aria-controls="campaigns-panel-a">Old design</button>
+              <button type="button" role="tab" id="campaigns-tab-b" aria-selected="false" aria-controls="campaigns-panel-b" tabindex="-1">Updated</button>
+            </div>
+            <div class="case-toggle-panels">
+              <div class="case-toggle-panel is-active" role="tabpanel" id="campaigns-panel-a" aria-labelledby="campaigns-tab-a"><img src="../assets/jugnu/case-study/lost-campaigns-problem.png" alt="Old design: campaigns buried inside tabs, easy for retailers to miss" style="width:100%;border-radius:12px;"></div>
+              <div class="case-toggle-panel" role="tabpanel" id="campaigns-panel-b" aria-labelledby="campaigns-tab-b"><img src="../assets/jugnu/case-study/upfront-campaigns-solution.png" alt="Updated design: campaigns surfaced upfront on the homepage with a summary banner" style="width:100%;border-radius:12px;"></div>
+            </div>
+          </div>
         </div>
 
         <div class="case-feature-block">
           <h4>Cognitive overload</h4>
           <p>Feedback showed retailers could not understand the tags, discounts, and price differences highlighted. They even missed the top price feature against every SKU.</p>
-          <div class="case-gallery-shot case-feature-video" aria-hidden="true">Video placeholder</div>
-          <details class="case-feature-expand">
-            <summary>The solution: drawer modals</summary>
-            <p>Converting SKUs into tiles and moving "add to cart" into drawers let us segment the information, give a clear CTA, and make the plus/minus buttons big enough to actually interact with — plus explain any SKU-specific promotions running.</p>
-          </details>
+          <p>The solution — drawer modals: converting SKUs into tiles and moving "add to cart" into drawers let us segment the information, give a clear CTA, and make the plus/minus buttons big enough to actually interact with — plus explain any SKU-specific promotions running.</p>
+          <div class="case-toggle" data-case-toggle>
+            <div class="case-toggle-bar" role="tablist" aria-label="Cognitive overload view">
+              <span class="case-toggle-thumb" aria-hidden="true"></span>
+              <button type="button" role="tab" id="cognitive-tab-a" aria-selected="true" aria-controls="cognitive-panel-a">Old design</button>
+              <button type="button" role="tab" id="cognitive-tab-b" aria-selected="false" aria-controls="cognitive-panel-b" tabindex="-1">Updated</button>
+            </div>
+            <div class="case-toggle-panels">
+              <div class="case-toggle-panel is-active" role="tabpanel" id="cognitive-panel-a" aria-labelledby="cognitive-tab-a"><img src="../assets/jugnu/case-study/cognitive-overload-problem.png" alt="Old design: tags, discounts, and price differences cluttered together and hard to parse" style="width:100%;border-radius:12px;"></div>
+              <div class="case-toggle-panel" role="tabpanel" id="cognitive-panel-b" aria-labelledby="cognitive-tab-b"><img src="../assets/jugnu/case-study/drawer-modals-solution.png" alt="Updated design: SKU tiles with add-to-cart drawer modals segmenting the information" style="width:100%;border-radius:12px;"></div>
+            </div>
+          </div>
         </div>
 
         <div class="case-feature-block">
           <h4>Discount breakdown</h4>
           <p>Since discounts weren't visible upfront, retailers heavily relied on manual calculations — and didn't know their minimum order value (MOV).</p>
-          <div class="case-gallery-shot case-feature-video" aria-hidden="true">Video placeholder</div>
-          <details class="case-feature-expand">
-            <summary>The solution: upfront visibility</summary>
-            <p>A progress bar of MOV achieved gives the retailer visibility into the discount he's availed — decreasing reliance on external apps and building faith in this one.</p>
-          </details>
+          <p>The solution — upfront visibility: a progress bar of MOV achieved gives the retailer visibility into the discount he's availed — decreasing reliance on external apps and building faith in this one.</p>
+          <div class="case-toggle" data-case-toggle>
+            <div class="case-toggle-bar" role="tablist" aria-label="Discount breakdown view">
+              <span class="case-toggle-thumb" aria-hidden="true"></span>
+              <button type="button" role="tab" id="discount-tab-a" aria-selected="true" aria-controls="discount-panel-a">Old design</button>
+              <button type="button" role="tab" id="discount-tab-b" aria-selected="false" aria-controls="discount-panel-b" tabindex="-1">Updated</button>
+            </div>
+            <div class="case-toggle-panels">
+              <div class="case-toggle-panel is-active" role="tabpanel" id="discount-panel-a" aria-labelledby="discount-tab-a"><img src="../assets/jugnu/case-study/discount-breakdown-problem.png" alt="Old design: discounts and minimum order value not visible upfront" style="width:100%;border-radius:12px;"></div>
+              <div class="case-toggle-panel" role="tabpanel" id="discount-panel-b" aria-labelledby="discount-tab-b"><img src="../assets/jugnu/case-study/upfront-visibility-solution.png" alt="Updated design: a progress bar showing minimum order value achieved" style="width:100%;border-radius:12px;"></div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -314,19 +342,19 @@
         <h2>UI revamp for a better experience</h2>
 
         <h3>Challenges redesign</h3>
-        <div class="case-gallery-shot" style="height:220px;" aria-hidden="true">Before / after</div>
+        <img src="../assets/jugnu/case-study/challenges-redesign.png" alt="Before and after: challenges screen redesigned to segment repetitive, clubbed information" style="width:100%;border-radius:16px;">
         <p>The challenges designed first were hard to understand — the clubbed information was repetitive. We changed the look and feel to segment the information better.</p>
 
         <h3>Account page redesign</h3>
-        <div class="case-gallery-shot" style="height:220px;" aria-hidden="true">Before / after</div>
+        <img src="../assets/jugnu/case-study/account-page-redesign.png" alt="Before and after: account page redesigned for scalability, with upfront credit program visibility" style="width:100%;border-radius:16px;">
         <p>Redesigned the account page for scalability of future features, to include demo videos, upfront visibility of the credit program, and to segment credit users from the rest of the userbase as a premium feature.</p>
 
         <h3>Order detail redesign</h3>
-        <div class="case-gallery-shot" style="height:220px;" aria-hidden="true">Before / after</div>
+        <img src="../assets/jugnu/case-study/order-detail-redesign.png" alt="Before and after: order detail screen redesigned with clear order value, discount, and wallet details" style="width:100%;border-radius:16px;">
         <p>Redesigned the progress of the order status with clear details on the order value, discount unlocked, challenges participated in, and wallet/credit amount used.</p>
 
         <h3>Order confirmation</h3>
-        <div class="case-gallery-shot" style="height:220px;" aria-hidden="true">Before / after</div>
+        <img src="../assets/jugnu/case-study/order-confirmation-redesign.png" alt="Before and after: order confirmation screen redesigned with a promo code slot and delivery-schedule picker" style="width:100%;border-radius:16px;">
         <p>Following the new design system, we re-did these screens with a slot for promo codes and room to scale the delivery-schedule picker in the future.</p>
       </section>
 
@@ -369,6 +397,6 @@
   <div class="footer-skyline" aria-hidden="true"></div>
 </footer>
 
-<script src="../script.js?v=2026092212"></script>
+<script src="../script.js?v=2026092213"></script>
 </body>
 </html>

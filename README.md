@@ -92,14 +92,20 @@ re-theme the whole site.
 
 ### Typography
 
-- **Display** (`--font-display`) and **Body** (`--font-body`): both
-  `ui-rounded, "SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont,
-  'DM Sans', system-ui, sans-serif` — the same stack, used everywhere (hero headline,
-  page titles, stat numbers, subheadings, nav, body copy, chat UI). `ui-rounded` is the
-  standard CSS keyword for the system rounded face and renders as SF Pro Rounded on
-  Apple platforms; DM Sans (loaded from Google Fonts via `<link>` tags in each page's
-  `<head>`) is the fallback everywhere else. `--font-display` used to be Impact —
-  replaced so display and body text match.
+- **Display** (`--font-display`): `'Fira Sans', ui-rounded, "SF Pro Rounded", "SF Pro
+  Display", -apple-system, BlinkMacSystemFont, 'DM Sans', system-ui, sans-serif` — bold
+  Fira Sans (weight 800 on the base `h1, h2, h3` rule; loaded via Google Fonts on every
+  page, weights 400/700/800/900), used for every heading site-wide: hero headline, page
+  titles, section titles, the company **logo strip** (`.marquee-track span`), stat
+  labels, nav — anything reading `var(--font-display)` picked this up from the one
+  token change, no per-selector edits needed.
+- **Body** (`--font-body`): `ui-rounded, "SF Pro Rounded", "SF Pro Display",
+  -apple-system, BlinkMacSystemFont, 'DM Sans', system-ui, sans-serif` — the rounded
+  system font (renders as SF Pro Rounded on Apple platforms; DM Sans, loaded from
+  Google Fonts, is the fallback everywhere else), used for all body copy, paragraphs,
+  and UI text. `--font-display` and `--font-body` used to be identical (both this same
+  rounded stack) until this pass split them so headings read as a distinct, bolder
+  display face instead of just a heavier weight of the body font.
 - The hero `<h1>` is a flat solid `--heading` (dark blue), changed from `--accent`
   (purple) in a later pass. Before that it was a gradient text-fill across
   primary → secondary → accent; that pass flattened it along with every other
