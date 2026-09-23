@@ -645,6 +645,23 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   sync();
 })();
 
+// Hero icon row, mobile only (".hero-circles" — see styles.css): below
+// 760px the row never gets the scroll-driven reveal above (the hero
+// doesn't pin), so styles.css starts it closed there (--stage1:0, scoped
+// to .hero-circles itself) instead of the site-wide default of fully
+// open. A tap toggles .is-open, which switches that local --stage1 to 1
+// and lets the row's own existing transition animate it — no separate
+// animation code needed here, just the class toggle.
+(function () {
+  var circles = document.querySelector('.hero-circles');
+  if (!circles) return;
+  var mqSmall = window.matchMedia('(max-width: 760px)');
+  circles.addEventListener('click', function () {
+    if (!mqSmall.matches) return;
+    circles.classList.toggle('is-open');
+  });
+})();
+
 // Testimonial carousel (home page only, ".testimonial-carousel"): swaps
 // which .testimonial-slide has the .active class (CSS shows only that
 // one). Slide 1 is marked active in the markup, so nothing here is
