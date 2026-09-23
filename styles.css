@@ -271,10 +271,11 @@ a { color: inherit; text-decoration: none; }
 .case-studies-sticky { position: relative; overflow: hidden; }
 /* One sticky viewport (for the first slide to sit still in) plus a SHORT
    fixed scroll distance per additional slide — not another full 100vh
-   each, which took many scroll ticks to get through one transition. 160px
-   is roughly a single wheel/trackpad scroll gesture, so one scroll is
-   enough to move to the next slide instead of several. */
-.case-studies.is-pinned { position: relative; height: calc(100vh + (var(--cs-count, 4) - 1) * 160px); padding: 0; }
+   each, which took many scroll ticks to get through one transition. 220px
+   is a bit more than one wheel/trackpad scroll gesture, so one scroll is
+   still enough to move to the next slide, just with a touch more glide
+   instead of an instant snap. */
+.case-studies.is-pinned { position: relative; height: calc(100vh + (var(--cs-count, 4) - 1) * 220px); padding: 0; }
 .case-studies.is-pinned .case-studies-sticky {
   position: sticky; top: 0; height: 100vh;
   display: flex; align-items: center;
@@ -1420,6 +1421,14 @@ main { position: relative; }
 .case-sidebar-nav a:hover { color: var(--text); }
 .case-sidebar-nav a.active { color: var(--heading); border-left-color: var(--accent); }
 .case-layout .case-body { padding-bottom: 0; }
+/* Grid items default to min-width:auto, and percentage-width <img> children
+   (the plain <img style="width:100%"> tags used for case-study screenshots)
+   report their *intrinsic* natural width for that auto-minimum instead of the
+   percentage — so without this, the single "1fr" column on mobile refuses to
+   shrink below the widest embedded image's real pixel width, overflowing the
+   whole page horizontally. */
+.case-body { min-width: 0; }
+.case-toggle-panels, .case-toggle-panel { min-width: 0; }
 .case-layout section + section { margin-top: 48px; }
 
 /* Problem / Context / Result — a numbered vertical list, each item a
