@@ -1700,14 +1700,15 @@ main { position: relative; }
   .testimonial-person { width: auto; }
   .connect-panel { padding: 40px 24px; }
   /* Mobile never pins (see the hero-scroll script), so .hero-sticky is just
-     a normal-flow box — but it was still inheriting min-height:100vh plus
-     align-items:center from the desktop/pinned rule, which vertically
-     centers the whole card+heading+tagline block in a near-fullscreen box.
-     Since the block is shorter than that, centering left a large empty gap
-     above the cards and pushed everything down toward the middle of the
-     screen. Top-aligning with a much smaller min-height moves the cards up
-     right under the header instead. */
-  .hero-sticky { min-height: 0; align-items: flex-start; padding: 32px 0 16px; }
+     a normal-flow box — but align-items:center (inherited from the
+     desktop/pinned rule) vertically centered the whole card+heading+
+     tagline block, which left a large empty gap above it since the block
+     is shorter than a full viewport. Top-aligning fixes that gap without
+     giving up the section's own height — min-height stays close to 100vh
+     (not 0) so the hero still reads as a full hero on mobile instead of
+     collapsing to just its content's own short height, with the content
+     sitting near the top of that space rather than dead center. */
+  .hero-sticky { min-height: 90vh; align-items: flex-start; padding: 32px 0 16px; }
   /* Tighter than the desktop 36px — on a narrow screen the marquee reads as
      a divider between the hero and Case Studies, not a section of its own,
      so it doesn't need much breathing room on either side. */
