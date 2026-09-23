@@ -259,15 +259,19 @@ a { color: inherit; text-decoration: none; }
    active/is-before/is-after class swap — so transform/opacity/the veil
    are all written inline per frame instead of via CSS transitions (a
    transition here would fight the spring's own easing/overshoot). */
+/* position:relative + overflow:hidden unconditionally (not just when
+   pinned) — .case-studies-bg below is position:absolute with a negative
+   inset, and without a sized, clipping ancestor here it was escaping all
+   the way up to the nearest positioned ancestor (main) on mobile, where
+   main's height is the WHOLE page's content height, not this section's —
+   inset:-20% of "the whole page" added ~600px of dead empty space below
+   the footer. */
+.case-studies-sticky { position: relative; overflow: hidden; }
 .case-studies.is-pinned { position: relative; height: calc(var(--cs-count, 4) * 100vh); padding: 0; }
 .case-studies.is-pinned .case-studies-sticky {
   position: sticky; top: 0; height: 100vh;
   display: flex; align-items: center;
   perspective: 1200px;
-  /* Clips the decorative parallax background's travel range — NOT the
-     cards themselves, which need to visibly rotate/peek past the panel's
-     own edges rather than being cropped flush to it. */
-  overflow: hidden;
 }
 /* Slow decorative drift (script.js writes its transform from continuous
    scroll progress, not the stepped slide index) — sits behind the panel. */
