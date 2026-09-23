@@ -138,6 +138,55 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   steps.forEach(function (step) { observer.observe(step); });
 })();
 
+// About-preview bio (home page only, "#about-preview .about-preview-text
+// p"): word-by-word scroll highlight, same color-mix technique as the hero
+// tagline (.hero-tagline-line) but not pinned — this section scrolls
+// normally, so each word's highlight amount is derived continuously from
+// how far the paragraph itself has travelled through a reading band in the
+// viewport, rather than from a fixed scroll-stage. Words behind the reading
+// position sit at full color, the ones ahead stay muted, and it reverses
+// cleanly on scroll-up since it's re-derived from position every frame.
+(function () {
+  var p = document.querySelector('#about-preview .about-preview-text p');
+  var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (!p || mqReduce.matches) return;
+
+  var words = p.textContent.trim().split(/\s+/);
+  p.innerHTML = words.map(function (w) { return '<span class="about-reveal-word">' + w + '</span>'; }).join(' ');
+  var spans = Array.prototype.slice.call(p.querySelectorAll('.about-reveal-word'));
+  var count = spans.length;
+  // Each word's own reveal window is a slice of the 0-1 progress range,
+  // sized so consecutive words' windows overlap slightly (smoother than a
+  // hard per-word cutoff) but still land in reading order start-to-finish.
+  var band = Math.min(0.25, 2 / count);
+
+  var ticking = false;
+  function update() {
+    ticking = false;
+    var rect = p.getBoundingClientRect();
+    var vh = window.innerHeight;
+    // Reveal starts once the paragraph's top has scrolled up to 85% of the
+    // viewport height (comfortably below the fold, not off-screen) and
+    // finishes once it's scrolled the paragraph's own height plus half a
+    // viewport further — a fixed reading band regardless of paragraph length.
+    var raw = (vh * 0.85 - rect.top) / (rect.height + vh * 0.5);
+    var progress = Math.min(1, Math.max(0, raw));
+    spans.forEach(function (span, i) {
+      var start = (i / count) * (1 - band);
+      var reveal = Math.min(1, Math.max(0, (progress - start) / band));
+      span.style.setProperty('--reveal', reveal);
+    });
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
+})();
+
 // Rule-based Q&A over Hafsah's CV (home page only). Answers are fixed templates
 // built only from the knowledge base below — nothing is generated or invented.
 (function () {

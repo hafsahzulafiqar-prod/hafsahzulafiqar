@@ -1182,7 +1182,30 @@ main { position: relative; }
   box-shadow: 0 8px 24px rgba(27,23,48,0.12);
   margin-bottom: 24px;
 }
-.about-preview-text p { color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 20px; max-width: 480px; }
+/* Sized and set in the display face (same 'Fira Sans' bold treatment as the
+   hero tagline) rather than the usual muted body-copy styling, since this
+   bio now reads as a statement, not filler text. Falls back to a solid
+   --heading color when JS doesn't run; .about-reveal-word (below) overrides
+   that per word once script.js wraps them for the scroll highlight. */
+.about-preview-text p {
+  color: var(--heading);
+  font-family: 'Fira Sans', var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 1.9vw, 1.5rem);
+  line-height: 1.4;
+  margin-bottom: 20px;
+  max-width: 520px;
+}
+/* Per-word highlight for the about-preview bio, driven by script.js: muted
+   at --reveal:0, full color at --reveal:1. JS sets this continuously as the
+   paragraph scrolls through the reading band (same color-mix technique as
+   .hero-tagline-line), so words light up in scroll order and dim back out
+   on scroll-up instead of firing once. The --reveal:1 default means a word
+   renders fully colored until JS actually starts driving it (or if it never
+   runs at all under prefers-reduced-motion), so nothing flashes muted. */
+.about-reveal-word {
+  color: color-mix(in srgb, var(--heading) calc(var(--reveal, 1) * 100%), var(--text-muted) calc((1 - var(--reveal, 1)) * 100%));
+}
 .about-preview-media {
   aspect-ratio: 4 / 5;
   background: url('assets/about/awards.png') center / contain no-repeat;
