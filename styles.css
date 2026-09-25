@@ -1897,6 +1897,13 @@ main { position: relative; }
   transition: opacity 200ms var(--ease-out), visibility 0s linear 200ms;
 }
 .case-toggle-panel.is-active { opacity: 1; visibility: visible; transition-delay: 0s; }
+/* A full-page screenshot is much taller than it is wide — showing it at
+   full width would blow the panel's height out and make the toggle jump
+   around when switching tabs. Capping the height and scrolling vertically
+   inside it keeps the toggle's own height stable while still letting the
+   whole screenshot be seen. */
+.case-toggle-scroll { max-height: 480px; overflow-y: auto; border-radius: 12px; }
+.case-toggle-scroll img { display: block; width: 100%; border-radius: 0; }
 @media (max-width: 760px) { .case-toggle-bar { display: grid; } }
 @media (prefers-reduced-motion: reduce) { .case-toggle-thumb { transition: none; } }
 
