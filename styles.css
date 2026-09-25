@@ -547,9 +547,10 @@ main { position: relative; }
 .hero-card-4 { z-index: 10; --rest-x: 135px;  --target-x: 220px;  --target-y: -25px;  --card-rot: 6.24deg; }
 
 /* The tagline now carries the H1 treatment that "Product Designer" used to
-   (same family/weight/uppercase — text-transform:uppercase comes from the
-   base h1/h2/h3 rule since it's an <h1> now), just sized for a full
-   sentence instead of two words. Compound selector so this beats
+   (same family/weight — but NOT uppercase; a full sentence reads better in
+   normal case than the base h1/h2/h3 rule's all-caps, which was fine for
+   short headings/labels but not a whole readable sentence), just sized for
+   a full sentence instead of two words. Compound selector so this beats
    .tagline's own font-size/color regardless of source order — both .tagline
    and .hero-tagline are single-class selectors otherwise. */
 .tagline.hero-tagline {
@@ -557,6 +558,7 @@ main { position: relative; }
   font-weight: 800;
   font-size: clamp(1.35rem, 3.3vw, 2.2rem);
   line-height: 1.25;
+  text-transform: none;
   /* .tagline's own max-width:600px is meant for a body-copy paragraph —
      too narrow for an H1-sized headline, which is why each line was
      wrapping a second time inside it. */
