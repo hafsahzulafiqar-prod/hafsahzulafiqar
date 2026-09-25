@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mualim — Hafsah Zulafiqar</title>
-<link rel="stylesheet" href="../styles.css?v=2026092509">
+<link rel="stylesheet" href="../styles.css?v=2026092510">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -46,17 +46,19 @@
     <aside class="case-sidebar">
       <nav class="case-sidebar-nav">
         <a href="#overview" class="active">Overview</a>
-        <a href="#research">Research</a>
-        <a href="#survey">Survey</a>
+        <a href="#for-parents">Part one — For parents</a>
+        <a href="#research">Research findings</a>
         <a href="#personas">Personas</a>
-        <a href="#challenges">Challenges</a>
+        <a href="#parent-challenges">Challenges</a>
+        <a href="#platform">All-in-one platform</a>
+        <a href="#core-features">Core features</a>
+        <a href="#for-students">Part two — For students</a>
+        <a href="#student-challenges">Challenges</a>
         <a href="#design-considerations">Design considerations</a>
         <a href="#visual-dna">Visual DNA</a>
-        <a href="#layout">Layout</a>
-        <a href="#interactions">Interactions</a>
-        <a href="#core-features">Core features</a>
-        <a href="#strategy">Strategy</a>
-        <a href="#interface">Interface</a>
+        <a href="#layout">Layout hierarchy</a>
+        <a href="#ai-learning">AI learning made easy</a>
+        <a href="#positive-reinforcement">Positive reinforcement</a>
         <a href="#outcomes">Outcomes</a>
       </nav>
     </aside>
@@ -94,59 +96,34 @@
         <div class="case-gallery-shot thumb-mualim-hero" style="height:320px;" aria-hidden="true"></div>
       </section>
 
-      <section id="research">
-        <h2>Research</h2>
-        <p>Designing for kids means designing for two audiences at once — the child actually using the product, and the parent or guardian deciding whether to trust it with their kid's learning. My UX research focused on understanding how each side needed to experience the product differently: what makes an AI tutor feel safe, engaging, and genuinely useful to a child, and what makes it feel trustworthy and transparent to the adult overseeing it. That split informed every decision that followed.</p>
-        <div class="case-callout">Designing for a child's attention and a parent's trust, at the same time — in a single interface.</div>
+      <section id="for-parents">
+        <p class="case-studies-kicker">Part one</p>
+        <h2>Designing for parents</h2>
+        <p>Before a child ever opens the app, a parent has to decide the AI tutor is worth letting them use in the first place. This half of the work is about earning that trust — research, personas, and a core feature set built around making Mualim feel like one coherent platform a parent can rely on, not a black box.</p>
       </section>
 
-      <section id="survey">
-        <h3>Survey Findings</h3>
-        <p>Alongside short usability sessions with kids, I ran a parent-facing survey to understand what would actually make an AI tutor feel safe enough to adopt — a child's enthusiasm meant nothing if the parent wouldn't approve the app in the first place.</p>
-        <p>The sessions with kids surfaced a different set of signals entirely: what kept their attention past the first few minutes, and exactly where they got stuck or gave up on a task.</p>
+      <section id="research">
+        <h2>Research findings</h2>
+        <p>Designing for kids means designing for two audiences at once — the child actually using the product, and the parent or guardian deciding whether to trust it with their kid's learning. My UX research focused on understanding how each side needed to experience the product differently: what makes an AI tutor feel safe, engaging, and genuinely useful to a child, and what makes it feel trustworthy and transparent to the adult overseeing it. That split informed every decision that followed.</p>
+        <div class="case-callout">Designing for a child's attention and a parent's trust, at the same time — in a single interface.</div>
+        <p>A parent-facing survey ran alongside short usability sessions with kids to understand what would actually make an AI tutor feel safe enough to adopt — a child's enthusiasm meant nothing if the parent wouldn't approve the app in the first place.</p>
         <div class="case-stats">
           <div class="case-stat">
             <p class="case-stat-num" data-count-to="78">78%</p>
             <p class="case-stat-text">Of parents said visible, plain-language progress tracking was their top trust factor</p>
           </div>
           <div class="case-stat">
-            <p class="case-stat-num" data-count-to="64">64%</p>
-            <p class="case-stat-text">Of kids disengaged within the first session without an immediate reward or reaction</p>
+            <p class="case-stat-num" data-count-to="52">52%</p>
+            <p class="case-stat-text">Of parents said managing account, billing, and progress in separate places was their biggest frustration</p>
           </div>
         </div>
-        <div class="case-gallery-shot" style="height:260px;" aria-hidden="true">Survey &amp; session findings board</div>
+        <div class="case-gallery-shot" style="height:260px;" aria-hidden="true">Parent survey &amp; findings board</div>
       </section>
 
       <section id="personas">
         <h3>Defining Personas</h3>
-        <p>Two very different kinds of learners emerged, plus the parent watching over both — Mualim had to work for a young child just starting out, an independent older student, and the adult deciding whether to trust either of them with an AI tutor.</p>
+        <p>Two very different parent profiles emerged, from opposite ends of the trust spectrum — one already sold on AI-driven learning and just wanting visibility, the other openly skeptical of it.</p>
         <div class="case-personas-grid">
-          <article class="case-persona-card">
-            <header class="case-persona-head">
-              <span class="case-persona-initial" aria-hidden="true">Y</span>
-              <div><h4>Yusuf</h4><p class="case-persona-meta">8 · Early learner · Riyadh</p></div>
-            </header>
-            <p class="case-persona-title">The Curious Beginner</p>
-            <dl class="case-persona-facts">
-              <div><dt>Goals</dt><dd>Feel like he's winning, not being tested; get instant, encouraging feedback.</dd></div>
-              <div><dt>Frustrations</dt><dd>Long blocks of text; tasks that feel like homework instead of play.</dd></div>
-              <div><dt>Decision drivers</dt><dd>Bright visuals, quick wins, a tutor that reacts to him personally.</dd></div>
-            </dl>
-            <blockquote class="case-persona-quote">“I want it to talk to me like it knows me, not like it's reading me a lesson.”</blockquote>
-          </article>
-          <article class="case-persona-card">
-            <header class="case-persona-head">
-              <span class="case-persona-initial" aria-hidden="true">L</span>
-              <div><h4>Lina</h4><p class="case-persona-meta">13 · Independent student · Jeddah</p></div>
-            </header>
-            <p class="case-persona-title">The Self-Directed Learner</p>
-            <dl class="case-persona-facts">
-              <div><dt>Goals</dt><dd>Move at her own pace; skip what she already knows without having to ask.</dd></div>
-              <div><dt>Frustrations</dt><dd>Being treated like a much younger child; no real sense of mastery or progress.</dd></div>
-              <div><dt>Decision drivers</dt><dd>Autonomy, visible mastery tracking, a tutor that challenges rather than babies her.</dd></div>
-            </dl>
-            <blockquote class="case-persona-quote">“If it's too easy I'll just stop paying attention — I want to actually get somewhere.”</blockquote>
-          </article>
           <article class="case-persona-card">
             <header class="case-persona-head">
               <span class="case-persona-initial" aria-hidden="true">N</span>
@@ -160,13 +137,89 @@
             </dl>
             <blockquote class="case-persona-quote">“I don't need to see every question — I need to know it's actually working.”</blockquote>
           </article>
+          <article class="case-persona-card">
+            <header class="case-persona-head">
+              <span class="case-persona-initial" aria-hidden="true">K</span>
+              <div><h4>Khalid</h4><p class="case-persona-meta">44 · First-time adopter · Jeddah</p></div>
+            </header>
+            <p class="case-persona-title">The Cautious Adopter</p>
+            <dl class="case-persona-facts">
+              <div><dt>Goals</dt><dd>Confirm the AI is actually teaching correct material, not just entertaining; keep final say over what his kids see.</dd></div>
+              <div><dt>Frustrations</dt><dd>Marketing claims about "AI-powered learning" with no way to verify what's actually happening in a session.</dd></div>
+              <div><dt>Decision drivers</dt><dd>Transparency into content and sources, an easy way to pause or override the tutor, visible learning outcomes.</dd></div>
+            </dl>
+            <blockquote class="case-persona-quote">“I don't trust an algorithm to raise my kid — show me exactly what it's teaching and I'll decide if it's good enough.”</blockquote>
+          </article>
         </div>
       </section>
 
-      <section id="challenges">
+      <section id="parent-challenges">
         <h3>Project challenges</h3>
-        <div class="case-callout">01 — Designing one interface for two audiences with opposite needs: a child who wants play and instant reward, and a parent who wants visible rigor and control — the same screen had to read differently to each of them.</div>
-        <div class="case-callout">02 — As an external consultant, I didn't own the AI tutor's underlying behavior, only the interface around it — every interaction had to be designed to feel consistent even when the model's responses varied.</div>
+        <div class="case-callout">01 — Building trust without becoming another report card: parents needed real visibility, but too much detail risked making the product feel like surveillance rather than a helpful summary.</div>
+        <div class="case-callout">02 — Converting skeptical, non-technical parents who distrust "AI-powered" as marketing language, without leaning on jargon or over-promising what the tutor could do.</div>
+      </section>
+
+      <section id="platform">
+        <h2>Making an all-in-one platform</h2>
+        <p>Parents didn't just want visibility into their child's learning — they wanted one place to manage all of it, instead of juggling a separate app or channel for progress, communication, and billing. That single idea shaped the whole parent experience: everything a parent needs sits behind one dashboard, not scattered across settings menus and support emails.</p>
+      </section>
+
+      <section id="core-features">
+        <h2>Core features</h2>
+        <p>The parent dashboard is the anchor of that all-in-one platform — everything below builds outward from it.</p>
+        <video class="case-video" src="../assets/mualim/parent-dashboard.mp4" autoplay muted loop playsinline preload="auto"></video>
+
+        <div class="case-feature-block">
+          <h4>Multi-child dashboard</h4>
+          <p>A parent with more than one child on Mualim sees all of them from a single screen, instead of switching accounts or apps to check on each one.</p>
+          <div class="case-gallery-shot case-feature-video" aria-hidden="true">Picture placeholder</div>
+          <details class="case-feature-expand">
+            <summary>How it works</summary>
+            <p>Each child gets their own card on the parent's home screen — progress, subject, and status at a glance, with a tap through to their full detail view.</p>
+          </details>
+        </div>
+
+        <div class="case-feature-block">
+          <h4>Plain-language progress reports</h4>
+          <p>Weekly summaries written in plain language — what's been learned, what's next — instead of raw scores that read like a report card.</p>
+          <div class="case-gallery-shot case-feature-video" aria-hidden="true">Picture placeholder</div>
+          <details class="case-feature-expand">
+            <summary>How it works</summary>
+            <p>Progress surfaces as short, plain-language summaries rather than exposing every individual answer or mistake.</p>
+          </details>
+        </div>
+
+        <div class="case-feature-block">
+          <h4>Milestone &amp; concern alerts</h4>
+          <p>Parents are notified only when it actually matters — a milestone reached, or a topic their child is visibly stuck on — instead of a constant stream of activity notifications.</p>
+          <div class="case-gallery-shot case-feature-video" aria-hidden="true">Picture placeholder</div>
+          <details class="case-feature-expand">
+            <summary>How it works</summary>
+            <p>Alerts are threshold-based, not activity-based, so a parent's notifications stay meaningful instead of becoming noise they learn to ignore.</p>
+          </details>
+        </div>
+
+        <div class="case-feature-block">
+          <h4>Manage plans &amp; settings</h4>
+          <p>Subscription, learning goals, and account controls all live in the same dashboard as progress — no separate billing portal or support ticket required.</p>
+          <div class="case-gallery-shot case-feature-video" aria-hidden="true">Picture placeholder</div>
+          <details class="case-feature-expand">
+            <summary>How it works</summary>
+            <p>Plan changes, payment details, and content controls sit one tap from the progress view they're already checking, instead of a separate settings destination.</p>
+          </details>
+        </div>
+      </section>
+
+      <section id="for-students">
+        <p class="case-studies-kicker">Part two</p>
+        <h2>Designing for students</h2>
+        <p>Once a parent trusts the platform enough to let their child in, the goals flip entirely — from transparency and control to attention and encouragement. This half covers the actual learning experience: the interface a child spends real time in.</p>
+      </section>
+
+      <section id="student-challenges">
+        <h3>Project challenges</h3>
+        <div class="case-callout">01 — One interface had to work for a 6-year-old and a 14-year-old without feeling babyish to the older kid or overwhelming to the younger one.</div>
+        <div class="case-callout">02 — Keeping a child's attention without gamifying so heavily that the actual learning got lost behind the rewards.</div>
       </section>
 
       <section id="design-considerations">
@@ -179,11 +232,21 @@
           <img src="../assets/mualim/exploration/challenge-task-2.png" alt="Mualim exploration — challenge task variant" loading="lazy">
           <img src="../assets/mualim/exploration/tasks-list.png" alt="Mualim exploration — early tasks list layout" loading="lazy">
         </div>
+        <h3>Easy to use interface</h3>
+        <img class="case-compare-img" src="../assets/mualim/kids-ui-dashboard.png" alt="Mualim student dashboard — homework, subjects, and challenges" loading="lazy">
+        <h3>Mobile responsive</h3>
+        <div class="case-exploration-grid">
+          <img src="../assets/mualim/mobile/home.png" alt="Mualim mobile — student dashboard" loading="lazy">
+          <img src="../assets/mualim/mobile/chat.png" alt="Mualim mobile — lesson navigation" loading="lazy">
+          <img src="../assets/mualim/mobile/home-2.png" alt="Mualim mobile — parent dashboard" loading="lazy">
+          <img src="../assets/mualim/mobile/student.png" alt="Mualim mobile — child progress detail" loading="lazy">
+          <img src="../assets/mualim/mobile/student-2.png" alt="Mualim mobile — settings menu" loading="lazy">
+        </div>
       </section>
 
       <section id="visual-dna">
         <h3>Visual DNA</h3>
-        <p>Warm, playful, and unmistakably built for kids — rounded shapes, bright accent colors, and a friendly tutor character carry the child-facing screens, while the parent-facing dashboard dials the same palette down to something calmer and more report-like.</p>
+        <p>Warm, playful, and unmistakably built for kids — rounded shapes, bright accent colors, and a friendly tutor character are meant to carry the child-facing screens. Real visuals for this section are still incoming.</p>
         <div class="case-toggle" data-case-toggle>
           <div class="case-toggle-bar" role="tablist" aria-label="Visual DNA view">
             <span class="case-toggle-thumb" aria-hidden="true"></span>
@@ -199,7 +262,7 @@
 
       <section id="layout">
         <h3>Layout and Hierarchy</h3>
-        <p>The child's view leads with what to do next — one big, obvious action at a time — while the parent's dashboard leads with a summary first, letting them drill into detail only if they want to.</p>
+        <p>The child's view leads with what to do next — one big, obvious action at a time — rather than a menu of options to sort through. Real visuals for this section are still incoming.</p>
         <div class="case-toggle" data-case-toggle>
           <div class="case-toggle-bar" role="tablist" aria-label="Layout view">
             <span class="case-toggle-thumb" aria-hidden="true"></span>
@@ -213,82 +276,27 @@
         </div>
       </section>
 
-      <section id="interactions">
-        <h3>Interactions</h3>
-        <p>Every attempted answer gets an immediate, encouraging animation before moving on — no waiting, no ambiguity about whether it "counted." The tutor's help option is always one tap away, never buried behind a menu.</p>
-        <div class="case-toggle" data-case-toggle>
-          <div class="case-toggle-bar" role="tablist" aria-label="Interactions view">
-            <span class="case-toggle-thumb" aria-hidden="true"></span>
-            <button type="button" role="tab" id="interactions-tab-a" aria-selected="true" aria-controls="interactions-panel-a">Initial concept</button>
-            <button type="button" role="tab" id="interactions-tab-b" aria-selected="false" aria-controls="interactions-panel-b" tabindex="-1">Final outcome</button>
-          </div>
-          <div class="case-toggle-panels">
-            <div class="case-toggle-panel is-active" role="tabpanel" id="interactions-panel-a" aria-labelledby="interactions-tab-a"><div class="case-gallery-shot" style="height:260px;" aria-hidden="true"></div></div>
-            <div class="case-toggle-panel" role="tabpanel" id="interactions-panel-b" aria-labelledby="interactions-tab-b"><div class="case-gallery-shot" style="height:260px;" aria-hidden="true"></div></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="core-features">
-        <h2>Core features</h2>
-        <p>Three parts of the product carried the most weight in balancing a child's experience against a parent's trust.</p>
-
-        <div class="case-feature-block">
-          <h4>The parent dashboard</h4>
-          <p>One dashboard to check on their kids' progress — transparent enough to build trust without turning the child's learning into something that feels like it's being graded.</p>
-          <video class="case-video" src="../assets/mualim/parent-dashboard.mp4" autoplay muted loop playsinline preload="auto"></video>
-          <details class="case-feature-expand">
-            <summary>How it works</summary>
-            <p>Progress surfaces to the parent in plain terms — what's been learned, what's next — without exposing every mistake or turning the dashboard into a report card.</p>
-          </details>
-        </div>
-
-        <div class="case-feature-block">
-          <h4>Attempting challenges</h4>
-          <p>Challenges were designed to be easy to navigate, reduce cognitive load, and encourage kids to try again if they got stuck — with the option to easily ask the AI tutor for help along the way.</p>
-          <video class="case-video" src="../assets/mualim/kids-ai-learning-1.mp4" autoplay muted loop playsinline preload="auto"></video>
-          <details class="case-feature-expand">
-            <summary>How it works</summary>
-            <p>A stuck child gets a low-friction path to help — asking the tutor directly — rather than a dead end that invites them to give up.</p>
-          </details>
-        </div>
-
-        <div class="case-feature-block">
-          <h4>AI learning</h4>
-          <p>Built around an unconventional approach to education — kids didn't need to memorize concepts, but to learn, unlearn, and relearn through iteration and goal-based learning.</p>
-          <video class="case-video" src="../assets/mualim/kids-ai-learning-2.mp4" autoplay muted loop playsinline preload="auto"></video>
-          <details class="case-feature-expand">
-            <summary>How it works</summary>
-            <p>Lessons pace around iteration rather than one-shot correctness — a wrong answer is a step in the process, not a failure state.</p>
-          </details>
-        </div>
-      </section>
-
-      <section id="strategy">
-        <h2>Strategy</h2>
-        <p>With the research in hand, I shaped the product strategy around how an AI tutor should actually behave with a young learner: how it introduces itself, how it paces a lesson, how it responds when a child gets something wrong, and how it surfaces progress back to a parent without making the experience feel like it's being graded. My goal was a strategy that treated "AI-driven learning" as a promise to make good on through interaction design, not just a label on the product.</p>
-      </section>
-
-      <section id="interface">
-        <h2>Interface</h2>
-
-        <h3>Easy to use interface</h3>
-        <img class="case-compare-img" src="../assets/mualim/kids-ui-dashboard.png" alt="Mualim student dashboard — homework, subjects, and challenges" loading="lazy">
-
-        <h3>AI learning — simple and easy</h3>
+      <section id="ai-learning">
+        <h3>AI learning made easy</h3>
+        <p>Built around an unconventional approach to education — kids didn't need to memorize concepts, but to learn, unlearn, and relearn through iteration and goal-based learning. Lessons pace around iteration rather than one-shot correctness — a wrong answer is a step in the process, not a failure state.</p>
         <div class="case-video-grid">
           <video class="case-video" src="../assets/mualim/kids-ai-learning-1.mp4" autoplay muted loop playsinline preload="auto"></video>
           <video class="case-video" src="../assets/mualim/kids-ai-learning-2.mp4" autoplay muted loop playsinline preload="auto"></video>
         </div>
+        <details class="case-feature-expand">
+          <summary>How it works</summary>
+          <p>A stuck child gets a low-friction path to help — asking the tutor directly — rather than a dead end that invites them to give up.</p>
+        </details>
+      </section>
 
-        <h3>Mobile responsive</h3>
-        <div class="case-exploration-grid">
-          <img src="../assets/mualim/mobile/home.png" alt="Mualim mobile — student dashboard" loading="lazy">
-          <img src="../assets/mualim/mobile/chat.png" alt="Mualim mobile — lesson navigation" loading="lazy">
-          <img src="../assets/mualim/mobile/home-2.png" alt="Mualim mobile — parent dashboard" loading="lazy">
-          <img src="../assets/mualim/mobile/student.png" alt="Mualim mobile — child progress detail" loading="lazy">
-          <img src="../assets/mualim/mobile/student-2.png" alt="Mualim mobile — settings menu" loading="lazy">
-        </div>
+      <section id="positive-reinforcement">
+        <h3>Positive reinforcement</h3>
+        <p>Every attempted answer gets an immediate, encouraging reaction before moving on — no waiting, no ambiguity about whether it "counted." The goal was to reward effort and attempts, not just correct answers, so a wrong guess still feels like progress rather than a dead end. Real visuals for this section are still incoming.</p>
+        <div class="case-gallery-shot case-feature-video" aria-hidden="true">Picture placeholder</div>
+        <details class="case-feature-expand">
+          <summary>How it works</summary>
+          <p>A quick, positive animation follows every attempt — right or wrong — so the loop keeps a child moving forward instead of stalling on a mistake.</p>
+        </details>
       </section>
 
       <section id="outcomes">
@@ -344,6 +352,6 @@
   <div class="footer-skyline" aria-hidden="true"></div>
 </footer>
 
-<script src="../script.js?v=2026092509"></script>
+<script src="../script.js?v=2026092510"></script>
 </body>
 </html>
