@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FITT Meals: Subscription Journey | Hafsah Zulafiqar</title>
-<link rel="stylesheet" href="../styles.css?v=2026092511">
+<link rel="stylesheet" href="../styles.css?v=2026092513">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -109,7 +109,20 @@
                 </div>
               </div>
             </div>
-            <div class="case-toggle-panel" role="tabpanel" id="overview-panel-b" aria-labelledby="overview-tab-b"><div class="case-gallery-shot thumb-fitt-subscription" style="height:320px;" aria-hidden="true"></div></div>
+            <div class="case-toggle-panel" role="tabpanel" id="overview-panel-b" aria-labelledby="overview-tab-b">
+              <div class="case-carousel" data-case-carousel role="group" aria-roledescription="carousel" aria-label="Final outcome screens">
+                <div class="case-carousel-track" tabindex="0">
+                  <figure class="case-carousel-slide"><img src="../assets/fitt-meals/outcome-1.png" alt="Final outcome: fewer decisions, lesser clicks. The many options from before are condensed into a few action steps matching the backend order API, with popular customizations pre-highlighted and upfront total and discounts shown to avoid back and forth." width="938" height="525"></figure>
+                  <figure class="case-carousel-slide"><img src="../assets/fitt-meals/outcome-2.png" alt="Final outcome: launched AI recommendations. Meals sorted with a click-swap option instead of the 10-15 minutes users used to spend deciding, which had caused a decision-paralysis loop." width="938" height="525"></figure>
+                  <figure class="case-carousel-slide"><img src="../assets/fitt-meals/outcome-3.png" alt="Final outcome: quick checkout. A new user can sign up or sign in after finalizing the cart, preserving it and asking for address details, for fewer steps, fewer decisions, and better conversion." width="938" height="525"></figure>
+                </div>
+                <div class="case-carousel-controls">
+                  <button type="button" class="case-carousel-btn" data-dir="-1" aria-label="Previous screen">&lsaquo;</button>
+                  <span class="case-carousel-count" aria-live="polite"><span data-current>1</span> / 3</span>
+                  <button type="button" class="case-carousel-btn" data-dir="1" aria-label="Next screen">&rsaquo;</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -269,8 +282,8 @@
             <button type="button" role="tab" id="layout-tab-b" aria-selected="false" aria-controls="layout-panel-b" tabindex="-1">Final outcome</button>
           </div>
           <div class="case-toggle-panels">
-            <div class="case-toggle-panel is-active" role="tabpanel" id="layout-panel-a" aria-labelledby="layout-tab-a"><div class="case-gallery-shot thumb-fitt-subscription" style="height:260px;" aria-hidden="true"></div></div>
-            <div class="case-toggle-panel" role="tabpanel" id="layout-panel-b" aria-labelledby="layout-tab-b"><div class="case-gallery-shot thumb-fitt-subscription" style="height:260px;" aria-hidden="true"></div></div>
+            <div class="case-toggle-panel is-active" role="tabpanel" id="layout-panel-a" aria-labelledby="layout-tab-a"><img src="../assets/fitt-meals/layout-concept.png" alt="Initial concept wireframe: dividing the page into digestible sections and bringing everything from multiple pages into a single-page checkout" style="width:100%;border-radius:12px;" loading="lazy"></div>
+            <div class="case-toggle-panel" role="tabpanel" id="layout-panel-b" aria-labelledby="layout-tab-b"><img src="../assets/fitt-meals/layout-outcome.png" alt="Final outcome: the single-page checkout, combining plan selection, meal choices, and order summary into one screen" style="width:100%;border-radius:12px;" loading="lazy"></div>
           </div>
         </div>
       </section>
@@ -379,6 +392,6 @@
   <div class="footer-skyline" aria-hidden="true"></div>
 </footer>
 
-<script src="../script.js?v=2026092511"></script>
+<script src="../script.js?v=2026092513"></script>
 </body>
 </html>
