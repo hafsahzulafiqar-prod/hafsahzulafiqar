@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mualim — Hafsah Zulafiqar</title>
-<link rel="stylesheet" href="../styles.css?v=2026092507">
+<link rel="stylesheet" href="../styles.css?v=2026092508">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -47,7 +47,13 @@
       <nav class="case-sidebar-nav">
         <a href="#overview" class="active">Overview</a>
         <a href="#research">Research</a>
+        <a href="#survey">Survey</a>
+        <a href="#personas">Personas</a>
+        <a href="#challenges">Challenges</a>
         <a href="#design-considerations">Design considerations</a>
+        <a href="#visual-dna">Visual DNA</a>
+        <a href="#layout">Layout</a>
+        <a href="#interactions">Interactions</a>
         <a href="#core-features">Core features</a>
         <a href="#strategy">Strategy</a>
         <a href="#interface">Interface</a>
@@ -94,6 +100,75 @@
         <div class="case-callout">Designing for a child's attention and a parent's trust, at the same time — in a single interface.</div>
       </section>
 
+      <section id="survey">
+        <h3>Survey Findings</h3>
+        <p>Alongside short usability sessions with kids, I ran a parent-facing survey to understand what would actually make an AI tutor feel safe enough to adopt — a child's enthusiasm meant nothing if the parent wouldn't approve the app in the first place.</p>
+        <p>The sessions with kids surfaced a different set of signals entirely: what kept their attention past the first few minutes, and exactly where they got stuck or gave up on a task.</p>
+        <div class="case-stats">
+          <div class="case-stat">
+            <p class="ph ph-number"></p>
+            <p class="case-stat-text">Of parents said visible, plain-language progress tracking was their top trust factor</p>
+          </div>
+          <div class="case-stat">
+            <p class="ph ph-number"></p>
+            <p class="case-stat-text">Of kids disengaged within the first session without an immediate reward or reaction</p>
+          </div>
+        </div>
+        <div class="case-gallery-shot" style="height:260px;" aria-hidden="true">Survey &amp; session findings board</div>
+      </section>
+
+      <section id="personas">
+        <h3>Defining Personas</h3>
+        <p>Two very different kinds of learners emerged, plus the parent watching over both — Mualim had to work for a young child just starting out, an independent older student, and the adult deciding whether to trust either of them with an AI tutor.</p>
+        <div class="case-personas-grid">
+          <article class="case-persona-card">
+            <header class="case-persona-head">
+              <span class="case-persona-initial" aria-hidden="true">Y</span>
+              <div><h4>Yusuf</h4><p class="case-persona-meta">8 · Early learner · Riyadh</p></div>
+            </header>
+            <p class="case-persona-title">The Curious Beginner</p>
+            <dl class="case-persona-facts">
+              <div><dt>Goals</dt><dd>Feel like he's winning, not being tested; get instant, encouraging feedback.</dd></div>
+              <div><dt>Frustrations</dt><dd>Long blocks of text; tasks that feel like homework instead of play.</dd></div>
+              <div><dt>Decision drivers</dt><dd>Bright visuals, quick wins, a tutor that reacts to him personally.</dd></div>
+            </dl>
+            <blockquote class="case-persona-quote">“I want it to talk to me like it knows me, not like it's reading me a lesson.”</blockquote>
+          </article>
+          <article class="case-persona-card">
+            <header class="case-persona-head">
+              <span class="case-persona-initial" aria-hidden="true">L</span>
+              <div><h4>Lina</h4><p class="case-persona-meta">13 · Independent student · Jeddah</p></div>
+            </header>
+            <p class="case-persona-title">The Self-Directed Learner</p>
+            <dl class="case-persona-facts">
+              <div><dt>Goals</dt><dd>Move at her own pace; skip what she already knows without having to ask.</dd></div>
+              <div><dt>Frustrations</dt><dd>Being treated like a much younger child; no real sense of mastery or progress.</dd></div>
+              <div><dt>Decision drivers</dt><dd>Autonomy, visible mastery tracking, a tutor that challenges rather than babies her.</dd></div>
+            </dl>
+            <blockquote class="case-persona-quote">“If it's too easy I'll just stop paying attention — I want to actually get somewhere.”</blockquote>
+          </article>
+          <article class="case-persona-card">
+            <header class="case-persona-head">
+              <span class="case-persona-initial" aria-hidden="true">N</span>
+              <div><h4>Noor</h4><p class="case-persona-meta">36 · Working parent · Riyadh</p></div>
+            </header>
+            <p class="case-persona-title">The Watching Guardian</p>
+            <dl class="case-persona-facts">
+              <div><dt>Goals</dt><dd>Know her kids are actually learning, in plain language, without watching every session.</dd></div>
+              <div><dt>Frustrations</dt><dd>No visibility into what the AI is actually teaching; unclear if it's "good" screen time.</dd></div>
+              <div><dt>Decision drivers</dt><dd>Transparent progress, a sense of control, trust that the content is age-appropriate.</dd></div>
+            </dl>
+            <blockquote class="case-persona-quote">“I don't need to see every question — I need to know it's actually working.”</blockquote>
+          </article>
+        </div>
+      </section>
+
+      <section id="challenges">
+        <h3>Project challenges</h3>
+        <div class="case-callout">01 — Designing one interface for two audiences with opposite needs: a child who wants play and instant reward, and a parent who wants visible rigor and control — the same screen had to read differently to each of them.</div>
+        <div class="case-callout">02 — As an external consultant, I didn't own the AI tutor's underlying behavior, only the interface around it — every interaction had to be designed to feel consistent even when the model's responses varied.</div>
+      </section>
+
       <section id="design-considerations">
         <h2>Design considerations</h2>
         <p>We explored different design languages and approaches to see which would resonate with kids aged 5 to 15. We needed something that reinforced learning with positive emotions, without overcomplicating the experience — including directions that didn't work and were ruled out along the way.</p>
@@ -103,6 +178,54 @@
           <img src="../assets/mualim/exploration/challenge-task-1.png" alt="Mualim exploration — challenge task variant" loading="lazy">
           <img src="../assets/mualim/exploration/challenge-task-2.png" alt="Mualim exploration — challenge task variant" loading="lazy">
           <img src="../assets/mualim/exploration/tasks-list.png" alt="Mualim exploration — early tasks list layout" loading="lazy">
+        </div>
+      </section>
+
+      <section id="visual-dna">
+        <h3>Visual DNA</h3>
+        <p>Warm, playful, and unmistakably built for kids — rounded shapes, bright accent colors, and a friendly tutor character carry the child-facing screens, while the parent-facing dashboard dials the same palette down to something calmer and more report-like.</p>
+        <div class="case-toggle" data-case-toggle>
+          <div class="case-toggle-bar" role="tablist" aria-label="Visual DNA view">
+            <span class="case-toggle-thumb" aria-hidden="true"></span>
+            <button type="button" role="tab" id="visual-dna-tab-a" aria-selected="true" aria-controls="visual-dna-panel-a">Initial concept</button>
+            <button type="button" role="tab" id="visual-dna-tab-b" aria-selected="false" aria-controls="visual-dna-panel-b" tabindex="-1">Final outcome</button>
+          </div>
+          <div class="case-toggle-panels">
+            <div class="case-toggle-panel is-active" role="tabpanel" id="visual-dna-panel-a" aria-labelledby="visual-dna-tab-a"><div class="case-gallery-shot" style="height:260px;" aria-hidden="true"></div></div>
+            <div class="case-toggle-panel" role="tabpanel" id="visual-dna-panel-b" aria-labelledby="visual-dna-tab-b"><div class="case-gallery-shot" style="height:260px;" aria-hidden="true"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="layout">
+        <h3>Layout and Hierarchy</h3>
+        <p>The child's view leads with what to do next — one big, obvious action at a time — while the parent's dashboard leads with a summary first, letting them drill into detail only if they want to.</p>
+        <div class="case-toggle" data-case-toggle>
+          <div class="case-toggle-bar" role="tablist" aria-label="Layout view">
+            <span class="case-toggle-thumb" aria-hidden="true"></span>
+            <button type="button" role="tab" id="layout-tab-a" aria-selected="true" aria-controls="layout-panel-a">Initial concept</button>
+            <button type="button" role="tab" id="layout-tab-b" aria-selected="false" aria-controls="layout-panel-b" tabindex="-1">Final outcome</button>
+          </div>
+          <div class="case-toggle-panels">
+            <div class="case-toggle-panel is-active" role="tabpanel" id="layout-panel-a" aria-labelledby="layout-tab-a"><div class="case-gallery-shot" style="height:260px;" aria-hidden="true"></div></div>
+            <div class="case-toggle-panel" role="tabpanel" id="layout-panel-b" aria-labelledby="layout-tab-b"><div class="case-gallery-shot" style="height:260px;" aria-hidden="true"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="interactions">
+        <h3>Interactions</h3>
+        <p>Every attempted answer gets an immediate, encouraging animation before moving on — no waiting, no ambiguity about whether it "counted." The tutor's help option is always one tap away, never buried behind a menu.</p>
+        <div class="case-toggle" data-case-toggle>
+          <div class="case-toggle-bar" role="tablist" aria-label="Interactions view">
+            <span class="case-toggle-thumb" aria-hidden="true"></span>
+            <button type="button" role="tab" id="interactions-tab-a" aria-selected="true" aria-controls="interactions-panel-a">Initial concept</button>
+            <button type="button" role="tab" id="interactions-tab-b" aria-selected="false" aria-controls="interactions-panel-b" tabindex="-1">Final outcome</button>
+          </div>
+          <div class="case-toggle-panels">
+            <div class="case-toggle-panel is-active" role="tabpanel" id="interactions-panel-a" aria-labelledby="interactions-tab-a"><div class="case-gallery-shot" style="height:260px;" aria-hidden="true"></div></div>
+            <div class="case-toggle-panel" role="tabpanel" id="interactions-panel-b" aria-labelledby="interactions-tab-b"><div class="case-gallery-shot" style="height:260px;" aria-hidden="true"></div></div>
+          </div>
         </div>
       </section>
 
@@ -221,6 +344,6 @@
   <div class="footer-skyline" aria-hidden="true"></div>
 </footer>
 
-<script src="../script.js?v=2026092507"></script>
+<script src="../script.js?v=2026092508"></script>
 </body>
 </html>
