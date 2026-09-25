@@ -205,8 +205,12 @@ a { color: inherit; text-decoration: none; }
   gap: 56px;
 }
 /* The media is its own block, separate from the text: no shared card
-   background, so the picture and the copy sit directly on the page. */
+   background, so the picture and the copy sit directly on the page.
+   position:relative so a locked card's .project-thumb-lock badge (reused
+   as-is from the older .project-thumb grid — same badge, new card shape)
+   can position itself against this box instead of escaping to the page. */
 .case-studies-media {
+  position: relative;
   flex: 1 1 64%;
   aspect-ratio: 4 / 3;
   border-radius: 20px;
@@ -878,6 +882,16 @@ main { position: relative; }
   background-size: cover;
   background-position: center;
 }
+/* Compound selectors (specificity 0,2,0) rather than relying on source
+   order, since .case-gallery-shot's own dashed "needs a real photo" border
+   sits later in this file and would otherwise win regardless of what a
+   single-class .thumb-*-hero rule says — that dashed border is a placeholder
+   signal, and shouldn't wrap a real photo once one is showing. */
+.case-gallery-shot.thumb-purecs-hero,
+.case-gallery-shot.thumb-jugnu-hero,
+.case-gallery-shot.thumb-mualim-hero {
+  border: none;
+}
 .thumb-kahunas-hero {
   background-image: url('assets/kahunas/hero.png');
   background-size: cover;
@@ -1370,9 +1384,14 @@ main { position: relative; }
   display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 14px; margin: 20px 0 40px;
 }
+/* background-color (not the `background` shorthand) — a shorthand here
+   would reset background-image to none on any element that also carries a
+   .thumb-*-hero class (e.g. .case-gallery-shot.thumb-mualim-hero), silently
+   hiding that real photo behind this placeholder's fallback fill regardless
+   of which rule comes first in the file. */
 .case-gallery-shot {
   height: 200px; border-radius: 14px;
-  background: var(--bg-alt); border: 1px dashed var(--border);
+  background-color: var(--bg-alt); border: 1px dashed var(--border);
 }
 
 /* Real-image grid (e.g. early exploration screens) — unlike .case-gallery's

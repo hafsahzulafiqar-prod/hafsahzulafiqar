@@ -3,8 +3,10 @@ var yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 // Locked case study modal. #lock-modal appears on two pages with different
-// triggers: on index.html it opens when a .project-card.locked link is
-// clicked (currently just Jugnu); on the Jugnu case-study page itself it
+// triggers: on index.html it opens when a link inside any .locked card is
+// clicked (currently just Jugnu's .case-studies-card) — the plain .locked
+// selector, not .project-card.locked, so it still matches whichever card
+// shape the homepage happens to use; on the Jugnu case-study page itself it
 // opens automatically on load via its data-auto-open attribute, and every
 // way of dismissing it (backdrop, close button, Escape) sends the visitor
 // back to the homepage instead of ever revealing the page underneath.
@@ -36,7 +38,7 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   if (redirectTo) openModal();
 
-  document.querySelectorAll('.project-card.locked .project-link').forEach(function (link) {
+  document.querySelectorAll('.locked .project-link').forEach(function (link) {
     link.addEventListener('click', function (e) {
       e.preventDefault();
       openModal();

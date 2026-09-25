@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jugnu — Hafsah Zulafiqar</title>
-<link rel="stylesheet" href="../styles.css?v=2026092501">
+<link rel="stylesheet" href="../styles.css?v=2026092503">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -397,6 +397,22 @@
   <div class="footer-skyline" aria-hidden="true"></div>
 </footer>
 
-<script src="../script.js?v=2026092501"></script>
+<!-- This case study is locked: script.js opens this automatically on load
+     (data-auto-open) and sends any dismissal back to the homepage, rather
+     than ever revealing the page content above. -->
+<div class="lock-modal" id="lock-modal" hidden data-auto-open="../index.html#case-studies">
+  <div class="lock-modal-backdrop" data-lock-close></div>
+  <div class="lock-modal-card" role="dialog" aria-modal="true" aria-labelledby="lock-modal-title">
+    <button type="button" class="lock-modal-close" data-lock-close aria-label="Close">&times;</button>
+    <div class="lock-modal-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+    </div>
+    <h3 id="lock-modal-title">This case study is locked.</h3>
+    <p>Get in touch with Hafsah to unlock it.</p>
+    <a href="mailto:hafsah.zulafiqar@gmail.com" class="btn btn-primary">Get in touch</a>
+  </div>
+</div>
+
+<script src="../script.js?v=2026092503"></script>
 </body>
 </html>
