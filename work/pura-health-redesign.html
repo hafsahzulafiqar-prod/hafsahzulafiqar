@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PureCS — Hafsah Zulafiqar</title>
-<link rel="stylesheet" href="../styles.css?v=2026092505">
+<link rel="stylesheet" href="../styles.css?v=2026092507">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -124,27 +124,32 @@
         <div class="case-feature-block">
           <h4>Sign up &amp; sign in</h4>
           <p>The entry point to the whole app — the first impression a new user forms of whether Pura is worth trusting with their health data.</p>
-          <div class="case-flow-columns">
-            <div>
-              <p class="case-flow-col-label">Old</p>
-              <div class="case-flow-shots">
-                <img src="../assets/purecs/signup/old/1.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 1 of 6" loading="lazy">
-                <img src="../assets/purecs/signup/old/2.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 2 of 6" loading="lazy">
-                <img src="../assets/purecs/signup/old/3.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 3 of 6" loading="lazy">
-                <img src="../assets/purecs/signup/old/4.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 4 of 6" loading="lazy">
-                <img src="../assets/purecs/signup/old/5.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 5 of 6" loading="lazy">
-                <img src="../assets/purecs/signup/old/6.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 6 of 6" loading="lazy">
-              </div>
+          <div class="case-toggle" data-case-toggle>
+            <div class="case-toggle-bar" role="tablist" aria-label="Sign up & sign in view">
+              <span class="case-toggle-thumb" aria-hidden="true"></span>
+              <button type="button" role="tab" id="signup-tab-a" aria-selected="false" aria-controls="signup-panel-a" tabindex="-1">Old design</button>
+              <button type="button" role="tab" id="signup-tab-b" aria-selected="true" aria-controls="signup-panel-b">Updated</button>
             </div>
-            <div>
-              <p class="case-flow-col-label">New</p>
-              <div class="case-flow-shots">
-                <img src="../assets/purecs/signup/new/1.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 1 of 6" loading="lazy">
-                <img src="../assets/purecs/signup/new/2.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 2 of 6" loading="lazy">
-                <img src="../assets/purecs/signup/new/3.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 3 of 6" loading="lazy">
-                <img src="../assets/purecs/signup/new/4.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 4 of 6" loading="lazy">
-                <img src="../assets/purecs/signup/new/5.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 5 of 6" loading="lazy">
-                <img src="../assets/purecs/signup/new/6.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 6 of 6" loading="lazy">
+            <div class="case-toggle-panels">
+              <div class="case-toggle-panel" role="tabpanel" id="signup-panel-a" aria-labelledby="signup-tab-a">
+                <div class="case-flow-shots">
+                  <img src="../assets/purecs/signup/old/1.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 1 of 6" loading="lazy">
+                  <img src="../assets/purecs/signup/old/2.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 2 of 6" loading="lazy">
+                  <img src="../assets/purecs/signup/old/3.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 3 of 6" loading="lazy">
+                  <img src="../assets/purecs/signup/old/4.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 4 of 6" loading="lazy">
+                  <img src="../assets/purecs/signup/old/5.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 5 of 6" loading="lazy">
+                  <img src="../assets/purecs/signup/old/6.png" alt="Pura sign-up &amp; sign-in flow, old design, screen 6 of 6" loading="lazy">
+                </div>
+              </div>
+              <div class="case-toggle-panel is-active" role="tabpanel" id="signup-panel-b" aria-labelledby="signup-tab-b">
+                <div class="case-flow-shots">
+                  <img src="../assets/purecs/signup/new/1.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 1 of 6" loading="lazy">
+                  <img src="../assets/purecs/signup/new/2.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 2 of 6" loading="lazy">
+                  <img src="../assets/purecs/signup/new/3.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 3 of 6" loading="lazy">
+                  <img src="../assets/purecs/signup/new/4.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 4 of 6" loading="lazy">
+                  <img src="../assets/purecs/signup/new/5.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 5 of 6" loading="lazy">
+                  <img src="../assets/purecs/signup/new/6.png" alt="Pura sign-up &amp; sign-in flow, redesigned, screen 6 of 6" loading="lazy">
+                </div>
               </div>
             </div>
           </div>
@@ -157,27 +162,32 @@
         <div class="case-feature-block">
           <h4>Goal &amp; dual completion</h4>
           <p>How a user sets a health goal and sees it through — one of the most-used flows in the app.</p>
-          <div class="case-flow-columns">
-            <div>
-              <p class="case-flow-col-label">Old</p>
-              <div class="case-flow-shots">
-                <img src="../assets/purecs/goal-completion/old/1.png" alt="Pura goal completion flow, old design, screen 1 of 6" loading="lazy">
-                <img src="../assets/purecs/goal-completion/old/2.png" alt="Pura goal completion flow, old design, screen 2 of 6" loading="lazy">
-                <img src="../assets/purecs/goal-completion/old/3.png" alt="Pura goal completion flow, old design, screen 3 of 6" loading="lazy">
-                <img src="../assets/purecs/goal-completion/old/4.png" alt="Pura goal completion flow, old design, screen 4 of 6" loading="lazy">
-                <img src="../assets/purecs/goal-completion/old/5.png" alt="Pura goal completion flow, old design, screen 5 of 6" loading="lazy">
-                <img src="../assets/purecs/goal-completion/old/6.png" alt="Pura goal completion flow, old design, screen 6 of 6" loading="lazy">
-              </div>
+          <div class="case-toggle" data-case-toggle>
+            <div class="case-toggle-bar" role="tablist" aria-label="Goal &amp; dual completion view">
+              <span class="case-toggle-thumb" aria-hidden="true"></span>
+              <button type="button" role="tab" id="goal-tab-a" aria-selected="false" aria-controls="goal-panel-a" tabindex="-1">Old design</button>
+              <button type="button" role="tab" id="goal-tab-b" aria-selected="true" aria-controls="goal-panel-b">Updated</button>
             </div>
-            <div>
-              <p class="case-flow-col-label">New</p>
-              <div class="case-flow-shots">
-                <img src="../assets/purecs/goal-completion/new/1.png" alt="Pura goal completion flow, redesigned, screen 1 of 6" loading="lazy">
-                <img src="../assets/purecs/goal-completion/new/2.png" alt="Pura goal completion flow, redesigned, screen 2 of 6" loading="lazy">
-                <img src="../assets/purecs/goal-completion/new/3.png" alt="Pura goal completion flow, redesigned, screen 3 of 6" loading="lazy">
-                <img src="../assets/purecs/goal-completion/new/4.png" alt="Pura goal completion flow, redesigned, screen 4 of 6" loading="lazy">
-                <img src="../assets/purecs/goal-completion/new/5.png" alt="Pura goal completion flow, redesigned, screen 5 of 6" loading="lazy">
-                <img src="../assets/purecs/goal-completion/new/6.png" alt="Pura goal completion flow, redesigned, screen 6 of 6" loading="lazy">
+            <div class="case-toggle-panels">
+              <div class="case-toggle-panel" role="tabpanel" id="goal-panel-a" aria-labelledby="goal-tab-a">
+                <div class="case-flow-shots">
+                  <img src="../assets/purecs/goal-completion/old/1.png" alt="Pura goal completion flow, old design, screen 1 of 6" loading="lazy">
+                  <img src="../assets/purecs/goal-completion/old/2.png" alt="Pura goal completion flow, old design, screen 2 of 6" loading="lazy">
+                  <img src="../assets/purecs/goal-completion/old/3.png" alt="Pura goal completion flow, old design, screen 3 of 6" loading="lazy">
+                  <img src="../assets/purecs/goal-completion/old/4.png" alt="Pura goal completion flow, old design, screen 4 of 6" loading="lazy">
+                  <img src="../assets/purecs/goal-completion/old/5.png" alt="Pura goal completion flow, old design, screen 5 of 6" loading="lazy">
+                  <img src="../assets/purecs/goal-completion/old/6.png" alt="Pura goal completion flow, old design, screen 6 of 6" loading="lazy">
+                </div>
+              </div>
+              <div class="case-toggle-panel is-active" role="tabpanel" id="goal-panel-b" aria-labelledby="goal-tab-b">
+                <div class="case-flow-shots">
+                  <img src="../assets/purecs/goal-completion/new/1.png" alt="Pura goal completion flow, redesigned, screen 1 of 6" loading="lazy">
+                  <img src="../assets/purecs/goal-completion/new/2.png" alt="Pura goal completion flow, redesigned, screen 2 of 6" loading="lazy">
+                  <img src="../assets/purecs/goal-completion/new/3.png" alt="Pura goal completion flow, redesigned, screen 3 of 6" loading="lazy">
+                  <img src="../assets/purecs/goal-completion/new/4.png" alt="Pura goal completion flow, redesigned, screen 4 of 6" loading="lazy">
+                  <img src="../assets/purecs/goal-completion/new/5.png" alt="Pura goal completion flow, redesigned, screen 5 of 6" loading="lazy">
+                  <img src="../assets/purecs/goal-completion/new/6.png" alt="Pura goal completion flow, redesigned, screen 6 of 6" loading="lazy">
+                </div>
               </div>
             </div>
           </div>
@@ -190,25 +200,30 @@
         <div class="case-feature-block">
           <h4>Pure Score</h4>
           <p>Pura's headline health metric — the number a user checks most often.</p>
-          <div class="case-flow-columns">
-            <div>
-              <p class="case-flow-col-label">Old</p>
-              <div class="case-flow-shots">
-                <img src="../assets/purecs/purescore/old/1.png" alt="Pura Score flow, old design, screen 1 of 5" loading="lazy">
-                <img src="../assets/purecs/purescore/old/2.png" alt="Pura Score flow, old design, screen 2 of 5" loading="lazy">
-                <img src="../assets/purecs/purescore/old/3.png" alt="Pura Score flow, old design, screen 3 of 5" loading="lazy">
-                <img src="../assets/purecs/purescore/old/4.png" alt="Pura Score flow, old design, screen 4 of 5" loading="lazy">
-                <img src="../assets/purecs/purescore/old/5.png" alt="Pura Score flow, old design, screen 5 of 5" loading="lazy">
-              </div>
+          <div class="case-toggle" data-case-toggle>
+            <div class="case-toggle-bar" role="tablist" aria-label="Pure Score view">
+              <span class="case-toggle-thumb" aria-hidden="true"></span>
+              <button type="button" role="tab" id="purescore-tab-a" aria-selected="false" aria-controls="purescore-panel-a" tabindex="-1">Old design</button>
+              <button type="button" role="tab" id="purescore-tab-b" aria-selected="true" aria-controls="purescore-panel-b">Updated</button>
             </div>
-            <div>
-              <p class="case-flow-col-label">New</p>
-              <div class="case-flow-shots">
-                <img src="../assets/purecs/purescore/new/1.png" alt="Pura Score flow, redesigned, screen 1 of 5" loading="lazy">
-                <img src="../assets/purecs/purescore/new/2.png" alt="Pura Score flow, redesigned, screen 2 of 5" loading="lazy">
-                <img src="../assets/purecs/purescore/new/3.png" alt="Pura Score flow, redesigned, screen 3 of 5" loading="lazy">
-                <img src="../assets/purecs/purescore/new/4.png" alt="Pura Score flow, redesigned, screen 4 of 5" loading="lazy">
-                <img src="../assets/purecs/purescore/new/5.png" alt="Pura Score flow, redesigned, screen 5 of 5" loading="lazy">
+            <div class="case-toggle-panels">
+              <div class="case-toggle-panel" role="tabpanel" id="purescore-panel-a" aria-labelledby="purescore-tab-a">
+                <div class="case-flow-shots">
+                  <img src="../assets/purecs/purescore/old/1.png" alt="Pura Score flow, old design, screen 1 of 5" loading="lazy">
+                  <img src="../assets/purecs/purescore/old/2.png" alt="Pura Score flow, old design, screen 2 of 5" loading="lazy">
+                  <img src="../assets/purecs/purescore/old/3.png" alt="Pura Score flow, old design, screen 3 of 5" loading="lazy">
+                  <img src="../assets/purecs/purescore/old/4.png" alt="Pura Score flow, old design, screen 4 of 5" loading="lazy">
+                  <img src="../assets/purecs/purescore/old/5.png" alt="Pura Score flow, old design, screen 5 of 5" loading="lazy">
+                </div>
+              </div>
+              <div class="case-toggle-panel is-active" role="tabpanel" id="purescore-panel-b" aria-labelledby="purescore-tab-b">
+                <div class="case-flow-shots">
+                  <img src="../assets/purecs/purescore/new/1.png" alt="Pura Score flow, redesigned, screen 1 of 5" loading="lazy">
+                  <img src="../assets/purecs/purescore/new/2.png" alt="Pura Score flow, redesigned, screen 2 of 5" loading="lazy">
+                  <img src="../assets/purecs/purescore/new/3.png" alt="Pura Score flow, redesigned, screen 3 of 5" loading="lazy">
+                  <img src="../assets/purecs/purescore/new/4.png" alt="Pura Score flow, redesigned, screen 4 of 5" loading="lazy">
+                  <img src="../assets/purecs/purescore/new/5.png" alt="Pura Score flow, redesigned, screen 5 of 5" loading="lazy">
+                </div>
               </div>
             </div>
           </div>
@@ -282,6 +297,6 @@
   <div class="footer-skyline" aria-hidden="true"></div>
 </footer>
 
-<script src="../script.js?v=2026092505"></script>
+<script src="../script.js?v=2026092507"></script>
 </body>
 </html>
