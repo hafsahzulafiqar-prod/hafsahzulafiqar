@@ -271,11 +271,12 @@ a { color: inherit; text-decoration: none; }
 .case-studies-sticky { position: relative; overflow: hidden; }
 /* One sticky viewport (for the first slide to sit still in) plus a SHORT
    fixed scroll distance per additional slide — not another full 100vh
-   each, which took many scroll ticks to get through one transition. 220px
-   is a bit more than one wheel/trackpad scroll gesture, so one scroll is
-   still enough to move to the next slide, just with a touch more glide
-   instead of an instant snap. */
-.case-studies.is-pinned { position: relative; height: calc(100vh + (var(--cs-count, 4) - 1) * 220px); padding: 0; }
+   each, which took many scroll ticks to get through one transition. 330px
+   (50% more than the previous 220px, per feedback that it still felt too
+   fast) is more than one wheel/trackpad scroll gesture, so it now takes a
+   couple of scroll ticks to move to the next slide instead of a near-
+   instant snap. */
+.case-studies.is-pinned { position: relative; height: calc(100vh + (var(--cs-count, 4) - 1) * 330px); padding: 0; }
 .case-studies.is-pinned .case-studies-sticky {
   position: sticky; top: 0; height: 100vh;
   display: flex; align-items: center;
