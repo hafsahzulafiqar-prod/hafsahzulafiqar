@@ -301,14 +301,16 @@ a { color: inherit; text-decoration: none; }
 .case-studies.is-pinned .case-studies-card {
   position: absolute;
   inset: 0;
-  align-items: stretch;
+  /* center, not stretch — the media box keeps the video's own 16:9 shape
+     (below) instead of being forced to fill the full pinned-panel height,
+     so the row sizes itself and sits centered in the available space. */
+  align-items: center;
   pointer-events: none;
   transform-style: preserve-3d;
 }
 .case-studies.is-pinned .case-studies-card.active { pointer-events: auto; }
 .case-studies.is-pinned .case-studies-media {
-  aspect-ratio: auto;
-  height: 100%;
+  aspect-ratio: 16 / 9;
   position: relative;
   transform-origin: 50% 50%;
 }
@@ -1862,14 +1864,6 @@ main { position: relative; }
 .case-video-fill { display: block; width: 100%; height: 100%; object-fit: cover; }
 .case-video { aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: var(--bg-alt); margin-bottom: 48px; }
 .case-studies-media:has(> .case-video-fill) { overflow: hidden; }
-/* The pinned drum deck's media box is sized to fill the sticky panel's
-   height (see .case-studies.is-pinned .case-studies-media above), not to
-   the video's own 16:9 shape, so cover-cropping the sides is unavoidable
-   there. Letterbox instead: show the whole frame and fill the box's own
-   background (a dark neutral, since it sits behind the "veil" darkening
-   overlay) around it, rather than cropping content off. */
-.case-studies.is-pinned .case-studies-media { background: var(--heading); }
-.case-studies.is-pinned .case-studies-media .case-video-fill { object-fit: contain; }
 
 /* Initial concept / Final outcome toggle above a section's visual.
    Segmented pill (interactive = pill, like the rest of the site); the
