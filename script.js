@@ -46,6 +46,23 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   });
 })();
 
+// Case-studies media is also clickable, not just "Read the case study"
+// (home page only). .project-link's own ::after stretched-link trick (see
+// styles.css) doesn't reach over .case-studies-media here — .case-studies-card
+// has transform-style:preserve-3d for the pinned drum deck's 3D rotation,
+// and that 3D rendering context stops the ::after overlay's hit area from
+// covering its sibling flex item, even though it's visually/geometrically
+// sized to the whole card. Simplest reliable fix: forward a click anywhere
+// on the media box to the real link, so it goes through the exact same
+// navigation (and, for a locked card, the exact same modal intercept above)
+// rather than duplicating that logic.
+document.querySelectorAll('.case-studies-media').forEach(function (media) {
+  var link = media.parentElement && media.parentElement.querySelector('.project-link');
+  if (!link) return;
+  media.style.cursor = 'pointer';
+  media.addEventListener('click', function () { link.click(); });
+});
+
 // Hero role word (home page only): cycles Designer. → Thinker. → Marketeer. →
 // Strategist. → All-Rounder. → repeat, with a quick fade+rise swap. The full
 // stop lives inside the span (not after it in the HTML), so it swaps in and
@@ -590,45 +607,51 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   sync();
 })();
 
-// Hero decorative grid hover glow (home page only, ".hero-grid" — see
+// Decorative grid hover glow (home page only, ".hero-grid" — see
 // styles.css): each cell's lines read var(--glow) via color-mix, so
 // "lighting up" a cell is just setting a number, not swapping a class.
 // Hovering one cell sets --glow on it AND on cells further along its own
 // row/column with linear falloff, so the color spreads into the connecting
 // lines and fades out with distance instead of a hard on/off cutoff
 // confined to the exact cell under the pointer.
+// There can be more than one grid on the page now (the hero's, and the one
+// extended behind #case-studies) — each is wired up independently, with
+// its own cell list, so hovering one grid never lights up cells in the
+// other just because they happen to share the same row/col coordinates.
 (function () {
-  var grid = document.querySelector('.hero-grid');
-  var cells = document.querySelectorAll('.hero-grid-cell');
-  if (!grid || !cells.length) return;
   var GLOW_RADIUS = 2; // cells lit on either side along the row/column
 
-  function setGlow(cell, value) {
-    var current = parseFloat(cell.style.getPropertyValue('--glow') || '0');
-    if (current < value) cell.style.setProperty('--glow', value);
-  }
-  function clearGlow() {
-    cells.forEach(function (cell) { cell.style.removeProperty('--glow'); });
-  }
-  function onOver(e) {
-    var cell = e.target.closest('.hero-grid-cell');
-    if (!cell) return;
-    clearGlow();
-    var row = cell.getAttribute('data-row');
-    var col = cell.getAttribute('data-col');
-    cells.forEach(function (other) {
-      var r = other.getAttribute('data-row');
-      var c = other.getAttribute('data-col');
-      var dist = null;
-      if (r === row) dist = Math.abs(c - col);
-      else if (c === col) dist = Math.abs(r - row);
-      if (dist !== null && dist <= GLOW_RADIUS) {
-        setGlow(other, 1 - dist / (GLOW_RADIUS + 1));
-      }
-    });
-  }
-  grid.addEventListener('pointerover', onOver);
-  grid.addEventListener('pointerleave', clearGlow);
+  document.querySelectorAll('.hero-grid').forEach(function (grid) {
+    var cells = grid.querySelectorAll('.hero-grid-cell');
+    if (!cells.length) return;
+
+    function setGlow(cell, value) {
+      var current = parseFloat(cell.style.getPropertyValue('--glow') || '0');
+      if (current < value) cell.style.setProperty('--glow', value);
+    }
+    function clearGlow() {
+      cells.forEach(function (cell) { cell.style.removeProperty('--glow'); });
+    }
+    function onOver(e) {
+      var cell = e.target.closest('.hero-grid-cell');
+      if (!cell) return;
+      clearGlow();
+      var row = cell.getAttribute('data-row');
+      var col = cell.getAttribute('data-col');
+      cells.forEach(function (other) {
+        var r = other.getAttribute('data-row');
+        var c = other.getAttribute('data-col');
+        var dist = null;
+        if (r === row) dist = Math.abs(c - col);
+        else if (c === col) dist = Math.abs(r - row);
+        if (dist !== null && dist <= GLOW_RADIUS) {
+          setGlow(other, 1 - dist / (GLOW_RADIUS + 1));
+        }
+      });
+    }
+    grid.addEventListener('pointerover', onOver);
+    grid.addEventListener('pointerleave', clearGlow);
+  });
 })();
 
 // Hero card stack (home page only, ".hero" / ".hero-sticky" — see

@@ -273,6 +273,18 @@ a { color: inherit; text-decoration: none; }
    inset:-20% of "the whole page" added ~600px of dead empty space below
    the footer. */
 .case-studies-sticky { position: relative; overflow: hidden; }
+/* Extended wireframe grid (.hero-grid markup reused, see index.html) behind
+   the case-studies deck. Faded relative to the hero's own copy so it reads
+   as background texture, not a second foreground element; the hover-glow
+   mechanic (--glow via color-mix, see .hero-grid rules above) still applies
+   since it shares the .hero-grid class. Needs its own position/z-index here
+   (the hero's version relies on .hero being its only positioned ancestor,
+   which doesn't apply here) and .case-studies-panel needs an explicit
+   position+z-index in BOTH layouts (not just .is-pinned) so it reliably
+   paints above this absolutely-positioned sibling — a position:absolute
+   element paints above a position:static one regardless of DOM order. */
+.case-studies-grid { position: absolute; inset: 0; z-index: 0; opacity: 0.35; }
+.case-studies-panel { position: relative; z-index: 1; }
 /* One sticky viewport (for the first slide to sit still in) plus a SHORT
    fixed scroll distance per additional slide — not another full 100vh
    each, which took many scroll ticks to get through one transition. 330px
