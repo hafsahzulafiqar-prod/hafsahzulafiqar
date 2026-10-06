@@ -16,8 +16,8 @@ Home (index.html)
   → Case studies (#case-studies) — a scroll-pinned 3D "drum" deck on wide
     desktop viewports (one card centered at a time, neighbors peeking
     above/below), falling back to a plain stacked list on narrower
-    viewports. Features 4 cards: FITT Meals (Subscription Journey), Mualim,
-    PureCS, and Jugnu (locked — see "Lock modal" below)
+    viewports. Features 5 cards: FITT Meals (Subscription Journey), Mualim,
+    PureCS, Kahunas, and Jugnu (locked — see "Lock modal" below)
   → Going above and beyond (#beyond) — a video carousel (2D animation,
     logo/branding, 3D modeling) that opens each clip in a lightbox
   → What people say (#testimonials) — real quotes with a prev/next carousel
@@ -33,18 +33,20 @@ Work/
   ├── dtc-meal-plans.html             → FITT Meals (growth case study)
   ├── ai-tutor-ksa.html               → Mualim — AI tutor (two parts: For
   │                                      Parents, For Students)
-  ├── b2b-coaches.html                → Kahunas
+  ├── b2b-coaches.html                → Kahunas (B2B coaching platform; built on
+  │                                      the FITT page structure, visuals mostly
+  │                                      placeholders for now)
   ├── pura-health-redesign.html       → PureCS (Pura Health redesign)
   └── jugnu-retailer-app.html         → Jugnu (locked on the homepage deck —
                                          a modal on that card redirects
                                          visitors back to #case-studies)
 ```
 
-**`dtc-meal-plans.html` and `b2b-coaches.html` aren't linked from anywhere on
-the live site right now** (not in the homepage deck, not in any case study's
-"More case studies" grid). They still exist and render fine — just orphaned.
-Decide whether to link them back in or retire them; don't assume they're
-reachable by visitors as-is.
+**`dtc-meal-plans.html` isn't linked from anywhere on the live site right now**
+(not in the homepage deck, not in any case study's "More case studies" grid).
+It still exists and renders fine, in the older flat-prose format, just orphaned.
+Decide whether to rebuild it on the FITT page structure and link it in, or
+retire it; don't assume it's reachable by visitors as-is.
 
 Nav is minimal on every page: logo (links home) + a "Get in touch" CTA
 (→ `resume.html`). There's no top-nav link to About — it's only reachable via
