@@ -10,8 +10,8 @@ each page repeats its own nav/footer markup rather than using a template system.
 Home (index.html)
   → Hero: a decorative wireframe grid background (hover-glow lines) behind
     4 floating case-study photos (FITT, Mualim, PureCS, Kahunas) and the
-    headline "I design products that solve problems for the users / and
-    perform better for the business"
+    headline "10,000+ Downloads / 4M+ Users" with the subheading "My work
+    has impacted users across UAE, KSA, USA and South Asia"
   → Companies strip (#experience) — scrolling text marquee
   → Case studies (#case-studies) — a scroll-pinned 3D "drum" deck on wide
     desktop viewports (one card centered at a time, neighbors peeking

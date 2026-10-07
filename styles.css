@@ -595,6 +595,17 @@ main { position: relative; }
   opacity: calc(0.15 + var(--stage2) * 0.85);
 }
 
+/* Supporting line under the headline. Fades up with line 2 (--stage2) so
+   the headline and its subheading finish revealing together. */
+.hero-subline {
+  margin: 14px 0 0;
+  max-width: 520px;
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  line-height: 1.5;
+  color: var(--text-muted);
+  opacity: calc(0.15 + var(--stage2) * 0.85);
+}
+
 /* Soft, blurred color-mesh backdrop, drifting right to left in a seamless
    loop. Fixed to the viewport (not just sized to the hero) so it sits behind
    the entire page as you scroll, not only the first section or two — a
