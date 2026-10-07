@@ -47,16 +47,12 @@
     <aside class="case-sidebar">
       <nav class="case-sidebar-nav">
         <a href="#overview" class="active">Overview</a>
-        <a href="#research">Research</a>
-        <a href="#survey">Survey</a>
-        <a href="#personas">Personas</a>
         <a href="#challenges">Challenges</a>
-        <a href="#design-considerations">Design considerations</a>
-        <a href="#visual-dna">Visual DNA</a>
-        <a href="#layout">Layout</a>
+        <a href="#research">Research and survey results</a>
+        <a href="#personas">Personas</a>
         <a href="#core-features">Core features</a>
-        <a href="#outcomes">Outcomes</a>
         <a href="#v2">Planned for V2</a>
+        <a href="#outcomes">Outcomes</a>
       </nav>
     </aside>
 
@@ -68,7 +64,7 @@
             <img class="case-step-icon" src="../assets/icons/step-problem.png" alt="" width="44" height="44">
             <div>
               <h4>Problem</h4>
-              <p>FITT Meals was spending heavily on paid media, but customers were dropping off before they ever tasted a meal, and we were tracking behind our goal of 2,500 customers this year. So I surveyed current, lapsed, and warm customers to find out why. 61% found plan customization confusing and 57% didn't understand the total cost until checkout, and most of them dropped off right before placing the order. That told me the ordering flow wasn't just imperfect, it was working against conversion.</p>
+              <p>FITT Meals was spending heavily across marketing but users weren't converting. I analyzed the data and found out that the biggest drop off was right before checkout. I started working on the revamp of the ordering journey.</p>
             </div>
           </li>
           <li>
@@ -90,54 +86,31 @@
           <summary>The full story</summary>
           <p>FITT Meals was doing well, but not nearly as well as it wanted to. Users kept dropping off before placing an order and nobody could say why. The paid media budget was very high and the results weren't coming in. With an ambitious goal of 2,500 customers this year, the numbers said we would miss it, so I started by finding out where and why people were leaving.</p>
         </details>
-        <div class="case-toggle" data-case-toggle>
-          <div class="case-toggle-bar" role="tablist" aria-label="Overview view">
-            <span class="case-toggle-thumb" aria-hidden="true"></span>
-            <button type="button" role="tab" id="overview-tab-a" aria-selected="true" aria-controls="overview-panel-a">Legacy app</button>
-            <button type="button" role="tab" id="overview-tab-b" aria-selected="false" aria-controls="overview-panel-b" tabindex="-1">Final outcome</button>
+        <h3>Legacy app</h3>
+        <div class="case-carousel" data-case-carousel role="group" aria-roledescription="carousel" aria-label="Legacy app screens">
+          <div class="case-carousel-track" tabindex="0">
+            <figure class="case-carousel-slide"><img src="../assets/fitt-meals/legacy-1.png" alt="Legacy checkout screens: meal plan variant, order period and delivery details, with the friction points outlined in red" width="927" height="525"></figure>
+            <figure class="case-carousel-slide"><img src="../assets/fitt-meals/legacy-2.png" alt="Legacy cart and account screens, with unclear order information and the missing basket option outlined in red" width="927" height="525"></figure>
           </div>
-          <div class="case-toggle-panels">
-            <div class="case-toggle-panel is-active" role="tabpanel" id="overview-panel-a" aria-labelledby="overview-tab-a">
-              <div class="case-carousel" data-case-carousel role="group" aria-roledescription="carousel" aria-label="Legacy app screens">
-                <div class="case-carousel-track" tabindex="0">
-                  <figure class="case-carousel-slide"><img src="../assets/fitt-meals/legacy-1.png" alt="Legacy checkout screens: meal plan variant, order period and delivery details, with the friction points outlined in red" width="927" height="525"></figure>
-                  <figure class="case-carousel-slide"><img src="../assets/fitt-meals/legacy-2.png" alt="Legacy cart and account screens, with unclear order information and the missing basket option outlined in red" width="927" height="525"></figure>
-                </div>
-                <div class="case-carousel-controls">
-                  <button type="button" class="case-carousel-btn" data-dir="-1" aria-label="Previous screen">&lsaquo;</button>
-                  <span class="case-carousel-count" aria-live="polite"><span data-current>1</span> / 2</span>
-                  <button type="button" class="case-carousel-btn" data-dir="1" aria-label="Next screen">&rsaquo;</button>
-                </div>
-              </div>
-            </div>
-            <div class="case-toggle-panel" role="tabpanel" id="overview-panel-b" aria-labelledby="overview-tab-b">
-              <div class="case-carousel" data-case-carousel role="group" aria-roledescription="carousel" aria-label="Final outcome screens">
-                <div class="case-carousel-track" tabindex="0">
-                  <figure class="case-carousel-slide"><img src="../assets/fitt-meals/outcome-1.png" alt="Final outcome: fewer decisions, lesser clicks. The many options from before are condensed into a few action steps matching the backend order API, with popular customizations pre-highlighted and upfront total and discounts shown to avoid back and forth." width="938" height="525"></figure>
-                  <figure class="case-carousel-slide"><img src="../assets/fitt-meals/outcome-2.png" alt="Final outcome: launched AI recommendations. Meals sorted with a click-swap option instead of the 10-15 minutes users used to spend deciding, which had caused a decision-paralysis loop." width="938" height="525"></figure>
-                  <figure class="case-carousel-slide"><img src="../assets/fitt-meals/outcome-3.png" alt="Final outcome: quick checkout. A new user can sign up or sign in after finalizing the cart, preserving it and asking for address details, for fewer steps, fewer decisions, and better conversion." width="938" height="525"></figure>
-                </div>
-                <div class="case-carousel-controls">
-                  <button type="button" class="case-carousel-btn" data-dir="-1" aria-label="Previous screen">&lsaquo;</button>
-                  <span class="case-carousel-count" aria-live="polite"><span data-current>1</span> / 3</span>
-                  <button type="button" class="case-carousel-btn" data-dir="1" aria-label="Next screen">&rsaquo;</button>
-                </div>
-              </div>
-            </div>
+          <div class="case-carousel-controls">
+            <button type="button" class="case-carousel-btn" data-dir="-1" aria-label="Previous screen">&lsaquo;</button>
+            <span class="case-carousel-count" aria-live="polite"><span data-current>1</span> / 2</span>
+            <button type="button" class="case-carousel-btn" data-dir="1" aria-label="Next screen">&rsaquo;</button>
           </div>
         </div>
       </section>
 
-      <section id="research">
-        <h2>Research</h2>
-        <p>Our own numbers showed that people were leaving, but not why, so I looked at the market first. I ran a competitor analysis and a SWOT review of three direct UAE competitors (Calo, Kcal, and Meals on Me), then studied what actually drives meal plan buyers in this market. I mapped it all out on one board, and then went to customers directly with a survey.</p>
-        <a href="https://www.figma.com/board/HeWwGbMlhe6mWo9jEVTOcA/FITT-Meals?node-id=0-1&amp;t=hcEYyZQAaOvL43Zg-1" class="case-link-banner" target="_blank" rel="noopener noreferrer"><img src="../assets/fitt-meals/banner-research.png" alt="Research board (opens in a new tab): the complete research mapped out" width="927" height="208"></a>
+      <section id="challenges">
+        <h3>Project challenges</h3>
+        <div class="case-callout">01. The biggest challenge was not having our own backend. That really limited feature development and our UX improvements. We had to navigate our way around it for the solutions that we wanted to achieve.</div>
+        <div class="case-callout">02. Making flexibility feel safe, not risky: pause, skip, and swap needed to be self-serve and reversible enough that subscribing didn't feel like a trap.</div>
       </section>
 
-      <section id="survey">
-        <h3>Survey Findings</h3>
+      <section id="research">
+        <h2>Research and survey results</h2>
+        <p>I ran a competitor analysis and a SWOT review of three direct UAE competitors (Calo, Kcal, and Meals on Me), then studied what actually drives meal plan buyers in this market.</p>
+        <a href="https://www.figma.com/board/HeWwGbMlhe6mWo9jEVTOcA/FITT-Meals?node-id=0-1&amp;t=hcEYyZQAaOvL43Zg-1" class="case-link-banner" target="_blank" rel="noopener noreferrer"><img src="../assets/fitt-meals/banner-research.png" alt="Research board (opens in a new tab): the complete research mapped out" width="927" height="208"></a>
         <p>The market research told me what buyers expect, but not how our own customers felt. So I sent a survey about the signup experience and auto-renew, and mapped out the results.</p>
-        <p>The answers weren't vague dissatisfaction. Current, lapsed, and warm customers pointed to specific, fixable moments in the signup flow, and to how they felt about a meal plan that renews automatically instead of being ordered month by month. Two numbers stood out: 81% found it hard to place an order because of repetitive steps, and 61% said plan customization was unclear.</p>
 
         <div class="case-chart">
           <p class="case-chart-label">Survey demographic: 92 respondents</p>
@@ -162,121 +135,56 @@
               </div>
               </div>
             </div>
-            <div class="case-chart-group case-chart-group--wide">
-              <p class="case-chart-group-title">Top pain points</p>
-              <div class="case-chart-bars">
-              <div class="case-chart-bar-row">
-                <span class="case-chart-bar-name">Confusing plan customization (macros/calories)</span>
-                <span class="case-chart-bar-track"><span class="case-chart-bar-fill" style="--pct:0.61"></span></span>
-                <span class="case-chart-bar-value" data-count-to="61">61%</span>
-              </div>
-              <div class="case-chart-bar-row">
-                <span class="case-chart-bar-name">Unclear total pricing before checkout</span>
-                <span class="case-chart-bar-track"><span class="case-chart-bar-fill" style="--pct:0.57"></span></span>
-                <span class="case-chart-bar-value" data-count-to="57">57%</span>
-              </div>
-              <div class="case-chart-bar-row">
-                <span class="case-chart-bar-name">Rigid delivery schedule, no easy skip/pause</span>
-                <span class="case-chart-bar-track"><span class="case-chart-bar-fill" style="--pct:0.49"></span></span>
-                <span class="case-chart-bar-value" data-count-to="49">49%</span>
-              </div>
-              </div>
-            </div>
           </div>
         </div>
-
-        <div class="case-stats">
-          <div class="case-stat">
-            <p class="case-stat-num" data-count-to="81">81%</p>
-            <p class="case-stat-text">Hard to place an order due to repetitive steps</p>
-          </div>
-          <div class="case-stat">
-            <p class="case-stat-num" data-count-to="61">61%</p>
-            <p class="case-stat-text">Said plan customization was unclear during signup</p>
-          </div>
-        </div>
-
-        <a href="https://www.figma.com/board/HeWwGbMlhe6mWo9jEVTOcA/FITT-Meals?node-id=0-1&amp;t=hcEYyZQAaOvL43Zg-1" class="case-link-banner" target="_blank" rel="noopener noreferrer"><img src="../assets/fitt-meals/banner-survey.png" alt="Survey results (opens in a new tab): all the stats and the findings" width="927" height="208"></a>
       </section>
 
       <section id="personas">
-        <h3>Defining Personas</h3>
-        <p>Three segments emerged; a busy professional who had no time to cook and wanted a meal plan. A weight loss seeker who wanted to optimise her routine and health and an overwhelmed parent who just couldn't manage kids and meals at the same time.</p>
-        <div class="case-personas-grid">
-          <article class="case-persona-card">
-            <header class="case-persona-head">
-              <span class="case-persona-initial" aria-hidden="true">S</span>
-              <div><h4>Sara</h4><p class="case-persona-meta">29 · Marketing professional · Dubai</p></div>
-            </header>
-            <p class="case-persona-title">The Working Professional</p>
-            <dl class="case-persona-facts">
-              <div><dt>Goals</dt><dd>Hit a precise macro target with minimal weekly decision-making; keep delivery reliable around training sessions.</dd></div>
-              <div><dt>Frustrations</dt><dd>Vague “healthy” labels instead of real per-meal macros; customization built for beginners.</dd></div>
-              <div><dt>Decision drivers</dt><dd>Precision, meal-swap flexibility, reliable delivery windows.</dd></div>
-            </dl>
-            <blockquote class="case-persona-quote">“If I can’t see the macros per meal before I subscribe, I assume the plan wasn’t built for someone like me.”</blockquote>
-          </article>
-          <article class="case-persona-card">
-            <header class="case-persona-head">
-              <span class="case-persona-initial" aria-hidden="true">M</span>
-              <div><h4>Mariam</h4><p class="case-persona-meta">34 · Working parent · Dubai</p></div>
-            </header>
-            <p class="case-persona-title">The Weight-Loss Beginner</p>
-            <dl class="case-persona-facts">
-              <div><dt>Goals</dt><dd>Eat better without becoming a nutrition expert; avoid feeling locked into a rigid subscription.</dd></div>
-              <div><dt>Frustrations</dt><dd>Jargon-heavy plan builders; unclear total pricing; hidden cancellation flows.</dd></div>
-              <div><dt>Decision drivers</dt><dd>Trust signals, visible pricing, a real low-commitment trial.</dd></div>
-            </dl>
-            <blockquote class="case-persona-quote">“I just want someone to tell me what to eat that fits my goal. I don’t want to become an expert to sign up.”</blockquote>
-          </article>
-          <article class="case-persona-card">
-            <header class="case-persona-head">
-              <span class="case-persona-initial" aria-hidden="true">F</span>
-              <div><h4>Fatima</h4><p class="case-persona-meta">41 · Household manager · Abu Dhabi</p></div>
-            </header>
-            <p class="case-persona-title">The Family Health Manager</p>
-            <dl class="case-persona-facts">
-              <div><dt>Goals</dt><dd>Cover multiple dietary needs (halal + allergy) from one plan; flex delivery around school and Ramadan.</dd></div>
-              <div><dt>Frustrations</dt><dd>Dietary filters that handle only one restriction at a time; schedule changes that need a support call.</dd></div>
-              <div><dt>Decision drivers</dt><dd>Explicit halal/allergen compliance, scheduling flexibility, household value.</dd></div>
-            </dl>
-            <blockquote class="case-persona-quote">“I need to know it’s easy to do and hassle free before I’ll even look at the menu.”</blockquote>
-          </article>
-        </div>
-      </section>
-
-      <section id="challenges">
-        <h3>Project challenges</h3>
-        <div class="case-callout">01. The biggest challenge was not having our own backend. That really limited feature development and our UX improvements. We had to navigate our way around it for the solutions that we wanted to achieve.</div>
-        <div class="case-callout">02. Making flexibility feel safe, not risky: pause, skip, and swap needed to be self-serve and reversible enough that subscribing didn't feel like a trap.</div>
-      </section>
-
-      <section id="design-considerations">
-        <h2>Design considerations</h2>
-        <p>The survey gave me one test for every decision: does this remove a moment of hesitation, or add one?</p>
-        <p>People hesitated over cost, customization, and commitment, so I made four changes. Price, halal status, and macros now show before anyone commits. Goal-based presets lead, and advanced customization sits one tap deeper. Pausing, skipping, or swapping no longer needs a support ticket. And reviews and outcomes surface right when someone is deciding, so trust shows up at the moment it matters.</p>
-      </section>
-
-      <section id="visual-dna">
-        <h3>Visual DNA</h3>
-        <p>Clean, food first, appropriate, and calm. A light neutral base lets food photography do the selling, while a single confident accent color carries every price, macro number, and call-to-action.</p>
-        <img src="../assets/fitt-meals/visual-dna.png" alt="Visual DNA: a meal plan landing page with food photography as the background, plan tabs, and a single accent color carrying the CTAs" style="width:100%;border-radius:12px;" loading="lazy">
-      </section>
-
-      <section id="layout">
-        <h3>Layout and Hierarchy</h3>
-        <p>Competitors bury the details people are hunting for, so I moved them to the front. Price and dietary compliance sit at the top of every plan card, per-meal macros are visible without a click, and customization is progressive.</p>
-        <div class="case-toggle" data-case-toggle>
-          <div class="case-toggle-bar" role="tablist" aria-label="Layout view">
-            <span class="case-toggle-thumb" aria-hidden="true"></span>
-            <button type="button" role="tab" id="layout-tab-a" aria-selected="true" aria-controls="layout-panel-a">Initial concept</button>
-            <button type="button" role="tab" id="layout-tab-b" aria-selected="false" aria-controls="layout-panel-b" tabindex="-1">Final outcome</button>
+        <details class="case-feature-expand">
+          <summary>Defining personas</summary>
+          <p>Three segments emerged; a busy professional who had no time to cook and wanted a meal plan. A weight loss seeker who wanted to optimise her routine and health and an overwhelmed parent who just couldn't manage kids and meals at the same time.</p>
+          <div class="case-personas-grid">
+            <article class="case-persona-card">
+              <header class="case-persona-head">
+                <span class="case-persona-initial" aria-hidden="true">S</span>
+                <div><h4>Sara</h4><p class="case-persona-meta">29 · Marketing professional · Dubai</p></div>
+              </header>
+              <p class="case-persona-title">The Working Professional</p>
+              <dl class="case-persona-facts">
+                <div><dt>Goals</dt><dd>Hit a precise macro target with minimal weekly decision-making; keep delivery reliable around training sessions.</dd></div>
+                <div><dt>Frustrations</dt><dd>Vague “healthy” labels instead of real per-meal macros; customization built for beginners.</dd></div>
+                <div><dt>Decision drivers</dt><dd>Precision, meal-swap flexibility, reliable delivery windows.</dd></div>
+              </dl>
+              <blockquote class="case-persona-quote">“If I can’t see the macros per meal before I subscribe, I assume the plan wasn’t built for someone like me.”</blockquote>
+            </article>
+            <article class="case-persona-card">
+              <header class="case-persona-head">
+                <span class="case-persona-initial" aria-hidden="true">M</span>
+                <div><h4>Mariam</h4><p class="case-persona-meta">34 · Working parent · Dubai</p></div>
+              </header>
+              <p class="case-persona-title">The Weight-Loss Beginner</p>
+              <dl class="case-persona-facts">
+                <div><dt>Goals</dt><dd>Eat better without becoming a nutrition expert; avoid feeling locked into a rigid subscription.</dd></div>
+                <div><dt>Frustrations</dt><dd>Jargon-heavy plan builders; unclear total pricing; hidden cancellation flows.</dd></div>
+                <div><dt>Decision drivers</dt><dd>Trust signals, visible pricing, a real low-commitment trial.</dd></div>
+              </dl>
+              <blockquote class="case-persona-quote">“I just want someone to tell me what to eat that fits my goal. I don’t want to become an expert to sign up.”</blockquote>
+            </article>
+            <article class="case-persona-card">
+              <header class="case-persona-head">
+                <span class="case-persona-initial" aria-hidden="true">F</span>
+                <div><h4>Fatima</h4><p class="case-persona-meta">41 · Household manager · Abu Dhabi</p></div>
+              </header>
+              <p class="case-persona-title">The Family Health Manager</p>
+              <dl class="case-persona-facts">
+                <div><dt>Goals</dt><dd>Cover multiple dietary needs (halal + allergy) from one plan; flex delivery around school and Ramadan.</dd></div>
+                <div><dt>Frustrations</dt><dd>Dietary filters that handle only one restriction at a time; schedule changes that need a support call.</dd></div>
+                <div><dt>Decision drivers</dt><dd>Explicit halal/allergen compliance, scheduling flexibility, household value.</dd></div>
+              </dl>
+              <blockquote class="case-persona-quote">“I need to know it’s easy to do and hassle free before I’ll even look at the menu.”</blockquote>
+            </article>
           </div>
-          <div class="case-toggle-panels">
-            <div class="case-toggle-panel is-active" role="tabpanel" id="layout-panel-a" aria-labelledby="layout-tab-a"><img src="../assets/fitt-meals/layout-concept.png" alt="Initial concept wireframe: dividing the page into digestible sections and bringing everything from multiple pages into a single-page checkout" style="width:100%;border-radius:12px;" loading="lazy"></div>
-            <div class="case-toggle-panel" role="tabpanel" id="layout-panel-b" aria-labelledby="layout-tab-b"><div class="case-toggle-scroll"><img src="../assets/fitt-meals/layout-outcome.png" alt="Final outcome: the full single-page checkout, combining plan selection, meal choices, start date, portion size, meal picks, and add-ons into one long scrollable screen" loading="lazy"></div></div>
-          </div>
-        </div>
+        </details>
       </section>
 
       <section id="core-features">
@@ -314,9 +222,19 @@
         </div>
       </section>
 
+      <section id="v2">
+        <details class="case-feature-expand">
+          <summary>What we couldn't achieve: planned for V2</summary>
+          <p>I scoped this redesign to one problem: conversion and drop-off. A few ideas came up repeatedly during research and prototyping, but they solve a different problem, growing order value and engagement, so I held them back rather than dilute the fix.</p>
+          <div class="case-callout">01. Upselling: at checkout, there's no mechanism to suggest add-ons or plan upgrades based on what a customer is already ordering, a clear revenue lever left on the table for v2.</div>
+          <div class="case-callout">02. Gamification: streaks, milestones, or rewards for consistent ordering weren't part of this pass, even though they could reinforce the exact subscription behavior the redesign was trying to encourage.</div>
+          <div class="case-callout">03. Cross-basket ordering: customers managing multiple plans, like a couple with different goals, can't combine deliveries or billing into one basket. Each plan still lives as its own separate order.</div>
+        </details>
+      </section>
+
       <section id="outcomes">
         <div class="case-link-banner case-link-banner--static"><img src="../assets/fitt-meals/banner-outcome.png" alt="Final outcome: what was released and what wasn't" width="927" height="208"></div>
-        <p>The survey had flagged three drop-off points: unclear pricing, manual customization, and flexibility that needed support. I replaced each one with visible pricing, guided presets, and self-serve controls, and those drop-off points became FITT Meals' clearest selling points. The numbers after launch:</p>
+        <p>The biggest drop-off points were unclear pricing, manual customization, and flexibility that needed support. I replaced each one with visible pricing, guided presets, and self-serve controls, and they became FITT Meals' clearest selling points. The numbers after launch:</p>
         <div class="case-stats">
           <div class="case-stat">
             <p class="case-stat-num" data-count-to="146">146%+</p>
@@ -331,17 +249,6 @@
             <p class="case-stat-text">Decrease in bounce rate</p>
           </div>
         </div>
-      </section>
-
-      <section id="v2">
-        <h2>What we couldn't achieve: planned for V2</h2>
-        <p>I scoped this redesign to one problem: conversion and drop-off. A few ideas came up repeatedly during research and prototyping, but they solve a different problem, growing order value and engagement, so I held them back rather than dilute the fix.</p>
-        <!-- Placeholder image hidden until the real visual is added
-        <div class="case-gallery-shot thumb-fitt-subscription" style="height:280px;" aria-hidden="true"></div>
-        -->
-        <div class="case-callout">01. Upselling: at checkout, there's no mechanism to suggest add-ons or plan upgrades based on what a customer is already ordering, a clear revenue lever left on the table for v2.</div>
-        <div class="case-callout">02. Gamification: streaks, milestones, or rewards for consistent ordering weren't part of this pass, even though they could reinforce the exact subscription behavior the redesign was trying to encourage.</div>
-        <div class="case-callout">03. Cross-basket ordering: customers managing multiple plans, like a couple with different goals, can't combine deliveries or billing into one basket. Each plan still lives as its own separate order.</div>
       </section>
     </article>
   </div>
