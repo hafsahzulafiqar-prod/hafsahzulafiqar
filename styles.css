@@ -227,6 +227,12 @@ a { color: inherit; text-decoration: none; }
   color: var(--text-muted);
   margin-bottom: 10px;
 }
+.case-studies-tags {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
 .case-studies-title {
   font-family: 'Fira Sans', var(--font-display);
   font-weight: 700;
