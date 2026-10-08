@@ -5,7 +5,7 @@
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FITT Meals: Subscription Journey | Hafsah Zulafiqar</title>
-<link rel="stylesheet" href="../styles.css?v=2026100815">
+<link rel="stylesheet" href="../styles.css?v=2026100818">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -47,7 +47,6 @@
     <aside class="case-sidebar">
       <nav class="case-sidebar-nav">
         <a href="#overview" class="active">Overview</a>
-        <a href="#challenges">Challenges</a>
         <a href="#research">Research and survey results</a>
         <a href="#personas">Personas</a>
         <a href="#core-features">Core features</a>
@@ -87,23 +86,11 @@
           <p>FITT Meals was doing well, but not nearly as well as it wanted to. Users kept dropping off before placing an order and nobody could say why. The paid media budget was very high and the results weren't coming in. With an ambitious goal of 2,500 customers this year, the numbers said we would miss it, so I started by finding out where and why people were leaving.</p>
         </details>
         <h3>Legacy app</h3>
-        <div class="case-carousel" data-case-carousel role="group" aria-roledescription="carousel" aria-label="Legacy app screens">
-          <div class="case-carousel-track" tabindex="0">
-            <figure class="case-carousel-slide"><img src="../assets/fitt-meals/legacy-1.png" alt="Legacy checkout screens: meal plan variant, order period and delivery details, with the friction points outlined in red" width="927" height="525"></figure>
-            <figure class="case-carousel-slide"><img src="../assets/fitt-meals/legacy-2.png" alt="Legacy cart and account screens, with unclear order information and the missing basket option outlined in red" width="927" height="525"></figure>
-          </div>
-          <div class="case-carousel-controls">
-            <button type="button" class="case-carousel-btn" data-dir="-1" aria-label="Previous screen">&lsaquo;</button>
-            <span class="case-carousel-count" aria-live="polite"><span data-current>1</span> / 2</span>
-            <button type="button" class="case-carousel-btn" data-dir="1" aria-label="Next screen">&rsaquo;</button>
-          </div>
+        <div class="case-legacy-stack">
+          <img src="../assets/fitt-meals/legacy-android-1.png" alt="Legacy checkout: too many meal plan variants and an unclear order period, with the friction points outlined in red" width="1280" height="800" loading="lazy">
+          <img src="../assets/fitt-meals/legacy-android-2.png" alt="Legacy checkout: a long delivery form and a cart with unclear order and delivery information, outlined in red" width="1280" height="800" loading="lazy">
+          <img src="../assets/fitt-meals/legacy-android-3.png" alt="Legacy checkout: no way to create a basket on an existing account, and a password step that clears the basket, outlined in red" width="1280" height="800" loading="lazy">
         </div>
-      </section>
-
-      <section id="challenges">
-        <h3>Project challenges</h3>
-        <div class="case-callout">01. The biggest challenge was not having our own backend. That really limited feature development and our UX improvements. We had to navigate our way around it for the solutions that we wanted to achieve.</div>
-        <div class="case-callout">02. Making flexibility feel safe, not risky: pause, skip, and swap needed to be self-serve and reversible enough that subscribing didn't feel like a trap.</div>
       </section>
 
       <section id="research">
@@ -194,31 +181,25 @@
         <div class="case-feature-block">
           <h4>Choose which plan suits you best</h4>
           <p>Preview the plans to see what options suit your lifestyle, look at the weekly menu, the portion options and jump to a preset selection of customizations tailored for you.</p>
-          <div class="case-video" style="margin:16px 0;" aria-hidden="true"><video class="case-video-fill" src="../assets/fitt-meals/core-feature-1.mp4" poster="../assets/fitt-meals/core-feature-1-poster.jpg" muted loop playsinline preload="none"></video></div>
-          <details class="case-feature-expand">
-            <summary>How it works</summary>
-            <p>Goal-based plan presets replace manual macro-building: pick a goal and the plan configures itself around it.</p>
-          </details>
+          <img class="case-feature-img" src="../assets/fitt-meals/core-ux-plan-discovery.png" alt="Plan discovery and setup: plans named after goals, a bottom sheet with a sample menu, and a prefilled build screen, each annotated with the design approach" width="2576" height="1442" loading="lazy">
         </div>
 
         <div class="case-feature-block">
           <h4>See exactly what you're getting</h4>
-          <p>Price, macros, and delivery days are visible before payment. No account required just to see what a plan costs.</p>
-          <div class="case-video" style="margin:16px 0;" aria-hidden="true"><video class="case-video-fill" src="../assets/fitt-meals/core-feature-2.mp4" poster="../assets/fitt-meals/core-feature-2-poster.jpg" muted loop playsinline preload="none"></video></div>
-          <details class="case-feature-expand">
-            <summary>How it works</summary>
-            <p>Upfront, itemized pricing: the full weekly cost is visible before any account is created. Per-meal macro and halal/allergen labels are visible on every meal card.</p>
-          </details>
+          <p>Fewer choices, smart defaults and one card per question. The total and discounts update live above the button, so the price is clear before payment.</p>
+          <img class="case-feature-img" src="../assets/fitt-meals/core-ux-build-plan.png" alt="Build your plan screen annotated with the design approaches: smart defaults, fewer choices, one card per question, upfront total and a thumb-zone Next button" width="2576" height="1442" loading="lazy">
         </div>
 
         <div class="case-feature-block">
           <h4>Manage it your way</h4>
-          <p>Swap, skip, or pause anytime, all from one screen. No support ticket required.</p>
-          <div class="case-video" style="margin:16px 0;" aria-hidden="true"><video class="case-video-fill" src="../assets/fitt-meals/core-feature-3.mp4" poster="../assets/fitt-meals/core-feature-3-poster.jpg" muted loop playsinline preload="none"></video></div>
-          <details class="case-feature-expand">
-            <summary>How it works</summary>
-            <p>Self-serve pause, skip, and swap.</p>
-          </details>
+          <p>A week of meals is chosen for you before you ask, with a Swap button on every pick and macros visible at a glance. Swapping is open until 72 hours before delivery.</p>
+          <img class="case-feature-img" src="../assets/fitt-meals/core-ux-ai-meals.png" alt="AI meal recommendations screen annotated with the design approaches: ending decision paralysis, AI drafts the user approves, one-tap control, reversible swaps and macros at a glance" width="2576" height="1442" loading="lazy">
+        </div>
+
+        <div class="case-feature-block">
+          <h4>Check out in a few taps</h4>
+          <p>Build first, sign up later. The original price sits beside the plan price, savings are framed as a gain, and the last thing users read before paying is plain-language reassurance.</p>
+          <img class="case-feature-img" src="../assets/fitt-meals/core-ux-checkout.png" alt="Quick checkout screen annotated with the design approaches: build first and sign up later, price anchoring, savings framed as a gain, ending on reassurance and fewer steps to Pay Now" width="2576" height="1442" loading="lazy">
         </div>
       </section>
 
@@ -299,6 +280,6 @@
   <div class="footer-skyline" aria-hidden="true"></div>
 </footer>
 
-<script src="../script.js?v=2026100815"></script>
+<script src="../script.js?v=2026100818"></script>
 </body>
 </html>
