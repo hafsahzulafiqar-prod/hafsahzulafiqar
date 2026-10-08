@@ -365,6 +365,9 @@ main { position: relative; }
   z-index: 0;
   overflow: visible;
 }
+/* Fainter lines so the headline and subheading read cleanly over them (the
+   case-studies copy sets its own opacity). */
+.hero-grid:not(.case-studies-grid) { opacity: 0.4; }
 .hero-grid .hit { fill: transparent; pointer-events: fill; }
 .hero-grid .border,
 .hero-grid .diag {
@@ -570,8 +573,9 @@ main { position: relative; }
 .tagline.hero-tagline {
   font-family: 'Fira Sans', var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.35rem, 3.3vw, 2.2rem);
-  line-height: 1.25;
+  font-size: clamp(2.4rem, 7vw, 5.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
   text-transform: none;
   /* .tagline's own max-width:600px is meant for a body-copy paragraph —
      too narrow for an H1-sized headline, which is why each line was
@@ -600,7 +604,7 @@ main { position: relative; }
 .hero-subline {
   margin: 14px 0 0;
   max-width: 520px;
-  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
   line-height: 1.5;
   color: var(--text-muted);
   opacity: calc(0.15 + var(--stage2) * 0.85);
@@ -1783,7 +1787,7 @@ main { position: relative; }
      size keeps it reading as a bold headline; each line may still wrap
      once on the narrowest phones, which reads better than either shrinking
      it into single-line-but-tiny or keeping it desktop-huge and overflowing. */
-  .tagline.hero-tagline { font-size: 1.2rem; }
+  .tagline.hero-tagline { font-size: 2.1rem; }
   /* The pinned/scroll-jacked deck never engages below 760px (see the
      case-studies script) — mobile always gets this plain stacked-column
      rendering, one full card after another, no is-pinned overrides needed. */
@@ -2056,11 +2060,7 @@ main { position: relative; }
 @media (max-width: 640px) { .footer-links { align-items: flex-start; } }
 
 
-/* Banner with live text, reusing the illustration from the image banners */
-.case-link-banner--live { display: flex; align-items: center; container-type: inline-size; aspect-ratio: 927 / 208; color: var(--heading); text-decoration: none; }
-.case-link-banner-art { flex: 0 0 37.2%; align-self: stretch; overflow: hidden; }
-.case-link-banner-art img { width: 268.8%; max-width: none; height: 100%; object-fit: cover; object-position: left center; }
-.case-link-banner-copy { flex: 1; display: flex; flex-direction: column; gap: 1.2cqw; padding: 0 2cqw 0 4cqw; }
-.case-link-banner-copy strong { font-size: max(15px, 3cqw); font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; }
-.case-link-banner-copy span { font-size: max(11px, 1.8cqw); color: var(--text); }
-.case-link-banner-arrow { flex: 0 0 auto; margin-right: 5cqw; width: max(18px, 3.9cqw); height: auto; }
+
+.case-text-link { display: inline-block; margin: 4px 0 8px; font-weight: 700; color: var(--accent); text-decoration: none; border-bottom: 2px solid transparent; transition: border-color 160ms var(--ease-out); }
+.case-text-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .case-text-link:hover { border-bottom-color: var(--accent); } }
