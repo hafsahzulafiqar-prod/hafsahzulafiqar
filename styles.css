@@ -616,6 +616,17 @@ main { position: relative; }
   opacity: calc(0.15 + var(--stage2) * 0.85);
 }
 
+/* Industry labels under the subheading; reveal with the subheading (--stage2). */
+.hero-tags {
+  position: absolute; left: 0; right: 0; bottom: 28px; z-index: 1;
+  text-align: center;
+  margin: 0;
+  font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+  font-weight: 600;
+  color: var(--text);
+  opacity: calc(0.15 + var(--stage2) * 0.85);
+}
+
 /* Soft, blurred color-mesh backdrop, drifting right to left in a seamless
    loop. Fixed to the viewport (not just sized to the hero) so it sits behind
    the entire page as you scroll, not only the first section or two — a
@@ -979,6 +990,13 @@ main { position: relative; }
    positioning resolves against .project-card (position:relative) instead. */
 .project-link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
 .project-card:hover .project-link .arrow { margin-left: 8px; }
+/* Card with two actions: the stretched .project-link covers the card, and this
+   secondary link sits above that overlay so it stays separately clickable. */
+.case-studies-actions { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; }
+.project-link-plain { position: relative; z-index: 2; font-weight: 700; color: var(--text); font-size: 0.88rem; }
+.project-link-plain .arrow { color: var(--accent); margin-left: 4px; transition: margin-left 0.15s ease; }
+@media (hover: hover) and (pointer: fine) { .project-link-plain:hover .arrow { margin-left: 8px; } }
+.project-link-plain:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
 /* Scroll-driven stacking cards (home page "The work." section). Each card is
    sticky with a slightly deeper `top` than the one before it, so as the page
