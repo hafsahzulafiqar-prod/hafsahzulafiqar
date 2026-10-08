@@ -2070,3 +2070,12 @@ main { position: relative; }
 .case-legacy-stack img { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--border); background: #fff; }
 
 .case-feature-img { display: block; width: 100%; height: auto; margin: 16px 0 8px; border-radius: 14px; border: 1px solid var(--border); background: #fff; }
+
+/* Banner with live text, reusing the illustration from the image banners */
+.case-link-banner--live { display: flex; align-items: center; container-type: inline-size; aspect-ratio: 927 / 208; color: var(--heading); text-decoration: none; }
+.case-link-banner-art { flex: 0 0 37.2%; align-self: stretch; overflow: hidden; }
+.case-link-banner-art img { width: 268.8%; max-width: none; height: 100%; object-fit: cover; object-position: left center; }
+.case-link-banner-copy { flex: 1; display: flex; flex-direction: column; gap: 1.2cqw; padding: 0 2cqw 0 4cqw; }
+.case-link-banner-copy strong { font-size: max(15px, 3cqw); font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; }
+.case-link-banner-copy span { font-size: max(11px, 1.8cqw); color: var(--text); }
+.case-link-banner-arrow { flex: 0 0 auto; margin-right: 5cqw; width: max(18px, 3.9cqw); height: auto; }
