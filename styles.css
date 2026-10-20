@@ -609,7 +609,7 @@ main { position: relative; }
    the headline and its subheading finish revealing together. */
 .hero-subline {
   margin: 14px 0 0;
-  max-width: 520px;
+  max-width: 680px;
   font-size: clamp(1rem, 1.8vw, 1.25rem);
   line-height: 1.5;
   color: var(--text-muted);
